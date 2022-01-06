@@ -12,6 +12,7 @@
 
 #include "status.hpp" // struct status data, struct status_change
 #include "unit.hpp" // unit_stop_walking(), unit_stop_attack()
+#include <functional>
 
 struct guardian_data;
 
@@ -191,11 +192,77 @@ struct s_mob_skill {
 	short permillage;
 	int casttime,delay;
 	short cancel;
-	short cond1,cond2;
+	short cond1;
+	std::string cond2;
 	short target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
+};
+
+
+
+
+namespace ai_advanced_condition_functions {
+	bool ai_status(block_list *caster,block_list *target, std::string v, int type,bool exclude);
+	bool ai_cell(block_list *caster,block_list *target, std::string v,int cell, bool exclude);
+	bool ai_elementarmor(block_list *caster,block_list *target, std::string v, int elem,bool exclude);
+	bool ai_elementresist(block_list *caster,block_list *target, std::string v, int elem,bool exclude);
+	bool ai_elementattack(block_list *caster,block_list *target, std::string,int elem, bool exclude);
+	bool ai_spiritball(block_list *caster,block_list *target, std::string v, int,bool exclude);
+	bool ai_class(block_list *caster,block_list *target, std::string v,int,bool exclude);
+	bool ai_attackrange(block_list *caster,block_list *target, std::string v,  int,bool exclude);
+	bool ai_distance(block_list *caster,block_list *target, std::string v,  int,bool exclude);
+	bool ai_health(block_list *caster,block_list *target, std::string v,  int,bool exclude);
+	bool ai_percenthealth(block_list *caster,block_list *target, std::string v,  int,bool exclude);
+}
+struct s_mob_advanced_ai_condition {
+	std::function<bool(block_list* caster,block_list* target, std::string val,int val2, bool exclude)> fcn;
+	std::string fcn_arg_target;
+	std::string fcn_arg_val;
+	int fcn_arg_val2;
+	bool fcn_arg_exclude;
+};
+class Mob_ai_condition_holder {
+public:
+	Mob_ai_condition_holder() {
+
+	}
+	virtual bool get_status(block_list *caster, block_list*target) {
+		return false;
+	}
+
+};
+
+class Simple_ai_conditions :public Mob_ai_condition_holder {
+private:
+	bool cond1test;
+	int cond2;
+public:
+	Simple_ai_conditions(bool t1, int c2) :cond1test{t1},cond2{c2} {
+	}
+	
+	bool get_status(block_list *caster, block_list*target);
+};
+
+class Advanced_ai_conditions :public Mob_ai_condition_holder {
+private:
+	std::vector<s_mob_advanced_ai_condition> conds;
+public:
+	Advanced_ai_conditions(std::vector<s_mob_advanced_ai_condition> v) : conds{v} {
+	}
+	bool get_status(block_list *caster, block_list*target);
+};
+
+
+class MobAdvancedAiConditionsDatabase : public YamlDatabase {
+public:
+	MobAdvancedAiConditionsDatabase() : YamlDatabase("MOB_ADVANCED_AI_CONDITIONS_DB", 1) {
+
+	}
+	void clear() { };
+	const std::string getDefaultLocation();
+	uint64 parseBodyNode(const YAML::Node &node);
 };
 
 struct s_mob_chat {
@@ -414,6 +481,8 @@ enum e_mob_skill_condition {
 	MSC_MYSTATUSOFF,
 	MSC_FRIENDSTATUSON,
 	MSC_FRIENDSTATUSOFF,
+	MSC_ENEMYSTATUSON,
+	MSC_ENEMYSTATUSOFF,
 	MSC_ATTACKPCGT,
 	MSC_ATTACKPCGE,
 	MSC_SLAVELT,
@@ -428,6 +497,7 @@ enum e_mob_skill_condition {
 	MSC_MASTERATTACKED,
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
+	MSC_ADVANCEDCONDITION
 };
 
 // The data structures for storing delayed item drops
@@ -523,6 +593,122 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time);
 void mvptomb_destroy(struct mob_data *md);
 
 void mob_setdropitem_option(struct item *itm, struct s_mob_drop *mobdrop);
+
+const std::map<std::string, MobSkillState> ai_skillstate_map {
+		{	"any",		MSS_ANY		}, //All states except Dead
+		{	"idle",		MSS_IDLE	},
+		{	"walk",		MSS_WALK	},
+		{	"loot",		MSS_LOOT	},
+		{	"dead",		MSS_DEAD	},
+		{	"attack",	MSS_BERSERK	}, //Retaliating attack
+		{	"angry",	MSS_ANGRY	}, //Preemptive attack (aggressive mobs)
+		{	"chase",	MSS_RUSH	}, //Chase escaping target
+		{	"follow",	MSS_FOLLOW	}, //Preemptive chase (aggressive mobs)
+		{	"anytarget",MSS_ANYTARGET	}, //Berserk+Angry+Rush+Follow
+	};
+const std::map<std::string, e_mob_skill_target> ai_target_map{
+		{	"target",	MST_TARGET	},
+		{	"randomtarget",	MST_RANDOM	},
+		{	"self",		MST_SELF	},
+		{	"friend",	MST_FRIEND	},
+		{	"master",	MST_MASTER	},
+		{	"around5",	MST_AROUND5	},
+		{	"around6",	MST_AROUND6	},
+		{	"around7",	MST_AROUND7	},
+		{	"around8",	MST_AROUND8	},
+		{	"around1",	MST_AROUND1	},
+		{	"around2",	MST_AROUND2	},
+		{	"around3",	MST_AROUND3	},
+		{	"around4",	MST_AROUND4	},
+		{	"around",	MST_AROUND	},
+};
+const std::map<std::string, e_mob_skill_condition> ai_skillcondition_map{
+	// enum e_mob_skill_condition
+	{ "always",             MSC_ALWAYS             },
+	{ "myhpltmaxrate",      MSC_MYHPLTMAXRATE      },
+	{ "myhpinrate",         MSC_MYHPINRATE         },
+	{ "friendhpltmaxrate",  MSC_FRIENDHPLTMAXRATE  },
+	{ "friendhpinrate",     MSC_FRIENDHPINRATE     },
+	{ "mystatuson",         MSC_MYSTATUSON         },
+	{ "mystatusoff",        MSC_MYSTATUSOFF        },
+	{ "friendstatuson",     MSC_FRIENDSTATUSON     },
+	{ "friendstatusoff",    MSC_FRIENDSTATUSOFF    },
+	{ "enemystatuson",      MSC_ENEMYSTATUSON      },
+	{ "enemystatusoff",	    MSC_ENEMYSTATUSOFF     },
+	{ "attackpcgt",         MSC_ATTACKPCGT         },
+	{ "attackpcge",         MSC_ATTACKPCGE         },
+	{ "slavelt",            MSC_SLAVELT            },
+	{ "slavele",            MSC_SLAVELE            },
+	{ "closedattacked",     MSC_CLOSEDATTACKED     },
+	{ "longrangeattacked",  MSC_LONGRANGEATTACKED  },
+	{ "skillused",          MSC_SKILLUSED          },
+	{ "afterskill",         MSC_AFTERSKILL         },
+	{ "casttargeted",       MSC_CASTTARGETED       },
+	{ "rudeattacked",       MSC_RUDEATTACKED       },
+	{ "masterhpltmaxrate",  MSC_MASTERHPLTMAXRATE  },
+	{ "masterattacked",     MSC_MASTERATTACKED     },
+	{ "alchemist",          MSC_ALCHEMIST          },
+	{ "onspawn",            MSC_SPAWN              },
+	{ "advancedcondition",  MSC_ADVANCEDCONDITION  }
+};
+
+const std::map<std::string, sc_type> ai_status_map		{
+	{	"anybad",				SC_NONE				}, 
+	{	"stone",				SC_STONE			},
+	{	"freeze",				SC_FREEZE			},
+	{	"stun",					SC_STUN				},
+	{	"sleep",				SC_SLEEP			},
+	{	"poison",				SC_POISON			},
+	{	"curse",				SC_CURSE			},
+	{	"silence",				SC_SILENCE			},
+	{	"confusion",			SC_CONFUSION		},
+	{	"blind",				SC_BLIND			},
+	{	"decagi",				SC_DECREASEAGI		},
+	{	"hiding",				SC_HIDING			},
+	{	"cloaking",				SC_CLOAKING			},
+	{	"edp",					SC_EDP				},
+	{	"ruwach",				SC_RUWACH			},
+	{	"sight",				SC_SIGHT			},
+	{	"blessing",				SC_BLESSING			},
+	{	"increaseagi",			SC_INCREASEAGI		},
+	{	"assumptio",			SC_ASSUMPTIO  		},
+	{	"kyrie",				SC_KYRIE,			},
+	{	"magnificat",			SC_MAGNIFICAT,		},
+	{	"safetywall",			SC_SAFETYWALL 		},
+	{	"pneuma",				SC_PNEUMA			},
+	{	"explosionspirits",		SC_EXPLOSIONSPIRITS	},
+	{	"doublecasting",		SC_DOUBLECAST		},
+	{	"volcano",				SC_VOLCANO			},
+	{	"amplify",				SC_MAGICPOWER		},
+	{	"quagmire",				SC_QUAGMIRE			},
+	{	"spiderweb",			SC_SPIDERWEB		},
+	{	"energycoat",			SC_ENERGYCOAT		},
+	{	"aspersio",				SC_ASPERSIO			},
+	{	"autoguard",			SC_AUTOGUARD		},
+	{	"reflectshield",		SC_REFLECTSHIELD	},
+	{	"endure",				SC_ENDURE			},
+	{	"defender",				SC_DEFENDER			},
+	{    "kaizel",				SC_KAIZEL			},
+	{    "kaahi",				SC_KAAHI			},
+	{    "kaupe",				SC_KAUPE			},
+	{    "eswoo",				SC_SWOO				},
+	{    "eska",				SC_SKA				},
+	{    "parry",				SC_PARRYING		    },
+	{    "berserk",				SC_ASPDPOTION3      },
+	{    "eske",				SC_SKE			    },
+	{    "soul",				SC_NEN			    },
+	{    "cicada",				SC_UTSUSEMI         }
+};
+
+const std::map<std::string, cell_chk > ai_cell_map{
+	
+	{    "cellwater",			CELL_CHKWATER},			
+	{    "basilica",			CELL_CHKBASILICA},	
+	{    "landprotector",		CELL_CHKLANDPROTECTOR},	
+	{    "maelstrom",			CELL_CHKMAELSTROM},		
+	{    "icewall",				CELL_CHKICEWALL},
+};
+
 
 #define CHK_MOBSIZE(size) ((size) >= SZ_SMALL && (size) < SZ_MAX) /// Check valid Monster Size
 

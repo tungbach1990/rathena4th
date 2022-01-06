@@ -1,0 +1,73 @@
+Advanced conditions list
+
+--Status ailment--
+stone
+freeze
+stun
+sleep
+poison
+curse
+silence
+confusion
+blind
+decagi
+hiding
+cloaking
+edp
+ruwach
+sight
+blessing
+increaseagi
+assumptio
+safetywall
+pneuma
+explosionspirits
+doublecasting
+volcano
+amplify
+spiderweb
+energycoat
+aspersio
+autoguard
+reflectshield
+endure
+defender
+kaizel
+kaahi
+kaupe
+eswoo
+eska
+parry
+berserk
+eske
+soul
+cicada
+
+--Cell conditions--
+casewater
+basilica
+landprotector
+maelstrom
+icewall
+
+--Elemental conditions--
+neutralattack,neutralarmor,neutralresist
+water,waterarmor, etc...
+earth
+fire
+wind
+poison
+holy
+dark
+ghost
+undead
+
+
+--Special Condition--
+attackelement
+spiritball
+class
+range
+health
+percenthealth
+anybad

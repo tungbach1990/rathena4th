@@ -88,6 +88,8 @@ static struct eri *item_drop_list_ers;
 
 MobSummonDatabase mob_summon_db;
 MobChatDatabase mob_chat_db;
+MobAdvancedAiConditionsDatabase mob_advanced_ai_conditions_db;
+static std::map<std::string, std::vector<s_mob_advanced_ai_condition>> ai_adv_cond_entries;
 
 /*==========================================
  * Local prototype declaration   (only required thing)
@@ -3624,49 +3626,68 @@ struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int rate)
 
 	return NULL;
 }
+
+
+
 /*==========================================
  * What a status state suits by nearby MOB is looked for.
  *------------------------------------------*/
 int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 {
-	int cond1,cond2;
-	struct mob_data **fr, *md, *mmd;
-	int flag=0;
-
+	struct mob_data  *md;
+	struct block_list **fr;
 	nullpo_ret(bl);
-	nullpo_ret(md=(struct mob_data *)bl);
-	nullpo_ret(mmd=va_arg(ap,struct mob_data *));
+	nullpo_ret(md = va_arg(ap, struct mob_data *));
 
-	if( mmd->bl.id == bl->id && !(battle_config.mob_ai&0x10) )
+	Mob_ai_condition_holder* ai_cond_helper = va_arg(ap, Mob_ai_condition_holder*);
+	if (md->bl.id == bl->id && !(battle_config.mob_ai & 0x10))
+		return 0;
+	if (status_isdead(bl))
+		return 0;
+	if (battle_check_target(&md->bl, bl, BCT_FRIEND) < 0) // &md->bl is the src, bl is the target, *fr will be the selected ally.
 		return 0;
 
-	if (battle_check_target(&mmd->bl,bl,BCT_ENEMY)>0)
-		return 0;
-	cond1=va_arg(ap,int);
-	cond2=va_arg(ap,int);
-	fr=va_arg(ap,struct mob_data **);
-	if( cond2==-1 ){
-		int j;
-		for(j=SC_COMMON_MIN;j<=SC_COMMON_MAX && !flag;j++){
-			if ((flag=(md->sc.data[j] != NULL))) //Once an effect was found, break out. [Skotlex]
-				break;
-		}
-	}else
-		flag=( md->sc.data[cond2] != NULL );
-	if( flag^( cond1==MSC_FRIENDSTATUSOFF ) )
-		(*fr)=md;
+	nullpo_ret(fr = va_arg(ap, struct block_list **)); 
 
+	if(ai_cond_helper->get_status(&md->bl, bl))
+		(*fr) = bl;
+		
 	return 0;
 }
-
-struct mob_data *mob_getfriendstatus(struct mob_data *md,int cond1,int cond2)
+struct block_list *mob_getfriendstatus(struct mob_data *md,Mob_ai_condition_holder* ai_cond_helper)
 {
-	struct mob_data* fr = NULL;
+	struct block_list* fr = NULL;
 	nullpo_ret(md);
 
-	map_foreachinallrange(mob_getfriendstatus_sub, &md->bl, 8,BL_MOB, md,cond1,cond2,&fr);
+	map_foreachinallrange(mob_getfriendstatus_sub, &md->bl, 8,BL_PC | BL_MOB | BL_MER, md,ai_cond_helper,&fr);
 	return fr;
 }
+
+bool Simple_ai_conditions::get_status(block_list *caster, block_list*target) {
+	bool flag = 0;
+	if (this->cond2 == -1) {
+		int j;
+		for (j = SC_COMMON_MIN;j <= SC_COMMON_MAX && !flag;j++) {
+			if ((flag = (status_get_sc(target)->data[j] != NULL))) //Once an effect was found, break out. [Skotlex]
+				break;
+		}
+	}
+	else {
+		flag = (status_get_sc(target)->data[this->cond2] != NULL);
+	}
+	return flag ^ (this->cond1test);
+}
+
+bool Advanced_ai_conditions::get_status(block_list *caster, block_list*target) {
+	for (auto cond : this->conds) {
+		if (!cond.fcn(caster, target, cond.fcn_arg_val, cond.fcn_arg_val2, cond.fcn_arg_exclude))
+			return false;	
+	}
+	return true;
+	
+}
+
+
 
 // Display message from mob_chat_db.yml
 bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
@@ -3718,7 +3739,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 		if (DIFF_TICK(tick, md->skilldelay[i]) < ms[i]->delay)
 			continue;
 
-		c2 = ms[i]->cond2;
+		
 
 		if (ms[i]->state != md->state.skillstate) {
 			if (md->state.skillstate != MSS_DEAD && (ms[i]->state == MSS_ANY ||
@@ -3742,53 +3763,100 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 				case MSC_ALWAYS:
 					flag = 1; break;
 				case MSC_MYHPLTMAXRATE:		// HP< maxhp%
+					c2 = stoi(ms[i]->cond2);
 					flag = get_percentage(md->status.hp, md->status.max_hp);
 					flag = (flag <= c2);
 					break;
 				case MSC_MYHPINRATE:
+					c2 = stoi(ms[i]->cond2);
 					flag = get_percentage(md->status.hp, md->status.max_hp);
 					flag = (flag >= c2 && flag <= ms[i]->val[0]);
 					break;
 				case MSC_MYSTATUSON:		// status[num] on
 				case MSC_MYSTATUSOFF:		// status[num] off
-					if (!md->sc.count) {
-						flag = 0;
-					} else if (ms[i]->cond2 == -1) {
-						for (j = SC_COMMON_MIN; j <= SC_COMMON_MAX; j++)
-							if ((flag = (md->sc.data[j]!=NULL)) != 0)
-								break;
-					} else {
-						flag = (md->sc.data[ms[i]->cond2]!=NULL);
-					}
-					flag ^= (ms[i]->cond1 == MSC_MYSTATUSOFF); break;
+					c2 = stoi(ms[i]->cond2);
+					flag=Simple_ai_conditions(ms[i]->cond1 == MSC_MYSTATUSOFF,c2).get_status(&md->bl, &md->bl);
+					break;
 				case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
-					flag = ((fbl = mob_getfriendhprate(md, 0, ms[i]->cond2)) != NULL); break;
+					c2 = stoi(ms[i]->cond2);
+					flag = ((fbl = mob_getfriendhprate(md, 0, c2)) != NULL); break;
 				case MSC_FRIENDHPINRATE	:
-					flag = ((fbl = mob_getfriendhprate(md, ms[i]->cond2, ms[i]->val[0])) != NULL); break;
+					c2 = stoi(ms[i]->cond2);
+					flag = ((fbl = mob_getfriendhprate(md, c2, ms[i]->val[0])) != NULL); break;
 				case MSC_FRIENDSTATUSON:	// friend status[num] on
 				case MSC_FRIENDSTATUSOFF:	// friend status[num] off
-					flag = ((fmd = mob_getfriendstatus(md, ms[i]->cond1, ms[i]->cond2)) != NULL); break;
+					c2 = stoi(ms[i]->cond2);
+					flag = ((fbl = mob_getfriendstatus(md,&Simple_ai_conditions(ms[i]->cond1 == MSC_FRIENDSTATUSOFF,c2))) != NULL);
+					break;
+				case MSC_ENEMYSTATUSON:	// enemy status[num] on
+				case MSC_ENEMYSTATUSOFF:	// enemy status[num] off
+					c2 = stoi(ms[i]->cond2);
+					if (skill_target == MST_RANDOM) //Pick a random enemy within skill range.
+						bl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
+							skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true));
+					else
+						bl = map_id2bl(md->target_id);
+					if (bl) {
+						flag=Simple_ai_conditions(ms[i]->cond1 == MSC_ENEMYSTATUSOFF,c2).get_status(&md->bl, bl);
+					}
+					else
+						flag = 0;
+					break;
 				case MSC_SLAVELT:		// slave < num
+					c2 = stoi(ms[i]->cond2);
 					flag = (mob_countslave(&md->bl) < c2 ); break;
 				case MSC_ATTACKPCGT:	// attack pc > num
+					c2 = stoi(ms[i]->cond2);
 					flag = (unit_counttargeted(&md->bl) > c2); break;
 				case MSC_SLAVELE:		// slave <= num
+					c2 = stoi(ms[i]->cond2);
 					flag = (mob_countslave(&md->bl) <= c2 ); break;
 				case MSC_ATTACKPCGE:	// attack pc >= num
+					c2 = stoi(ms[i]->cond2);
 					flag = (unit_counttargeted(&md->bl) >= c2); break;
 				case MSC_AFTERSKILL:
+					c2 = stoi(ms[i]->cond2);
 					flag = (md->ud.skill_id == c2); break;
 				case MSC_RUDEATTACKED:
 					flag = (md->state.attacked_count >= RUDE_ATTACKED_COUNT);
 					if (flag) md->state.attacked_count = 0;	//Rude attacked count should be reset after the skill condition is met. Thanks to Komurka [Skotlex]
 					break;
 				case MSC_MASTERHPLTMAXRATE:
-					flag = ((fbl = mob_getmasterhpltmaxrate(md, ms[i]->cond2)) != NULL); break;
+					c2 = stoi(ms[i]->cond2);
+					flag = ((fbl = mob_getmasterhpltmaxrate(md, c2)) != NULL); break;
 				case MSC_MASTERATTACKED:
 					flag = (md->master_id > 0 && (fbl=map_id2bl(md->master_id)) && unit_counttargeted(fbl) > 0); break;
 				case MSC_ALCHEMIST:
 					flag = (md->state.alchemist);
 					break;
+				case MSC_ADVANCEDCONDITION:
+				{
+					try {
+						flag = 1;
+						const std::vector<s_mob_advanced_ai_condition>& conditions = ai_adv_cond_entries.at(ms[i]->cond2);
+						std::vector<s_mob_advanced_ai_condition> ally_conditions = {}; // ally will test all conditions in this vector inside getfriend
+						for (int p = 0; p <conditions.size() && flag ; ++p) {
+							s_mob_advanced_ai_condition cond = conditions[p];
+							if (cond.fcn_arg_target == "target")
+								bl = map_id2bl(md->target_id);
+							else if (cond.fcn_arg_target == "self")
+								bl = &md->bl;
+							else if (cond.fcn_arg_target == "ally") {
+								ally_conditions.push_back(cond);
+								continue;
+							}
+							flag= bl ? cond.fcn(&md->bl, bl, cond.fcn_arg_val, cond.fcn_arg_val2, cond.fcn_arg_exclude) : 0;
+						}
+						
+						if (!ally_conditions.empty())
+							flag = ((fbl = mob_getfriendstatus(md, &Advanced_ai_conditions(ally_conditions))) != NULL);
+					}
+					catch (std::out_of_range e) {
+						ShowError("mob skill db : Invalid advanced condition [%s] for skill [%d]\n", ms[i]->cond2,ms[i]->skill_id);
+						flag = 0;
+					}
+					break;
+				}
 			}
 		}
 
@@ -3801,9 +3869,9 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 		{	//Ground skill.
 			short x, y;
 			switch (skill_target) {
-				case MST_RANDOM: //Pick a random enemy within skill range.
-					bl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
-						skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true));
+				case MST_RANDOM: //Pick a random enemy within skill range if not picked previously.
+					bl = (bl ? bl : battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
+					skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true)));
 					break;
 				case MST_TARGET:
 				case MST_AROUND5:
@@ -3848,8 +3916,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 			//Targetted skill
 			switch (skill_target) {
 				case MST_RANDOM: //Pick a random enemy within skill range.
-					bl = battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
-						skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true));
+					bl = (bl ? bl : battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
+					skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true)));
 					break;
 				case MST_TARGET:
 					bl = map_id2bl(md->target_id);
@@ -3969,7 +4037,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	int inf, fd;
 	struct mob_data *md;
 	struct status_data *status;
-
+	
 	nullpo_ret(sd);
 
 	if(pc_isdead(sd) && master_id && flag&1)
@@ -4080,7 +4148,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 				} else { //Target allies
 					ms->target = MST_FRIEND;
 					ms->cond1 = MSC_FRIENDHPLTMAXRATE;
-					ms->cond2 = 95;
+					ms->cond2 = "95";
 				}
 			} else if (inf&INF_SELF_SKILL) {
 				if (skill_get_inf2(skill_id, INF2_NOTARGETSELF)) { //auto-select target skill.
@@ -4094,7 +4162,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 				} else { //Self skill
 					ms->target = MST_SELF;
 					ms->cond1 = MSC_MYHPLTMAXRATE;
-					ms->cond2 = 90;
+					ms->cond2 = "90";
 					ms->permillage = 2000;
 					//Delay: Remove the stock 5 secs and add half of the support time.
 					ms->delay += -5000 +(skill_get_time(skill_id, ms->skill_lv) + skill_get_time2(skill_id, ms->skill_lv))/2;
@@ -4104,11 +4172,11 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 			} else if (inf&INF_SUPPORT_SKILL) {
 				ms->target = MST_FRIEND;
 				ms->cond1 = MSC_FRIENDHPLTMAXRATE;
-				ms->cond2 = 90;
+				ms->cond2 = "90";
 				if (skill_id == AL_HEAL)
 					ms->permillage = 5000; //Higher skill rate usage for heal.
 				else if (skill_id == ALL_RESURRECTION)
-					ms->cond2 = 1;
+					ms->cond2 = "1";
 				//Delay: Remove the stock 5 secs and add half of the support time.
 				ms->delay += -5000 +(skill_get_time(skill_id, ms->skill_lv) + skill_get_time2(skill_id, ms->skill_lv))/2;
 				if (ms->delay < 2000)
@@ -5644,6 +5712,211 @@ uint64 MobSummonDatabase::parseBodyNode(const YAML::Node &node) {
 	return 1;
 }
 
+namespace ai_advanced_condition_functions {
+	using std::string;
+	bool isExclusion(bool exclude, bool flag) {
+		if (exclude)
+			flag = !flag;
+		return flag;
+	}
+	bool value_comp(string v, int v2) {
+		int value;
+		bool flag;
+
+		if (v[0] == '>') {
+			if (v[1] == '=') {
+				value = stoi(v.substr(2, 10)); // offset 2
+				flag = (v2 >= value);
+			}
+			else {
+				value = stoi(v.substr(1, 10));
+				flag = (v2 > value);
+			}
+		}
+		else if (v[0] == '<') {
+			if (v[1] == '=') {
+				value = stoi(v.substr(2, 10));
+				flag = (v2 <= value);
+			}
+			else {
+				value = stoi(v.substr(1, 10));
+				flag = (v2 < value);
+			}
+		}
+		else if (v[0] == '=') {
+			value = stoi(v);
+			flag = (v2 == value);
+		}
+		return flag;
+
+	}
+	bool ai_status(block_list*, block_list *target, string v, int type, bool exclude) {
+
+		bool flag;
+		if (v == "on")
+			flag = !(status_get_sc(target)->data[type] == NULL);
+		else if (v == "off") {
+			flag = (status_get_sc(target)->data[type] == NULL);
+		}
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_cell(block_list*, block_list *target, string v,int c, bool exclude) {
+		bool flag;
+		if (v == "on")
+			flag = map_getcell(target->m, target->x, target->y, static_cast<cell_chk>(c));
+		else if (v == "off") {
+			flag = !map_getcell(target->m, target->x, target->y, static_cast<cell_chk>(c));
+		}
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_elementarmor(block_list*, block_list *target, string v, int elem, bool exclude) {
+		bool flag;
+		flag = value_comp(v, status_get_element_level(target));
+		flag = (flag && status_get_element(target) == elem);
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_elementattack(block_list*, block_list *target, string v,int elem, bool exclude) {
+		bool flag;
+		if (v == "on")
+			flag = (status_get_attack_element(target) == elem);
+		else if (v == "off")
+			flag = !(status_get_attack_element(target) == elem);
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_elementresist(block_list*, block_list *target, string v, int elem, bool exclude) {
+		bool flag;
+		map_session_data* sd;
+		if (sd = BL_CAST(BL_PC, target)) {
+			flag = value_comp(v, sd->indexed_bonus.subele_script[elem]);
+		}
+		else
+			flag= value_comp(v, 0);
+		flag = isExclusion(exclude, flag);		
+		return flag;
+	}
+	bool ai_spiritball(block_list*, block_list *target, string v,int, bool exclude) {
+		bool flag;
+		//flag = ai_v_comp(v, status_get_spiritball(target));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_class(block_list*, block_list *target, string v,int, bool exclude) {
+		bool flag;
+		flag = (status_get_class(target) == stoi(v));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_attackrange(block_list*, block_list *target, string v, int,bool exclude) {
+		bool flag;
+		flag = value_comp(v, status_get_range(target));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_distance(block_list*caster, block_list *target, string v, int,bool exclude) {
+		bool flag;
+		flag = value_comp(v, distance_bl(caster, target));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_health(block_list*, block_list *target, string v, int,bool exclude) {
+		bool flag;
+		flag = value_comp(v, status_get_hp(target));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+	bool ai_percenthealth(block_list*, block_list *target, string v, int , bool exclude ) {
+		bool flag;
+		flag = value_comp(v, get_percentage(status_get_hp(target), status_get_max_hp(target)));
+		flag = isExclusion(exclude, flag);
+		return flag;
+	}
+
+	void fill_condition_and_push(const string& first, const string& second, s_mob_advanced_ai_condition& ai_cond,std::vector<s_mob_advanced_ai_condition>& ai_adv_conditions) {
+
+		const std::map <std::string, std::function<bool(block_list*, block_list*,std::string, int,bool)>> ai_funcs_map{
+			{ "spiritball",ai_spiritball },
+			{ "class",ai_class },
+			{ "range",ai_attackrange },
+			{ "distance",ai_distance },
+			{ "elementarmor",ai_elementarmor },
+			{ "elementattack",ai_elementattack },
+			{ "elementresist",ai_elementresist },
+			{ "health",ai_health },
+			{ "percenthealth",ai_percenthealth },
+		};
+		if (ai_status_map.count(first)) { 
+			ai_cond.fcn = ai_status;
+			ai_cond.fcn_arg_val2 = ai_status_map.at(first);
+		}
+		else if (ai_cell_map.count(first)) { 
+			ai_cond.fcn = ai_cell;
+			ai_cond.fcn_arg_val2 = ai_cell_map.at(first);
+		}
+		else if (ai_funcs_map.count(first)) {
+			ai_cond.fcn = ai_funcs_map.at(first);
+			ai_cond.fcn_arg_val2 = 0;
+		}
+		else  {
+			std::string typeToCheck;
+			for (const auto& pair : um_eleid2elename) {
+				char firstLetter = tolower(pair.first[0]);
+				std::string ele_str = firstLetter+pair.first.substr(1);
+				if ((first.find(ele_str)) != string::npos) { // is an element condition
+					typeToCheck = first.substr(ele_str.length());//armor, attack or resist
+					string f_str = ele_str + typeToCheck; // ex: neutralarmor, neutralattack or neutralresist
+					if (ai_funcs_map.count("element"+ typeToCheck)) {
+						ai_cond.fcn = ai_funcs_map.at("element"+ typeToCheck);
+						ai_cond.fcn_arg_val2 = pair.second;
+					}
+				}
+			}
+		}
+		ai_cond.fcn_arg_val = second;
+		ai_adv_conditions.push_back(ai_cond);
+	}
+}
+const std::string MobAdvancedAiConditionsDatabase::getDefaultLocation() {
+	return std::string(db_path) + "/mob_advanced_ai_conditions_db.yml";
+}
+/**
+ * Reads and parses an entry from the mob_advanced_ai_conditions_db.
+ * @param node: YAML node containing the entry.
+ * @return count of successfully parsed entries
+ */
+uint64 MobAdvancedAiConditionsDatabase::parseBodyNode(const YAML::Node &node) {
+	
+	for (const auto& pair : node) {
+		std::vector<s_mob_advanced_ai_condition> ia_adv_conditions;
+		std::string ai_adv_cond_entry_name = pair.first.as<std::string>(); 
+
+		for (const auto& targets : pair.second ){ //"target","self","ally"
+			for (const auto& conds : targets.second) {
+				s_mob_advanced_ai_condition ia_cond;
+				ia_cond.fcn_arg_target = targets.first.as<std::string>();
+
+				//loop through conditions
+				if(conds.second.Type()!=YAML::NodeType::Map) { 
+					ia_cond.fcn_arg_exclude = false;
+					ai_advanced_condition_functions::fill_condition_and_push(conds.first.as<std::string>(),conds.second.as<std::string>(), ia_cond,ia_adv_conditions);
+				}
+				//Enter excluded conditions' node
+				else {
+					ia_cond.fcn_arg_exclude = true;
+					//loop through excluded conditions
+					for (const auto& excludedConds : conds.second) 
+						ai_advanced_condition_functions::fill_condition_and_push(excludedConds.first.as<std::string>(), excludedConds.second.as<std::string>(), ia_cond,ia_adv_conditions);									
+				}
+				
+			}
+		}
+		ai_adv_cond_entries[ai_adv_cond_entry_name] = ia_adv_conditions;
+	}
+	return 1;
+}
 const std::string MobChatDatabase::getDefaultLocation() {
 	return std::string(db_path) + "/mob_chat_db.yml";
 }
@@ -5707,79 +5980,7 @@ uint64 MobChatDatabase::parseBodyNode(const YAML::Node &node) {
  *------------------------------------------*/
 static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 {
-	static const struct {
-		char str[32];
-		enum MobSkillState id;
-	} state[] = {
-		{	"any",		MSS_ANY		}, //All states except Dead
-		{	"idle",		MSS_IDLE	},
-		{	"walk",		MSS_WALK	},
-		{	"loot",		MSS_LOOT	},
-		{	"dead",		MSS_DEAD	},
-		{	"attack",	MSS_BERSERK	}, //Retaliating attack
-		{	"angry",	MSS_ANGRY	}, //Preemptive attack (aggressive mobs)
-		{	"chase",	MSS_RUSH	}, //Chase escaping target
-		{	"follow",	MSS_FOLLOW	}, //Preemptive chase (aggressive mobs)
-		{	"anytarget",MSS_ANYTARGET	}, //Berserk+Angry+Rush+Follow
-	};
-	static const struct {
-		char str[32];
-		int id;
-	} cond1[] = {
-		// enum e_mob_skill_condition
-		{ "always",            MSC_ALWAYS            },
-		{ "myhpltmaxrate",     MSC_MYHPLTMAXRATE     },
-		{ "myhpinrate",        MSC_MYHPINRATE        },
-		{ "friendhpltmaxrate", MSC_FRIENDHPLTMAXRATE },
-		{ "friendhpinrate",    MSC_FRIENDHPINRATE    },
-		{ "mystatuson",        MSC_MYSTATUSON        },
-		{ "mystatusoff",       MSC_MYSTATUSOFF       },
-		{ "friendstatuson",    MSC_FRIENDSTATUSON    },
-		{ "friendstatusoff",   MSC_FRIENDSTATUSOFF   },
-		{ "attackpcgt",        MSC_ATTACKPCGT        },
-		{ "attackpcge",        MSC_ATTACKPCGE        },
-		{ "slavelt",           MSC_SLAVELT           },
-		{ "slavele",           MSC_SLAVELE           },
-		{ "closedattacked",    MSC_CLOSEDATTACKED    },
-		{ "longrangeattacked", MSC_LONGRANGEATTACKED },
-		{ "skillused",         MSC_SKILLUSED         },
-		{ "afterskill",        MSC_AFTERSKILL        },
-		{ "casttargeted",      MSC_CASTTARGETED      },
-		{ "rudeattacked",      MSC_RUDEATTACKED      },
-		{ "masterhpltmaxrate", MSC_MASTERHPLTMAXRATE },
-		{ "masterattacked",    MSC_MASTERATTACKED    },
-		{ "alchemist",         MSC_ALCHEMIST         },
-		{ "onspawn",           MSC_SPAWN             },
-	}, cond2[] ={
-		{	"anybad",		-1				},
-		{	"stone",		SC_STONE		},
-		{	"freeze",		SC_FREEZE		},
-		{	"stun",			SC_STUN			},
-		{	"sleep",		SC_SLEEP		},
-		{	"poison",		SC_POISON		},
-		{	"curse",		SC_CURSE		},
-		{	"silence",		SC_SILENCE		},
-		{	"confusion",	SC_CONFUSION	},
-		{	"blind",		SC_BLIND		},
-		{	"hiding",		SC_HIDING		},
-		{	"sight",		SC_SIGHT		},
-	}, target[] = {
-		// enum e_mob_skill_target
-		{	"target",	MST_TARGET	},
-		{	"randomtarget",	MST_RANDOM	},
-		{	"self",		MST_SELF	},
-		{	"friend",	MST_FRIEND	},
-		{	"master",	MST_MASTER	},
-		{	"around5",	MST_AROUND5	},
-		{	"around6",	MST_AROUND6	},
-		{	"around7",	MST_AROUND7	},
-		{	"around8",	MST_AROUND8	},
-		{	"around1",	MST_AROUND1	},
-		{	"around2",	MST_AROUND2	},
-		{	"around3",	MST_AROUND3	},
-		{	"around4",	MST_AROUND4	},
-		{	"around",	MST_AROUND	},
-	};
+
 	static int last_mob_id = 0;  // ensures that only one error message per mob id is printed
 	int mob_id;
 	int j, tmp;
@@ -5822,11 +6023,13 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	std::shared_ptr<s_mob_skill> ms = std::make_shared<s_mob_skill>();
 
 	//State
-	ARR_FIND( 0, ARRAYLENGTH(state), j, strcmp(str[2],state[j].str) == 0 );
-	if( j < ARRAYLENGTH(state) )
-		ms->state = state[j].id;
+	const std::string& str_state = str[2];
+	const std::map<std::string, MobSkillState>& state = ai_skillstate_map;
+	const std::map<std::string, MobSkillState>::const_iterator it = state.find(str_state);
+	if (it!=state.end())
+		ms->state = it->second;
 	else {
-		ShowError("mob_parse_row_mobskilldb: Unrecognized state '%s' in line %d\n", str[2], current);
+		ShowError("mob_parse_row_mobskilldb: Unrecognized state '%s' in line %d\n", str_state, current);
 		return false;
 	}
 
@@ -5867,11 +6070,13 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		ms->cancel=1;
 
 	//Target
-	ARR_FIND( 0, ARRAYLENGTH(target), j, strcmp(str[9],target[j].str) == 0 );
-	if( j < ARRAYLENGTH(target) )
-		ms->target = target[j].id;
+	const std::string& str_target = str[9];
+	const std::map<std::string, e_mob_skill_target>& target = ai_target_map;
+	const auto& it_target = target.find(str_target);
+	if (it_target!=target.end())
+		ms->target = it_target->second;
 	else {
-		ShowWarning("mob_parse_row_mobskilldb: Unrecognized target %s for %d\n", str[9], mob_id);
+		ShowWarning("mob_parse_row_mobskilldb: Unrecognized target %s for %d\n", str_target, mob_id);
 		ms->target = MST_TARGET;
 	}
 
@@ -5893,22 +6098,26 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	}
 
 	//Cond1
-	ARR_FIND( 0, ARRAYLENGTH(cond1), j, strcmp(str[10],cond1[j].str) == 0 );
-	if( j < ARRAYLENGTH(cond1) )
-		ms->cond1 = cond1[j].id;
+	const std::string& str_cond = str[10];
+	const std::map <std::string, e_mob_skill_condition>& cond1 = ai_skillcondition_map;
+	const auto& it_cond = cond1.find(str_cond);
+	if (it_cond!=cond1.end())
+		ms->cond1 = it_cond->second;
 	else {
-		ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition 1 %s for %d\n", str[10], mob_id);
+		ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition 1 %s for %d\n", str_cond, mob_id);
 		ms->cond1 = -1;
 	}
 
 	//Cond2
-	// numeric value
-	ms->cond2 = atoi(str[11]);
-	// or special constant
-	ARR_FIND( 0, ARRAYLENGTH(cond2), j, strcmp(str[11],cond2[j].str) == 0 );
-	if( j < ARRAYLENGTH(cond2) )
-		ms->cond2 = cond2[j].id;
+	
 
+	const std::string& str_cond2 = str[11];
+	//search special constant ;
+	const auto& it_cond2 = ai_status_map.find(str_cond2);
+	if (it_cond2 != ai_status_map.end())
+		ms->cond2 = std::to_string(it_cond2->second);
+	else
+		ms->cond2 = str_cond2;
 	ms->val[0] = (int)strtol(str[12],NULL,0);
 	ms->val[1] = (int)strtol(str[13],NULL,0);
 	ms->val[2] = (int)strtol(str[14],NULL,0);
@@ -6380,6 +6589,9 @@ static void mob_load(void)
 		aFree(dbsubpath1);
 		aFree(dbsubpath2);
 	}
+
+	ai_adv_cond_entries.clear();
+	mob_advanced_ai_conditions_db.load();
 
 	mob_item_drop_ratio.load();
 	mob_avail_db.load();
