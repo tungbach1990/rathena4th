@@ -9,11 +9,11 @@
 #include "../common/database.hpp"
 #include "../common/mmo.hpp" // struct item
 #include "../common/timer.hpp"
+#include <algorithm>
 
 #include "status.hpp" // struct status data, struct status_change
 #include "unit.hpp" // unit_stop_walking(), unit_stop_attack()
 #include <functional>
-
 struct guardian_data;
 
 //This is the distance at which @autoloot works,
@@ -193,74 +193,281 @@ struct s_mob_skill {
 	int casttime,delay;
 	short cancel;
 	short cond1;
-	std::string cond2;
+	short cond2;
+	std::string literal_cond2; // For expanded conditions
 	short target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
 };
 
+namespace expanded_ai {
+	using namespace std;
 
 
+	template <class _InIt,class _Pr>
+	inline bool one_only(_InIt _First,_InIt _Last,_Pr _Pred) {
+		// test if all elements satisfy _Pred
+		std::_Adl_verify_range(_First,_Last);
+		auto _UFirst = std::_Get_unwrapped(_First);
+		const auto _ULast = std::_Get_unwrapped(_Last);
+		bool isOneTrue = (false);
+		for(; _UFirst != _ULast; ++_UFirst) {
+			if(_Pred(*_UFirst)){
+				if(!isOneTrue)
+					isOneTrue = (true);
+				else
+					return (false);
+			}
+		}
+		return (isOneTrue);
+	}
 
-namespace ai_advanced_condition_functions {
-	bool ai_status(block_list *caster,block_list *target, std::string v, int type,bool exclude);
-	bool ai_cell(block_list *caster,block_list *target, std::string v,int cell, bool exclude);
-	bool ai_elementarmor(block_list *caster,block_list *target, std::string v, int elem,bool exclude);
-	bool ai_elementresist(block_list *caster,block_list *target, std::string v, int elem,bool exclude);
-	bool ai_elementattack(block_list *caster,block_list *target, std::string,int elem, bool exclude);
-	bool ai_spiritball(block_list *caster,block_list *target, std::string v, int,bool exclude);
-	bool ai_class(block_list *caster,block_list *target, std::string v,int,bool exclude);
-	bool ai_attackrange(block_list *caster,block_list *target, std::string v,  int,bool exclude);
-	bool ai_distance(block_list *caster,block_list *target, std::string v,  int,bool exclude);
-	bool ai_health(block_list *caster,block_list *target, std::string v,  int,bool exclude);
-	bool ai_percenthealth(block_list *caster,block_list *target, std::string v,  int,bool exclude);
+	template<class _InIt,
+		class _Pr>
+		_NODISCARD inline bool any_false_of(const _InIt _First,const _InIt _Last,_Pr _Pred)
+	{	// test if any element satisfies _Pred
+		_Adl_verify_range(_First,_Last);
+		auto _UFirst = _Get_unwrapped(_First);
+		const auto _ULast = _Get_unwrapped(_Last);
+		for(; _UFirst != _ULast; ++_UFirst)
+		{
+			if(!_Pred(*_UFirst))
+				return (true);
+		}
+		return (false);
+	}
+
+	template <class _InIt,class _Pr>
+	inline bool all_or_none(_InIt _First,_InIt _Last,_Pr _Pred) {
+		// test if all elements satisfy _Pred
+		std::_Adl_verify_range(_First,_Last);
+		auto _UFirst = std::_Get_unwrapped(_First);
+		const auto _ULast = std::_Get_unwrapped(_Last);
+		bool first = _Pred(*_UFirst);
+		++_UFirst;
+		for(; _UFirst != _ULast; ++_UFirst) {
+			if(_Pred(*_UFirst) != (first))
+				return (false);
+		}
+		return (true);
+	}
+
+
+	template <class TTargetType,class TInverter>
+	struct ConditionNode {
+	public:
+		TInverter inverter;
+		ConditionNode(TInverter inverter) : inverter{inverter} {}
+		virtual bool test(const std::map<short,TTargetType*>& targets) = 0;
+	};
+
+	template <class TTargetType,class TInverter,class TPredicate>
+	struct ConditionTester: public ConditionNode<TTargetType, TInverter> {
+		TPredicate predicate;
+		ConditionTester(TInverter inverter,TPredicate predicate):ConditionNode(inverter),predicate{predicate}{}
+		bool test(const std::map<short,TTargetType*>& targets) override;
+	};
+
+	template <class TTargetType,class TInverter>
+	struct ConditionContainer: public ConditionNode<TTargetType,TInverter> {
+		using pConditionNode_t = shared_ptr<ConditionNode<TTargetType,TInverter>>;
+		using pConditionNode_iterator_t = typename vector<pConditionNode_t>::const_iterator;
+		using logicFunction_t=std::function<bool(pConditionNode_iterator_t,pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>)>;
+		std::vector<pConditionNode_t> nodes;
+		logicFunction_t logicFunction;
+		ConditionContainer(TInverter inverter,logicFunction_t logicFunction):ConditionNode(inverter),logicFunction{ logicFunction }{}
+		void push_back(std::shared_ptr<ConditionNode<TTargetType,TInverter>> conditionNode);
+		bool test(const std::map<short,TTargetType*>& targets) override;
+	};
+
+	using inverter_t=std::function<bool(bool)>;
+	using predicate_t = std::function<bool(std::map<short,block_list*>)>;
+
+	std::shared_ptr<ConditionNode<block_list,inverter_t>> createConditionNode(const YAML::Node& node);
+	predicate_t createPredicate(std::vector<string>&,const std::string& nodeLine);
+	inverter_t createInverter(const std::vector<string>& container,const std::string& line);
+	template <class TTargetType,class TInverter,class TPredicate>
+	shared_ptr<ConditionTester<TTargetType,TInverter,TPredicate>> createConditionTester(const std::vector<string>& container,const std::string& line);
+	namespace predicates {
+
+		struct default_predicate {
+			short target_type_id;
+			default_predicate() {}
+			default_predicate(short target_type_id): target_type_id{target_type_id}{}
+			inline bool operator()(const std::map<short,block_list*> targets) {
+				return true;
+			}
+		};
+		template <class TComparator>
+		struct percent_health: public default_predicate {
+			TComparator comparator;
+			int threshold;
+			percent_health(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				block_list* target = targets.at(target_type_id);
+				return this->comparator(get_percentage(status_get_hp(target),status_get_max_hp(target)),this->threshold);
+			}
+		};
+		template <class TComparator>
+		struct health: public default_predicate {
+			TComparator comparator;
+			int threshold;
+			health(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return this->comparator(status_get_hp(targets.at(target_type_id)),this->threshold);
+			}
+		};
+
+		template <class TComparator>
+		struct element_armor: public default_predicate {
+			TComparator comparator;
+			short element;
+			short level;
+			element_armor(short target_type_id,TComparator comparator,short element,short level): default_predicate(target_type_id),comparator{comparator},element{element},level{level}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				block_list* target = targets.at(target_type_id);
+				return status_get_element(target) == element
+					&& this->comparator(status_get_element_level(target),level);
+			}
+		};
+		struct element_attack: public default_predicate {
+			short element;
+			element_attack(short target_type_id,short element): default_predicate(target_type_id),element{element}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return status_get_attack_element(targets.at(target_type_id)) == this->element;
+			}
+		};
+		template <class TComparator>
+		struct element_resist: public default_predicate {
+			TComparator comparator;
+			short element;
+			int threshold;
+			element_resist(short target_type_id,TComparator comparator,short element,int threshold): default_predicate(target_type_id),comparator{comparator},element{element},threshold{threshold}{
+			}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				map_session_data* sd;
+				if(sd = BL_CAST(BL_PC,targets.at(target_type_id)))
+					return comparator(sd->indexed_bonus.subele_script[element],threshold);
+				else
+					return comparator(0,threshold); // 0 until mob elemental resistance feature is added
+			}
+		};
+		struct cell: public default_predicate {
+			cell_chk mCell;
+			cell(short target_type_id,cell_chk cell): default_predicate(target_type_id),mCell{mCell}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				block_list* target = targets.at(target_type_id);
+				return map_getcell(target->m,target->x,target->y,mCell);
+			}
+		};
+		struct status: public default_predicate {
+			int mStatus;
+			status(short target_type_id,int mStatus): default_predicate(target_type_id),mStatus{mStatus}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return status_get_sc(targets.at(target_type_id))->data[mStatus] != NULL;
+			}
+		};
+		template <class TComparator>
+		struct job: public default_predicate {
+			TComparator comparator;
+			int job;
+			job(short target_type_id,TComparator comparator,int job): default_predicate(target_type_id),comparator{comparator},job{job}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return status_get_class(targets.at(target_type_id)) == job;
+			}
+		};
+		template <class TComparator>
+		struct attack_range: public default_predicate {
+			TComparator comparator;
+			int range;
+			attack_range(short target_type_id,TComparator comparator,int range): default_predicate(target_type_id),comparator{comparator},range{range}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return this->comparator(status_get_range(targets.at(target_type_id)),this->range);
+			}
+		};
+		template <class TComparator>
+		struct target_distance: public default_predicate {
+			TComparator comparator;
+			int mDistance; // Conflict with distance_bl macro if named distance 
+			target_distance(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return comparator(distance_bl(targets.at(MST_SELF),targets.at(target_type_id)),this->mDistance);
+			}
+		};
+		template <class TComparator>
+		struct target_distance_from_ally: public default_predicate {
+			TComparator comparator;
+			int mDistance;
+			target_distance_from_ally(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return comparator(distance_bl(targets.at(MST_FRIEND),targets.at(target_type_id)),this->mDistance);
+			}
+		};
+		template <class TComparator>
+		struct target_distance_from_master: public default_predicate {
+			TComparator comparator;
+			int mDistance;
+			target_distance_from_master(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				return comparator(distance_bl(targets.at(MST_MASTER),targets.at(target_type_id)),this->mDistance);
+			}
+		};
+		template <class TComparator>
+		struct physical_reflect: public default_predicate {
+			TComparator comparator;
+			int threshold;
+			physical_reflect(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
+			inline bool operator()(const std::map<short,block_list*>& targets) {
+				int totalReflect=0;
+				block_list* target = targets.at(target_type_id);
+				status_change *sc = status_get_sc(target);
+				if(sc->data[SC_REFLECTSHIELD])
+					totalReflect+=sc->data[SC_REFLECTSHIELD]->val2;
+				map_session_data* ssd = BL_CAST(BL_PC,target);
+				if(ssd && ssd->bonus.short_weapon_damage_return != 0)
+					totalReflect+=ssd->bonus.short_weapon_damage_return;
+				return comparator(totalReflect,this->threshold);
+			}
+		};
+
+
+	}
+
+	class ConditionLooper {
+	public:
+		bool get_status(std::map<short,block_list*> targets) { return false; };
+		bool get_status(block_list*) {
+			return false;
+		}
+	};
+
+	class ConditionLooperClassic:public ConditionLooper {
+	private:
+		bool invertResult;
+		int cond2;
+
+
+	public:
+		ConditionLooperClassic(bool t1,int c2):invertResult{t1},cond2{c2}{}
+		bool get_status(block_list*);
+	};
+
+	class ConditionLooperExpanded:public ConditionLooper {
+	private:
+		std::shared_ptr<ConditionContainer<block_list,inverter_t>> CTcontainer;
+		std::map<short,block_list*> targets;
+	public:
+		ConditionLooperExpanded(std::shared_ptr<ConditionContainer<block_list,inverter_t>> g,std::map<short,block_list*> tar):CTcontainer{g},targets{tar}{}
+		//	bool operator()(block_list*);
+		bool get_status(block_list*bl);
+
+	};
 }
-struct s_mob_advanced_ai_condition {
-	std::function<bool(block_list* caster,block_list* target, std::string val,int val2, bool exclude)> fcn;
-	std::string fcn_arg_target;
-	std::string fcn_arg_val;
-	int fcn_arg_val2;
-	bool fcn_arg_exclude;
-};
-class Mob_ai_condition_holder {
+using inverter_t=std::function<bool(bool)>;
+class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ConditionContainer<block_list,inverter_t>> {
 public:
-	Mob_ai_condition_holder() {
-
-	}
-	virtual bool get_status(block_list *caster, block_list*target) {
-		return false;
-	}
-
-};
-
-class Simple_ai_conditions :public Mob_ai_condition_holder {
-private:
-	bool cond1test;
-	int cond2;
-public:
-	Simple_ai_conditions(bool t1, int c2) :cond1test{t1},cond2{c2} {
-	}
-	
-	bool get_status(block_list *caster, block_list*target);
-};
-
-class Advanced_ai_conditions :public Mob_ai_condition_holder {
-private:
-	std::vector<s_mob_advanced_ai_condition> conds;
-public:
-	Advanced_ai_conditions(std::vector<s_mob_advanced_ai_condition> v) : conds{v} {
-	}
-	bool get_status(block_list *caster, block_list*target);
-};
-
-
-class MobAdvancedAiConditionsDatabase : public YamlDatabase {
-public:
-	MobAdvancedAiConditionsDatabase() : YamlDatabase("MOB_ADVANCED_AI_CONDITIONS_DB", 1) {
-
-	}
-	void clear() { };
+	MobExpandedAiConditionsDatabase(): TypesafeYamlDatabase("MOB_EXPANDED_AI_CONDITIONS_DB",1) {}
 	const std::string getDefaultLocation();
 	uint64 parseBodyNode(const YAML::Node &node);
 };
@@ -273,10 +480,7 @@ struct s_mob_chat {
 
 class MobChatDatabase : public TypesafeYamlDatabase<uint16, s_mob_chat> {
 public:
-	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {
-
-	}
-
+	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {}
 	const std::string getDefaultLocation();
 	uint64 parseBodyNode(const YAML::Node &node);
 };
@@ -289,10 +493,7 @@ struct s_mob_item_drop_ratio {
 
 class MobItemRatioDatabase : public TypesafeYamlDatabase<t_itemid, s_mob_item_drop_ratio> {
 public:
-	MobItemRatioDatabase() : TypesafeYamlDatabase("MOB_ITEM_RATIO_DB", 1) {
-
-	}
-
+	MobItemRatioDatabase() : TypesafeYamlDatabase("MOB_ITEM_RATIO_DB", 1) {}
 	const std::string getDefaultLocation();
 	uint64 parseBodyNode(const YAML::Node &node);
 };
@@ -470,7 +671,6 @@ enum e_mob_skill_target {
 	MST_AROUND4,
 	MST_AROUND	=	MST_AROUND4,
 };
-
 enum e_mob_skill_condition {
 	MSC_ALWAYS	=	0x0000,
 	MSC_MYHPLTMAXRATE,
@@ -494,12 +694,13 @@ enum e_mob_skill_condition {
 	MSC_CASTTARGETED,
 	MSC_RUDEATTACKED,
 	MSC_MASTERHPLTMAXRATE,
+	MSC_MASTERSTATUSON,
+	MSC_MASTERSTATUSOFF,
 	MSC_MASTERATTACKED,
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
-	MSC_ADVANCEDCONDITION
+	MSC_EXPANDED
 };
-
 // The data structures for storing delayed item drops
 struct item_drop {
 	struct item item_data;
@@ -593,122 +794,6 @@ void mvptomb_create(struct mob_data *md, char *killer, time_t time);
 void mvptomb_destroy(struct mob_data *md);
 
 void mob_setdropitem_option(struct item *itm, struct s_mob_drop *mobdrop);
-
-const std::map<std::string, MobSkillState> ai_skillstate_map {
-		{	"any",		MSS_ANY		}, //All states except Dead
-		{	"idle",		MSS_IDLE	},
-		{	"walk",		MSS_WALK	},
-		{	"loot",		MSS_LOOT	},
-		{	"dead",		MSS_DEAD	},
-		{	"attack",	MSS_BERSERK	}, //Retaliating attack
-		{	"angry",	MSS_ANGRY	}, //Preemptive attack (aggressive mobs)
-		{	"chase",	MSS_RUSH	}, //Chase escaping target
-		{	"follow",	MSS_FOLLOW	}, //Preemptive chase (aggressive mobs)
-		{	"anytarget",MSS_ANYTARGET	}, //Berserk+Angry+Rush+Follow
-	};
-const std::map<std::string, e_mob_skill_target> ai_target_map{
-		{	"target",	MST_TARGET	},
-		{	"randomtarget",	MST_RANDOM	},
-		{	"self",		MST_SELF	},
-		{	"friend",	MST_FRIEND	},
-		{	"master",	MST_MASTER	},
-		{	"around5",	MST_AROUND5	},
-		{	"around6",	MST_AROUND6	},
-		{	"around7",	MST_AROUND7	},
-		{	"around8",	MST_AROUND8	},
-		{	"around1",	MST_AROUND1	},
-		{	"around2",	MST_AROUND2	},
-		{	"around3",	MST_AROUND3	},
-		{	"around4",	MST_AROUND4	},
-		{	"around",	MST_AROUND	},
-};
-const std::map<std::string, e_mob_skill_condition> ai_skillcondition_map{
-	// enum e_mob_skill_condition
-	{ "always",             MSC_ALWAYS             },
-	{ "myhpltmaxrate",      MSC_MYHPLTMAXRATE      },
-	{ "myhpinrate",         MSC_MYHPINRATE         },
-	{ "friendhpltmaxrate",  MSC_FRIENDHPLTMAXRATE  },
-	{ "friendhpinrate",     MSC_FRIENDHPINRATE     },
-	{ "mystatuson",         MSC_MYSTATUSON         },
-	{ "mystatusoff",        MSC_MYSTATUSOFF        },
-	{ "friendstatuson",     MSC_FRIENDSTATUSON     },
-	{ "friendstatusoff",    MSC_FRIENDSTATUSOFF    },
-	{ "enemystatuson",      MSC_ENEMYSTATUSON      },
-	{ "enemystatusoff",	    MSC_ENEMYSTATUSOFF     },
-	{ "attackpcgt",         MSC_ATTACKPCGT         },
-	{ "attackpcge",         MSC_ATTACKPCGE         },
-	{ "slavelt",            MSC_SLAVELT            },
-	{ "slavele",            MSC_SLAVELE            },
-	{ "closedattacked",     MSC_CLOSEDATTACKED     },
-	{ "longrangeattacked",  MSC_LONGRANGEATTACKED  },
-	{ "skillused",          MSC_SKILLUSED          },
-	{ "afterskill",         MSC_AFTERSKILL         },
-	{ "casttargeted",       MSC_CASTTARGETED       },
-	{ "rudeattacked",       MSC_RUDEATTACKED       },
-	{ "masterhpltmaxrate",  MSC_MASTERHPLTMAXRATE  },
-	{ "masterattacked",     MSC_MASTERATTACKED     },
-	{ "alchemist",          MSC_ALCHEMIST          },
-	{ "onspawn",            MSC_SPAWN              },
-	{ "advancedcondition",  MSC_ADVANCEDCONDITION  }
-};
-
-const std::map<std::string, sc_type> ai_status_map		{
-	{	"anybad",				SC_NONE				}, 
-	{	"stone",				SC_STONE			},
-	{	"freeze",				SC_FREEZE			},
-	{	"stun",					SC_STUN				},
-	{	"sleep",				SC_SLEEP			},
-	{	"poison",				SC_POISON			},
-	{	"curse",				SC_CURSE			},
-	{	"silence",				SC_SILENCE			},
-	{	"confusion",			SC_CONFUSION		},
-	{	"blind",				SC_BLIND			},
-	{	"decagi",				SC_DECREASEAGI		},
-	{	"hiding",				SC_HIDING			},
-	{	"cloaking",				SC_CLOAKING			},
-	{	"edp",					SC_EDP				},
-	{	"ruwach",				SC_RUWACH			},
-	{	"sight",				SC_SIGHT			},
-	{	"blessing",				SC_BLESSING			},
-	{	"increaseagi",			SC_INCREASEAGI		},
-	{	"assumptio",			SC_ASSUMPTIO  		},
-	{	"kyrie",				SC_KYRIE,			},
-	{	"magnificat",			SC_MAGNIFICAT,		},
-	{	"safetywall",			SC_SAFETYWALL 		},
-	{	"pneuma",				SC_PNEUMA			},
-	{	"explosionspirits",		SC_EXPLOSIONSPIRITS	},
-	{	"doublecasting",		SC_DOUBLECAST		},
-	{	"volcano",				SC_VOLCANO			},
-	{	"amplify",				SC_MAGICPOWER		},
-	{	"quagmire",				SC_QUAGMIRE			},
-	{	"spiderweb",			SC_SPIDERWEB		},
-	{	"energycoat",			SC_ENERGYCOAT		},
-	{	"aspersio",				SC_ASPERSIO			},
-	{	"autoguard",			SC_AUTOGUARD		},
-	{	"reflectshield",		SC_REFLECTSHIELD	},
-	{	"endure",				SC_ENDURE			},
-	{	"defender",				SC_DEFENDER			},
-	{    "kaizel",				SC_KAIZEL			},
-	{    "kaahi",				SC_KAAHI			},
-	{    "kaupe",				SC_KAUPE			},
-	{    "eswoo",				SC_SWOO				},
-	{    "eska",				SC_SKA				},
-	{    "parry",				SC_PARRYING		    },
-	{    "berserk",				SC_ASPDPOTION3      },
-	{    "eske",				SC_SKE			    },
-	{    "soul",				SC_NEN			    },
-	{    "cicada",				SC_UTSUSEMI         }
-};
-
-const std::map<std::string, cell_chk > ai_cell_map{
-	
-	{    "cellwater",			CELL_CHKWATER},			
-	{    "basilica",			CELL_CHKBASILICA},	
-	{    "landprotector",		CELL_CHKLANDPROTECTOR},	
-	{    "maelstrom",			CELL_CHKMAELSTROM},		
-	{    "icewall",				CELL_CHKICEWALL},
-};
-
 
 #define CHK_MOBSIZE(size) ((size) >= SZ_SMALL && (size) < SZ_MAX) /// Check valid Monster Size
 
