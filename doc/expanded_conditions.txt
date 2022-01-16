@@ -49,6 +49,7 @@ basilica
 landprotector
 maelstrom
 icewall
+cliff
 
 --Elemental conditions--
 neutralattack,neutralarmor,neutralresist
@@ -70,4 +71,3 @@ class
 range
 health
 percenthealth
-anybad

@@ -2,6 +2,7 @@
 // For more information, see LICENCE in the main folder
 
 #include "mob.hpp"
+#include "mob_inlines.hpp"
 #include <algorithm>
 #include <map>
 #include <math.h>
@@ -90,7 +91,7 @@ MobExpandedAiConditionsDatabase mob_expanded_ai_conditions_db;
 
 //Globals used by ai functions
 const std::unordered_map<std::string, sc_type> um_statusname2id{ // Subset used for mob ai
-   {	"anybad",				SC_NONE				},
+   {	"anybad",				SC_NONE 			},
    {	"stone",				SC_STONE			},
    {	"freeze",				SC_FREEZE			},
    {	"stun",					SC_STUN				},
@@ -100,7 +101,7 @@ const std::unordered_map<std::string, sc_type> um_statusname2id{ // Subset used 
    {	"silence",				SC_SILENCE			},
    {	"confusion",			SC_CONFUSION		},
    {	"blind",				SC_BLIND			},
-   {	"decreaseagi",				SC_DECREASEAGI		},
+   {	"decreaseagi",			SC_DECREASEAGI		},
    {	"hiding",				SC_HIDING			},
    {	"cloaking",				SC_CLOAKING			},
    {	"edp",					SC_EDP				},
@@ -129,11 +130,11 @@ const std::unordered_map<std::string, sc_type> um_statusname2id{ // Subset used 
    {    "kaahi",				SC_KAAHI			},
    {    "kaupe",				SC_KAUPE			},
    {    "eswoo",				SC_SWOO				},
-   {    "eska",				SC_SKA				},
+   {    "eska",					SC_SKA				},
    {    "parry",				SC_PARRYING		    },
    {    "berserk",				SC_ASPDPOTION3      },
-   {    "eske",				SC_SKE			    },
-   {    "soul",				SC_NEN			    },
+   {    "eske",					SC_SKE			    },
+   {    "soul",					SC_NEN			    },
    {    "cicada",				SC_UTSUSEMI         }
 };
 
@@ -3695,7 +3696,6 @@ int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 	int min_rate, max_rate,rate;
 	struct block_list **fr;
 	struct mob_data *md;
-
 	md = va_arg(ap,struct mob_data *);
 	min_rate=va_arg(ap,int);
 	max_rate=va_arg(ap,int);
@@ -3711,7 +3711,6 @@ int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 		return 0;
 
 	rate = get_percentage(status_get_hp(bl), status_get_max_hp(bl));
-
 	if (rate >= min_rate && rate <= max_rate)
 		(*fr) = bl;
 	return 1;
@@ -3755,52 +3754,91 @@ int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 	struct block_list **fr;
 	nullpo_ret(bl);
 	nullpo_ret(md = va_arg(ap, struct mob_data *));
-
-	expanded_ai::ConditionLooper* cond_looper=va_arg(ap, expanded_ai::ConditionLooper*);
+	bool flag = 0;
+	int cond1, cond2;
+	cond1 = va_arg(ap, int);
+	cond2 = va_arg(ap, int);
 	if (md->bl.id == bl->id && !(battle_config.mob_ai & 0x10))
 		return 0;
 	if (status_isdead(bl))
 		return 0;
 	if (battle_check_target(&md->bl, bl, BCT_FRIEND) < 0) // &md->bl is the src, bl is the target, *fr will be the selected ally.
 		return 0;
-
 	nullpo_ret(fr = va_arg(ap, struct block_list **)); 
-
-	if (cond_looper->get_status(bl))
+	if (cond2 == -1) {
+		int j;
+		for (j = SC_COMMON_MIN; j <= SC_COMMON_MAX && !flag; j++) {
+			if ((flag = (status_get_sc(bl)->data[j] != NULL))) //Once an effect was found, break out. [Skotlex]
+				break;
+		}
+	} else {
+		flag = (status_get_sc(bl)->data[cond2] != NULL);
+	}
+	if (flag ^ (cond1 == MSC_FRIENDSTATUSOFF))
 		(*fr) = bl;
-		
 	return 0;
 }
-struct block_list *mob_getfriendstatus(struct mob_data *md, expanded_ai::ConditionLooper* cond_looper)
+struct block_list *mob_getfriendstatus(struct mob_data *md, short cond1, short cond2)
 {
+
 	struct block_list* fr = NULL;
 	nullpo_ret(md);
 
-	map_foreachinallrange(mob_getfriendstatus_sub, &md->bl, 8, BL_PC | BL_MOB | BL_MER, md, cond_looper, &fr);
+	map_foreachinallrange(mob_getfriendstatus_sub, &md->bl, 8, BL_PC | BL_MOB | BL_MER, md, cond1,cond2, &fr); //vararg at md,cond1,cond2,&fr giving it to sub
 	return fr;
 }
 
-bool expanded_ai::ConditionLooperClassic::get_status(block_list* target) {
-	bool flag = 0;
+int mob_findmobif_sub(struct block_list* bl, va_list ap) {
+	struct mob_data* md;
+	struct block_list** bl_list;
+	int* c;
+	nullpo_ret(bl_list = va_arg(ap, struct block_list**));
+	c = va_arg(ap, int*);
+	nullpo_ret(bl);
+	nullpo_ret(md = va_arg(ap, struct mob_data*));
 
-	if (this->cond2 == -1) {
-		int j;
-		for (j = SC_COMMON_MIN;j <= SC_COMMON_MAX && !flag;j++) {
-			if ((flag = (status_get_sc(target)->data[j] != NULL))) //Once an effect was found, break out. [Skotlex]
-				break;
-		}
-	}
-	else {
-		flag = (status_get_sc(target)->data[this->cond2] != NULL);
-	}
-	return flag ^ (this->invertResult);
+	std::shared_ptr<expanded_ai::ConditionContainer> container = va_arg(ap, std::shared_ptr<expanded_ai::ConditionContainer>);
+	if (*c >= 24)
+		return 0;
+	if (md->bl.id == bl->id && !(battle_config.mob_ai & 0x10))
+		return 0;
+	if (status_isdead(bl))
+		return 0;
+	using map_t = ::std::map<e_mob_skill_target, block_list*>;
+	std::map<e_mob_skill_target, block_list*> targets = va_arg(ap,map_t);
+	e_battle_check_target btarget = va_arg(ap, e_battle_check_target);
+
+	if (battle_check_target(&md->bl, bl, btarget) < 0) // &md->bl is the src, bl is the target, *fr will be the selected target.
+		return 0;
+	if(btarget== BCT_ENEMY)
+		targets[MST_TARGET] = bl;
+	if (btarget == BCT_FRIEND)
+		targets[MST_FRIEND] = bl;
+	if (container->test(targets)) // Starts the big loop amongst expanded conditions
+		bl_list[(*c)++] = bl;
+
+	return 0;
+}
+struct block_list* mob_getifconditions(struct mob_data* md, int range,std::shared_ptr<expanded_ai::ConditionContainer> container,
+	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction) {
+
+	struct block_list *bl_list[24];
+	int c = 0;
+	memset(bl_list, 0, sizeof(bl_list));
+	map_foreachinallrange(mob_findmobif_sub, &md->bl, 8, BL_PC | BL_MOB | BL_MER, bl_list, &c, md, container, targets, target_faction);
+
+	if ( c == 0 )
+		return NULL;
+
+	if( c > 24 )
+		c = 24;
+
+	return bl_list[rnd()%c];
+
 }
 
-bool expanded_ai::ConditionLooperExpanded::get_status(block_list* bl) {
-	this->targets[MST_FRIEND]=bl;
-	return this->CTcontainer->test(this->targets); // Starts the big loop amongst expanded conditions
-	
-}
+
+
 
 // Display message from mob_chat_db.yml
 bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
@@ -3830,8 +3868,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 	struct block_list *bl;
 	struct mob_data *fmd = NULL;
 	int i,j,n;
-	short skill_target;
-	std::map<short, block_list*> targets;
+	e_mob_skill_target skill_target;
+	std::map<e_mob_skill_target, block_list*> targets;
 	targets[MST_SELF]=&md->bl;
 	if ((bl=map_id2bl(md->target_id)) != NULL)
 		targets[MST_TARGET]=bl;
@@ -3853,7 +3891,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 		int flag=0;
 		int c2 =ms[i]->cond2;
 
-		skill_target=status_has_mode(&md->db->status, MD_RANDOMTARGET) ? MST_RANDOM:ms[i]->target;
+		skill_target= status_has_mode(&md->db->status, MD_RANDOMTARGET) ? MST_RANDOM:ms[i]->target;
 		if (i == ms.size())
 			i = 0;
 
@@ -3877,10 +3915,11 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 			flag = 1; //Trigger skill.
 		else if (ms[i]->cond1 == MSC_SKILLUSED)
 			flag = ((event & 0xffff) == MSC_SKILLUSED && ((event >> 16) == c2 || c2 == 0));
-		else if(event == -1){
+		else if (event == -1) {
 			//Avoid entering on defined events to avoid "hyper-active skill use" due to the overflow of calls to this function in battle.
-			switch (ms[i]->cond1)
-			{
+			try {
+				switch (ms[i]->cond1)
+				{
 				case MSC_ALWAYS:
 					flag = 1; break;
 				case MSC_MYHPLTMAXRATE:		// HP< maxhp%
@@ -3893,15 +3932,24 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					break;
 				case MSC_MYSTATUSON:		// status[num] on
 				case MSC_MYSTATUSOFF:		// status[num] off
-				flag=expanded_ai::ConditionLooperClassic(ms[i]->cond1 == MSC_MYSTATUSOFF, c2).get_status(targets[MST_SELF]);
+					if (!md->sc.count) {
+						flag = 0;
+					} else if (ms[i]->cond2 == -1) {
+						for (j = SC_COMMON_MIN; j <= SC_COMMON_MAX; j++)
+							if ((flag = (md->sc.data[j] != NULL)) != 0)
+								break;
+					} else {
+						flag = (md->sc.data[ms[i]->cond2] != NULL);
+					}
+					flag ^= (ms[i]->cond1 == MSC_MYSTATUSOFF); break;
 					break;
 				case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
 					flag = ((fbl = mob_getfriendhprate(md, 0, c2)) != NULL); break;
-				case MSC_FRIENDHPINRATE	:
+				case MSC_FRIENDHPINRATE:
 					flag = ((fbl = mob_getfriendhprate(md, c2, ms[i]->val[0])) != NULL); break;
 				case MSC_FRIENDSTATUSON:	// friend status[num] on
 				case MSC_FRIENDSTATUSOFF:	// friend status[num] off
-				flag=((fbl=mob_getfriendstatus(md, &expanded_ai::ConditionLooperClassic(ms[i]->cond1 == MSC_FRIENDSTATUSOFF, c2))) != NULL);
+					flag = ((fbl = mob_getfriendstatus(md, ms[i]->cond1, ms[i]->cond2)) != NULL); break;
 					break;
 				case MSC_ENEMYSTATUSON:	// enemy status[num] on
 				case MSC_ENEMYSTATUSOFF:	// enemy status[num] off
@@ -3911,16 +3959,17 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					else
 						bl = map_id2bl(md->target_id);
 					if (bl) {
-					flag=expanded_ai::ConditionLooperClassic(ms[i]->cond1 == MSC_ENEMYSTATUSOFF, c2).get_status(bl);
-				} else
+						flag = status_get_sc(bl)->data[ms[i]->cond2] != NULL;
+						flag ^= (ms[i]->cond1 == MSC_ENEMYSTATUSOFF); break;
+					} else
 						flag = 0;
 					break;
 				case MSC_SLAVELT:		// slave < num
-					flag = (mob_countslave(&md->bl) < c2 ); break;
+					flag = (mob_countslave(&md->bl) < c2); break;
 				case MSC_ATTACKPCGT:	// attack pc > num
 					flag = (unit_counttargeted(&md->bl) > c2); break;
 				case MSC_SLAVELE:		// slave <= num
-					flag = (mob_countslave(&md->bl) <= c2 ); break;
+					flag = (mob_countslave(&md->bl) <= c2); break;
 				case MSC_ATTACKPCGE:	// attack pc >= num
 					flag = (unit_counttargeted(&md->bl) >= c2); break;
 				case MSC_AFTERSKILL:
@@ -3930,51 +3979,65 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					if (flag) md->state.attacked_count = 0;	//Rude attacked count should be reset after the skill condition is met. Thanks to Komurka [Skotlex]
 					break;
 				case MSC_MASTERHPLTMAXRATE:
-				flag=((mbl=mob_getmasterhpltmaxrate(md, c2)) != NULL); break;
-			case MSC_MASTERSTATUSON:	// friend status[num] on
-			case MSC_MASTERSTATUSOFF:	// friend status[num] off
-				if (mbl != NULL)
-					flag=expanded_ai::ConditionLooperClassic(ms[i]->cond1 == MSC_MASTERSTATUSOFF, c2).get_status(mbl);
-				else
-					flag=0;
-				break;
+					flag = ((mbl = mob_getmasterhpltmaxrate(md, c2)) != NULL); break;
+				case MSC_MASTERSTATUSON:	// friend status[num] on
+				case MSC_MASTERSTATUSOFF:	// friend status[num] off
+					if (mbl != nullptr) {
+						if (!status_get_sc(mbl)->count) {
+							flag = 0;
+						} else if (ms[i]->cond2 == -1) {
+							for (j = SC_COMMON_MIN; j <= SC_COMMON_MAX; j++)
+								if ((flag = (status_get_sc(mbl)->data[j] != NULL)) != 0)
+									break;
+						} else {
+							flag = (status_get_sc(mbl)->data[ms[i]->cond2] != NULL);
+						}
+						flag ^= (ms[i]->cond1 == MSC_MASTERSTATUSOFF);
+					} else
+						continue;
+					break;
 				case MSC_MASTERATTACKED:
-				flag=(md->master_id >0&& (mbl=map_id2bl(md->master_id)) && unit_counttargeted(mbl) > 0); break;
+					flag = (md->master_id > 0 && (mbl = map_id2bl(md->master_id)) && unit_counttargeted(mbl) > 0); break;
 				case MSC_ALCHEMIST:
 					flag = (md->state.alchemist);
 					break;
-			case MSC_EXPANDED:
+				case MSC_EXPANDED:
 				{
-				using inverter_t=std::function<bool(bool)>;
-				std::shared_ptr<expanded_ai::ConditionContainer<block_list,inverter_t>> condition_container;
-				if ((condition_container=mob_expanded_ai_conditions_db.find(ms[i]->literal_cond2)) != nullptr) {
-					switch (skill_target) {
-					case MST_FRIEND:
-						flag=((fbl=mob_getfriendstatus(md, &expanded_ai::ConditionLooperExpanded(condition_container, targets))) != NULL);
-						break;
-					case MST_MASTER:
-						if (mbl == NULL)
+					std::shared_ptr<expanded_ai::ConditionContainer> condition_container = mob_expanded_ai_conditions_db.find(ms[i]->literal_cond2);
+					if ((condition_container) != nullptr) {
+						switch (skill_target) {
+						case MST_FRIEND:
+							flag = ((fbl = mob_getifconditions(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), condition_container, targets, BCT_FRIEND)) != NULL);
+							break;
+						case MST_MASTER:
+							if (mbl == NULL)
 								continue;
-						flag=condition_container->test(targets);
-						break;
-					case MST_RANDOM:
-						bl=(battle_getenemy(&md->bl, DEFAULT_ENEMY_TYPE(md),
-							skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true)));
-						targets[MST_TARGET]=bl;
-						//no break
-					default:
-						flag=condition_container->test(targets);
-						break;
-							}
-				} else {
-					ShowError("mob_skill_db:Invalid expanded condition '%s' for mobid %d skill %d-removing from db\n", ms[i]->literal_cond2, md->mob_id, ms[i]->skill_id);
-					md->db->skill.erase(md->db->skill.begin()+i);
+							flag = condition_container->test(targets);
+							break;
+						case MST_RANDOM:
+							flag = ((bl = mob_getifconditions(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), condition_container, targets, BCT_ENEMY)) != NULL);
+
+							break;
+						default:
+							if (bl)
+								flag = condition_container->test(targets);
+							break;
+						}
+					} else {
+						ShowError("mob_skill_db:Invalid expanded condition '%s' for mobid %d skill %d-removing from db\n", ms[i]->literal_cond2, md->mob_id, ms[i]->skill_id);
+						md->db->skill.erase(md->db->skill.begin() + i);
 						flag = 0;
 					}
 					break;
 				}
+				}
+			}
+			catch (std::exception& e) {
+				ShowError("%s\n", e.what());
+				continue;
 			}
 		}
+		
 		if (!flag)
 			continue; //Skill requisite failed to be fulfilled.
 
@@ -5824,276 +5887,258 @@ uint64 MobSummonDatabase::parseBodyNode(const YAML::Node &node) {
 	return 1;
 }
 namespace expanded_ai {
-	using namespace std;
-	using YAML::Node;
-	using predicate_t=std::function<bool(std::map<short,block_list*>)>;
-	using comparator_t=std::function<bool(int,int)>;
-	using inverter_t=std::function<bool(bool)>;
-	using pConditionNode_t=std::shared_ptr<expanded_ai::ConditionNode<block_list,inverter_t>>;
-	using pConditionNode_iterator_t=typename std::vector<pConditionNode_t>::const_iterator;
-	using logicFunction_t=std::function<bool(pConditionNode_iterator_t,pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>)>;
-
-
-	namespace {
-		pair<comparator_t,int> getComparatorAndValue(string v) {
-			int value;
-			std::pair<comparator_t,int> cvpair;
-			std::size_t valueEndPos=v.find('%');
-
-			if(v[0] == '>') {
-				if(v[1] == '=') {
-					value=stoi(v.substr(2,valueEndPos)); // offset 2
-					cvpair=std::pair<comparator_t,int>(std::greater_equal<int>(),value);
-				} else {
-					value=stoi(v.substr(1,valueEndPos));
-					cvpair=std::pair<comparator_t,int>(std::greater<int>(),value);
-				}
-			} else if(v[0] == '<') {
-				if(v[1] == '=') {
-					value=stoi(v.substr(2,valueEndPos));
-					cvpair=std::pair<comparator_t,int>(std::less_equal<int>(),value);
-				} else {
-					value=stoi(v.substr(1,valueEndPos));
-					cvpair=std::pair<comparator_t,int>(std::less<int>(),value);
-				}
-			} else if(v[0] == '=') {
-				value=stoi(v.substr(1,valueEndPos));
-				cvpair=std::pair<comparator_t,int>(std::equal_to<int>(),value);
-			} else {
-				value=stoi(v.substr(0,valueEndPos)); // offset 2
-				cvpair=std::pair<comparator_t,int>(std::equal_to<int>(),value);
-			}
-
-			return cvpair;
-
-
-		}
-
-		bool fillWithElement(int& element,string& suffix) {
-			for(const auto& pair:um_eleid2elename) {
-				char firstLetter=tolower(pair.first[0]);
-				string ele_str=firstLetter+pair.first.substr(1); //ex: neutral,water
-				if((suffix.find(ele_str)) != string::npos) { // is an element condition
-					suffix=suffix.substr(ele_str.length());//result is armor, attack or resist
-					element=pair.second;
-					return true;
-				}
-			}
-			return false;
-		}
-		template <class Container>
-		void split(const std::string& str,Container& cont,char delim) {
-			std::size_t current,previous=0;
-			current=str.find(delim);
-			while(current != std::string::npos) {
-				cont.push_back(str.substr(previous,current-previous));
-				previous=current+1;
-				current=str.find(delim,previous);
-			}
-			cont.push_back(str.substr(previous,current-previous));
-		}
-
-		void createNodesLoop(const Node& sequence,std::shared_ptr<ConditionContainer<block_list,inverter_t>> CTContainer) {
-			for(size_t i=0;i<sequence.size();i++) { // loop through each node
-				std::shared_ptr<ConditionNode<block_list,inverter_t>> conditionNode;
-				try{
-					conditionNode=createConditionNode(sequence[i]);
-				} catch(std::invalid_argument ia){
-					continue;
-				}
-				if(conditionNode == nullptr)
-					continue;
-
-				CTContainer->push_back(conditionNode);
-			}
+using YAML::Node;
+using std::string;
+using std::vector;
+namespace {
+bool fillWithElement(int& element,string& suffix) {
+	for(const auto& pair:um_eleid2elename) {
+		char firstLetter=tolower(pair.first[0]);
+		string ele_str=firstLetter+pair.first.substr(1); //ex: neutral,water
+		if((suffix.find(ele_str)) != string::npos) { // is an element condition
+			suffix=suffix.substr(ele_str.length());//result is armor, attack or resist
+			element=pair.second;
+			return true;
 		}
 	}
-
-
-
-	template <class TTargetType,
-		class TInverter>
-		void ConditionContainer<TTargetType,TInverter>::push_back(std::shared_ptr<ConditionNode<TTargetType,TInverter>> conditionNode) {
-		this->nodes.push_back(conditionNode);
+	return false;
+}
+template <class Container>
+void split(const std::string& str,Container& cont,char delim) {
+	std::size_t current,previous=0;
+	current=str.find(delim);
+	while(current != std::string::npos) {
+		cont.push_back(str.substr(previous,current-previous));
+		previous=current+1;
+		current=str.find(delim,previous);
 	}
-
-	template <class TTargetType,
-		class TInverter,
-		class TPredicate>
-		bool ConditionTester<TTargetType,TInverter,TPredicate>::test(const std::map<short,TTargetType*>& targets) {
-		return this->inverter(this->predicate(targets));
-	}
-
-	template <class TTargetType,
-		class TInverter>
-		bool ConditionContainer<TTargetType,TInverter>::test(const std::map<short,TTargetType*>& targets) {
-		return this->inverter(this->logicFunction(nodes.cbegin(),nodes.cend(),[&](const auto& it) {return it->test(targets);}));
-	}
-
-	template <class TTargetType,class TInverter>
-	shared_ptr<ConditionContainer<TTargetType,TInverter>> findContainerAndResetInverter(const vector<string>& v){
-		inverter_t inverter;
-		comparator_t comparator;
-		shared_ptr<ConditionContainer<TTargetType,TInverter>> pStoredContainer;
-		if(v.size()==1){
-			pStoredContainer=mob_expanded_ai_conditions_db.find(v[0]);
-			if(pStoredContainer != nullptr)
-				pStoredContainer->inverter=[](bool result) {return result;};
-		} else if(v.size()==2 && v[0] == "not"){
-			pStoredContainer=mob_expanded_ai_conditions_db.find(v[1]);
-			if(pStoredContainer != nullptr)
-				pStoredContainer->inverter=[](bool result) {return !result;};
-		}
-		return pStoredContainer;
-	}
-
-	template <class TTargetType,class TInverter,class TPredicate>
-	shared_ptr<ConditionTester<TTargetType,TInverter,TPredicate>> createConditionTester(vector<string>& container,const string& line){
-		inverter_t inverter = createInverter(container,line); // modifies container
-		if(inverter==nullptr)
-			return nullptr;
-		predicate_t conditionTesterPredicate=createPredicate(container,line);
-		if(conditionTesterPredicate == nullptr)
-			return nullptr;
-
-		shared_ptr<ConditionTester<TTargetType,TInverter,TPredicate>> pTester;
-		pTester=std::make_shared<ConditionTester<block_list,inverter_t,predicate_t>>(inverter,conditionTesterPredicate);
-		return pTester;
-	}
-	inverter_t createInverter(vector<string>& container,const string& line){
-		if(container[0] == "not") {
-			return [](bool result) {return !result;};
-		} else if(container.size() >= 4){
-			ShowError("mob_expanded_conditions_db: syntax error in '%s', correct format is '[not](space)target(space)test(space)[[><[=]]value]' \n",line.c_str());
-			return nullptr;
-		}
-		return [](bool result) {return result;};
-
-	}
-	predicate_t createPredicate(vector<string>& container,const string& line) {
-		inverter_t inverter;
-		comparator_t comparator;
-		if(container[0] == "not")
-			container.erase(container.begin());
-		std::string target_str=container[0];
+	cont.push_back(str.substr(previous,current-previous));
+}
 
 
-		std::string field=container[1];
-		std::pair<comparator_t,int> comparatorValuePair;
-		int value;
-		if(container.size() == 3) {
-			try {
-				comparatorValuePair=getComparatorAndValue(container[2]);
-			} catch(const std::invalid_argument& ia) {
-				ShowError("mob_expanded_conditions_db: in line '%s' \n",line.c_str());
-				return nullptr;
-			}
-			value=comparatorValuePair.second;
-			comparator=comparatorValuePair.first;
-		} else{
-			value=0;
-			comparator=std::greater<int>();
-		}
+}//namespace
 
-		short target;
-		try {
-			target=skill_target_name2enumid.at(target_str);
-		} catch(const std::out_of_range& ia) {
-			ShowError("mob_expanded_conditions_db: wrong target %s in line '%s' \n",target_str,line.c_str());
-			return nullptr;
-		}
+void ConditionContainer::push_back(std::shared_ptr<ConditionNode> conditionNode) {
+	this->nodes.push_back(conditionNode);
+}
 
-		if(field == "percenthealth") {
-			return  predicates::percent_health<comparator_t>(target,comparator,value);
-		} else if(field == "health")
-			return  predicates::health<comparator_t>(target,comparator,value);
-		else if(um_cellname2cellid.count(field)) {
-			value=um_cellname2cellid.at(field);
-			return  predicates::cell(target,static_cast<cell_chk>(value));
-		} else if(field == "job")
-			return  predicates::job<comparator_t>(target,comparator,value);
-		else if(field == "range")
-			return  predicates::attack_range<comparator_t>(target,comparator,value);
-		else if(field == "distance")
-			return  predicates::target_distance<comparator_t>(target,comparator,value);
-		else if(field == "target_distance_ally")
-			return  predicates::target_distance_from_ally<comparator_t>(target,comparator,value);
-		else if(field == "target_distance_master")
-			return  predicates::target_distance_from_master<comparator_t>(target,comparator,value);
-		else if(um_statusname2id.count(field)) {  // status
-			value=um_statusname2id.at(field);
-			return  predicates::status(target,value);
-		} else if(field == "reflectphy")
-			return  predicates::physical_reflect<comparator_t>(target,comparator,value);
-		else  {
-			int element=0;
-			if(fillWithElement(element,field)) {// modifies parameters
-				if(field == "armor" || field == "")
-					return  predicates::element_armor<comparator_t>(target,comparator,element,value);
-				if(field == "attack")
-					return  predicates::element_attack(target,element);
-				if(field == "resist")
-					return  predicates::element_resist<comparator_t>(target,comparator,element,value);
-			}
-		}
-		ShowError("mob_expanded_conditions_db: '%s' is invalid \n",line.c_str());
-		return nullptr;
+bool ConditionTest::test(const std::map<e_mob_skill_target,block_list*>& targets) {
+	return this->inverter(this->predicate(targets));
+}
 
-	}
-	void checkLineAndFormat(const string& line,vector<string>& container){
+bool ConditionContainer::test(const std::map<e_mob_skill_target,block_list*>& targets) {
+	return this->inverter(this->logicFunction(nodes.cbegin(),nodes.cend(),[&](const auto& it) {return it->test(targets);}));
+}
 
-		split<vector<string>>(line,container,' ');
-		if(container.size() >4|| container.size()<1) {
-			ShowError("mob_expanded_conditions_db: line with %d words in '%s' \n",container.size(),line.c_str());
-			throw std::invalid_argument(line);
-		}
-	}
 
-	std::shared_ptr<ConditionNode<block_list,inverter_t>> createConditionNode(const Node& node) {
-		using pConditionNode_t=shared_ptr<ConditionNode<block_list,inverter_t>>;
-		using pConditionNode_iterator_t=typename vector<pConditionNode_t>::const_iterator;
-		using logicFunction_t=std::function<bool(pConditionNode_iterator_t,pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>)>;
-		shared_ptr<ConditionContainer<block_list,inverter_t>> pContainer;
-		logicFunction_t logicFunction;
-		if(node.IsMap()) {
-			const auto& pair=node.begin();// there is only one pair per map
-			const string key=pair->first.as<string>();
+std::pair<comparator_t, int> getComparatorAndValue(const string& v) {
+	int value;
+	std::pair<comparator_t, int> cvpair;
+	std::size_t valueEndPos = v.find('%');
 
-			if(key == "or") {
-				logicFunction=std::any_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else if(key == "and") {
-				logicFunction=std::all_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else if(key == "nand") {
-				logicFunction=any_false_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else if(key == "nor") {
-				logicFunction=std::none_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else if(key == "xor") {
-				logicFunction=one_only<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else if(key == "nxor") {
-				logicFunction=all_or_none<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
-			} else
-				;//error
-			pContainer=make_shared<ConditionContainer<block_list,inverter_t>>([](bool result){return result;},logicFunction);
-			const auto& sequence=pair->second.as<Node>();
-			createNodesLoop(sequence,pContainer);
-			return pContainer;
+	if (v[0] == '>') {
+		if (v[1] == '=') {
+			value = std::stoi(v.substr(2, valueEndPos)); // offset 2
+			cvpair = std::pair<comparator_t, int>(std::greater_equal<int>(), value);
 		} else {
-			string conditionTestLine = node.as<string>();
-			vector<string> v;
+			value = std::stoi(v.substr(1, valueEndPos));
+			cvpair = std::pair<comparator_t, int>(std::greater<int>(), value);
+		}
+	} else if (v[0] == '<') {
+		if (v[1] == '=') {
+			value = std::stoi(v.substr(2, valueEndPos));
+			cvpair = std::pair<comparator_t, int>(std::less_equal<int>(), value);
+		} else {
+			value = std::stoi(v.substr(1, valueEndPos));
+			cvpair = std::pair<comparator_t, int>(std::less<int>(), value);
+		}
+	} else if (v[0] == '=') {
+		value = std::stoi(v.substr(1, valueEndPos));
+		cvpair = std::pair<comparator_t, int>(std::equal_to<int>(), value);
+	} else {
+		value = std::stoi(v.substr(0, valueEndPos)); // offset 2
+		cvpair = std::pair<comparator_t, int>(std::equal_to<int>(), value);
+	}
 
-			checkLineAndFormat(conditionTestLine,v); // throws exception invalid_argument
+	return cvpair;
 
-			pContainer=findContainerAndResetInverter<block_list,inverter_t>(v);
-			if(pContainer != nullptr)
-				return pContainer;
-			//Node is new single test;
-			shared_ptr<ConditionTester<block_list,inverter_t,predicate_t>> pCondition_tester;
-			pCondition_tester=createConditionTester<block_list,inverter_t,predicate_t>(v,conditionTestLine);
 
-			return pCondition_tester;
+}
+
+
+
+predicate_t createPredicate(vector<string>& container,const string& line) {
+	inverter_t inverter;
+	comparator_t comparator;
+	if(container[0] == "not")
+		container.erase(container.begin());
+	std::string target_str=container[0];
+	std::string field=container[1];
+	std::pair<comparator_t,int> comparatorValuePair;
+	int value;
+	if(container.size() == 3) {
+		try {
+			comparatorValuePair=getComparatorAndValue(container[2]);
+		} catch(const std::invalid_argument& ia) {
+			throw ExpandedConditionParsingError(line);
+		}
+		value=comparatorValuePair.second;
+		comparator=comparatorValuePair.first;
+	} else{
+		value=0;
+		comparator=std::greater<int>();
+	}
+
+	e_mob_skill_target target;
+	try {
+		target=skill_target_name2enumid.at(target_str);
+	} catch(const std::out_of_range& ia) {
+		throw ExpandedConditionParsingError("wrong target " + target_str + " '" + line + "'");
+	}
+
+	if(field == "percenthealth") {
+		return  predicates::percent_health<comparator_t>(target,comparator,value);
+	} else if(field == "health")
+		return  predicates::health<comparator_t>(target,comparator,value);
+	else if(um_cellname2cellid.count(field)) {
+		return  predicates::cell(target, um_cellname2cellid.at(field));
+	} else if(field == "job")
+		return  predicates::job<comparator_t>(target,comparator,value);
+	else if(field == "range")
+		return  predicates::attack_range<comparator_t>(target,comparator,value);
+	else if(field == "distance")
+		return  predicates::target_distance<comparator_t>(target,comparator,value);
+	else if(field == "target_distance_friend")
+		return  predicates::target_distance_from_ally<comparator_t>(target,comparator,value);
+	else if(field == "target_distance_master")
+		return  predicates::target_distance_from_master<comparator_t>(target,comparator,value);
+	else if(um_statusname2id.count(field)) {  // status
+		return  predicates::status(target, um_statusname2id.at(field));
+	} else if(field == "reflectphy")
+		return  predicates::physical_reflect<comparator_t>(target,comparator,value);
+	else  {
+		int element=0;
+		if(fillWithElement(element,field)) {// modifies parameters
+			if(field == "armor" || field == "")
+				return  predicates::element_armor<comparator_t>(target,comparator,element,value);
+			if(field == "attack")
+				return  predicates::element_attack(target,element);
+			if(field == "resist")
+				return  predicates::element_resist<comparator_t>(target,comparator,element,value);
+		}
+	}
+	throw ExpandedConditionParsingError(line);
+	
+
+}
+
+inverter_t createInverter(vector<string>& container, const string& line) {
+	if (container[0] == "not") {
+		return [](bool result) {return !result; };
+	} else if (container.size() >= 4) {
+		throw ExpandedConditionParsingError(line);
+	}
+	return [](bool result) {return result; };
+}
+
+std::shared_ptr<ConditionTest> createConditionTester(vector<string>& container, const string& line) {
+	inverter_t inverter = createInverter(container, line); // modifies container
+	predicate_t conditionTesterPredicate = createPredicate(container, line);
+	return std::make_shared<ConditionTest>(inverter, conditionTesterPredicate);
+}
+
+std::shared_ptr<ConditionContainer> findContainerAndResetInverter(const vector<string>& v) {
+	inverter_t inverter;
+	comparator_t comparator;
+	std::shared_ptr<ConditionContainer> pStoredContainer;
+	if (v.size() == 1) {
+		pStoredContainer = mob_expanded_ai_conditions_db.find(v[0]);
+		if (pStoredContainer == nullptr)
+			throw ExpandedConditionParsingError(v[0]);
+		pStoredContainer->inverter = [](bool result) {return result; };
+	} else if (v.size() == 2 && v[0] == "not") {
+		pStoredContainer = mob_expanded_ai_conditions_db.find(v[1]);
+		if (pStoredContainer == nullptr)
+			throw ExpandedConditionParsingError(v[1]);
+		pStoredContainer->inverter = [](bool result) {return !result; };
+	}
+	return pStoredContainer;
+}
+
+void parseLineAndFill(const string& line, vector<string>& container) {
+
+	split<vector<string>>(line, container, ' ');
+	if (container.size() > 4 || container.size() < 1) {
+		throw ExpandedConditionParsingError(line);
+	}
+}
+
+std::shared_ptr<ConditionNode> createConditionNode(const Node& node,const string& entry_name) {
+
+	std::shared_ptr<ConditionContainer> pContainer;
+	logicGateFunc_t logicFunction;
+	if(node.IsMap()) { // All maps should be logic gates
+		const auto& pair=node.begin();// there is only one pair per map
+		const string key=pair->first.as<string>();
+
+		if(key == "or") {
+			logicFunction=std::any_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else if(key == "and") {
+			logicFunction=std::all_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else if(key == "nand") {
+			logicFunction=any_false_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else if(key == "nor") {
+			logicFunction=std::none_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else if(key == "xor") {
+			logicFunction=one_only<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else if(key == "nxor") {
+			logicFunction=all_or_none<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+		} else
+			throw ExpandedConditionParsingError(key);
+		
+		pContainer = std::make_shared<ConditionContainer>([](bool result) {return result; }, logicFunction);
+		const auto& sequence=pair->second.as<Node>();
+		loopThroughSequenceAndCreateConditionNodes(sequence,pContainer,entry_name);
+		return pContainer;
+	} else {
+		string conditionTestLine = node.as<string>();
+		vector<string> v;
+
+		parseLineAndFill(conditionTestLine,v); 
+
+		pContainer = findContainerAndResetInverter(v);
+		if (pContainer != nullptr)
+			return pContainer;
+		//Node is new single test;
+		std::shared_ptr<ConditionTest> pCondition_tester;
+		pCondition_tester = createConditionTester(v, conditionTestLine);
+
+		return pCondition_tester;
+	}
+}
+
+void loopThroughSequenceAndCreateConditionNodes(const Node& node, std::shared_ptr<ConditionContainer> conditionContainer,const string& entry_name) {
+	for (size_t i = 0; i < node.size(); i++) { // loop through each node
+		std::shared_ptr<ConditionNode> conditionNode;
+		try {
+			conditionNode = createConditionNode(node[i],entry_name.c_str());
+			conditionContainer->push_back(conditionNode);
+		}
+		catch (const ExpandedConditionParsingError& ecpe) {
+			ShowError("%s for entry %s\n",ecpe.what(),entry_name.c_str());
+		}
+		catch (const std::exception e) {
+			ShowError("%s for entry %s\n", e.what(), entry_name.c_str());
 		}
 	}
 }
+const std::string ExpandedConditionParsingError::build_what(const std::string& msg) {
+
+	std::stringstream output;
+	output << "mob_expanded_conditions_db error: " << msg;
+	return output.str();
+}
+} // namespace expanded_ai
 
 /**
 *Reads and parses an entry from the mob_expanded_ai_conditions_db.
@@ -6101,23 +6146,25 @@ namespace expanded_ai {
  * @return count of successfully parsed entries
  */
 uint64 MobExpandedAiConditionsDatabase::parseBodyNode(const YAML::Node &node) {
-	using pConditionNode_t=std::shared_ptr<expanded_ai::ConditionNode<block_list,inverter_t>>;
-	using pConditionNode_iterator_t=typename std::vector<pConditionNode_t>::const_iterator;
-	using logicFunction_t=std::function<bool(pConditionNode_iterator_t,pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>)>;
+	using namespace expanded_ai;
 
-	const auto entry=node.begin(); // All expanded conditions are single element maps, so we just have to use begin() to get that only pair.
+	// All expanded conditions are single pair element maps, so we just have to use begin() to get that only pair.
+	const auto entry=node.begin(); 
+
 	const std::string& expanded_condition_name=entry->first.as<std::string>();
-	// sequence of strings and maps
-	const auto& first_seq_of_conditions=entry->second.as<YAML::Node>();
-	logicFunction_t logicFunction=std::all_of<pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>>;
+
+	//Each element of the sequence is either a string or a single element map<string,"sequence">
+	const auto& sequence=entry->second.as<YAML::Node>();
+
+	//First container is an implicit "and" gate.
+	logicGateFunc_t gateFunc = std::all_of<pConditionNode_iterator_t, std::function<bool(pConditionNode_t)>>;
+
 	// Main condition testers container.
-	std::shared_ptr<expanded_ai::ConditionContainer<block_list,inverter_t>> main_container=std::make_shared<expanded_ai::ConditionContainer<block_list,inverter_t>>([](bool result){return result;},logicFunction);
-	//adds the first inner conditions under a first implicit "and"
-	
-	main_container->inverter=[](bool result){return result;};
-	expanded_ai::createNodesLoop(first_seq_of_conditions,main_container);
-				
-	mob_expanded_ai_conditions_db.put(expanded_condition_name, main_container);
+	std::shared_ptr<ConditionContainer> main_container=std::make_shared<ConditionContainer>([](bool result){return result;},gateFunc);
+
+	main_container->inverter=[](bool result){return result;};	//Dummy yes gate
+	loopThroughSequenceAndCreateConditionNodes(sequence, main_container,expanded_condition_name); //Contains recursive calls for each logic gates
+   	mob_expanded_ai_conditions_db.put(expanded_condition_name, main_container);
 	return 1;
 }
 
@@ -6303,11 +6350,12 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 
 	//Cond1
 	const std::string& str_cond = str[10];
-	if (mob_skill_condition2name.count(str_cond))
-		ms->cond1=mob_skill_condition2name.at(str_cond);
-	else {
+	try {
+		ms->cond1 = mob_skill_condition2name.at(str_cond);
+	}
+	catch (std::out_of_range oor) {
 		ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition 1 %s for %d\n", str_cond, mob_id);
-		ms->cond1 = -1;
+		return false;
 	}
 
 	//Cond2

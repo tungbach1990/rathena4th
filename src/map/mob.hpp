@@ -186,286 +186,194 @@ enum e_aegis_monsterclass : int8 {
 	CLASS_MAX,
 };
 
+enum e_mob_skill_target {
+	MST_TARGET = 0,
+	MST_RANDOM,	//Random Target!
+	MST_SELF,
+	MST_FRIEND,
+	MST_MASTER,
+	MST_AROUND5,
+	MST_AROUND6,
+	MST_AROUND7,
+	MST_AROUND8,
+	MST_AROUND1,
+	MST_AROUND2,
+	MST_AROUND3,
+	MST_AROUND4,
+	MST_AROUND = MST_AROUND4,
+};
+enum e_mob_skill_condition {
+	MSC_ALWAYS = 0x0000,
+	MSC_MYHPLTMAXRATE,
+	MSC_MYHPINRATE,
+	MSC_FRIENDHPLTMAXRATE,
+	MSC_FRIENDHPINRATE,
+	MSC_MYSTATUSON,
+	MSC_MYSTATUSOFF,
+	MSC_FRIENDSTATUSON,
+	MSC_FRIENDSTATUSOFF,
+	MSC_ENEMYSTATUSON,
+	MSC_ENEMYSTATUSOFF,
+	MSC_ATTACKPCGT,
+	MSC_ATTACKPCGE,
+	MSC_SLAVELT,
+	MSC_SLAVELE,
+	MSC_CLOSEDATTACKED,
+	MSC_LONGRANGEATTACKED,
+	MSC_AFTERSKILL,
+	MSC_SKILLUSED,
+	MSC_CASTTARGETED,
+	MSC_RUDEATTACKED,
+	MSC_MASTERHPLTMAXRATE,
+	MSC_MASTERSTATUSON,
+	MSC_MASTERSTATUSOFF,
+	MSC_MASTERATTACKED,
+	MSC_ALCHEMIST,
+	MSC_SPAWN,
+	MSC_EXPANDED
+};
+
+
 struct s_mob_skill {
 	enum MobSkillState state;
 	uint16 skill_id,skill_lv;
 	short permillage;
 	int casttime,delay;
 	short cancel;
-	short cond1;
+	e_mob_skill_condition cond1;
 	short cond2;
 	std::string literal_cond2; // For expanded conditions
-	short target;
+	e_mob_skill_target target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
 };
 
+
 namespace expanded_ai {
-	using namespace std;
 
 
-	template <class _InIt,class _Pr>
-	inline bool one_only(_InIt _First,_InIt _Last,_Pr _Pred) {
-		// test if all elements satisfy _Pred
-		std::_Adl_verify_range(_First,_Last);
-		auto _UFirst = std::_Get_unwrapped(_First);
-		const auto _ULast = std::_Get_unwrapped(_Last);
-		bool isOneTrue = (false);
-		for(; _UFirst != _ULast; ++_UFirst) {
-			if(_Pred(*_UFirst)){
-				if(!isOneTrue)
-					isOneTrue = (true);
-				else
-					return (false);
-			}
-		}
-		return (isOneTrue);
-	}
-
-	template<class _InIt,
-		class _Pr>
-		_NODISCARD inline bool any_false_of(const _InIt _First,const _InIt _Last,_Pr _Pred)
-	{	// test if any element satisfies _Pred
-		_Adl_verify_range(_First,_Last);
-		auto _UFirst = _Get_unwrapped(_First);
-		const auto _ULast = _Get_unwrapped(_Last);
-		for(; _UFirst != _ULast; ++_UFirst)
-		{
-			if(!_Pred(*_UFirst))
-				return (true);
-		}
-		return (false);
-	}
-
-	template <class _InIt,class _Pr>
-	inline bool all_or_none(_InIt _First,_InIt _Last,_Pr _Pred) {
-		// test if all elements satisfy _Pred
-		std::_Adl_verify_range(_First,_Last);
-		auto _UFirst = std::_Get_unwrapped(_First);
-		const auto _ULast = std::_Get_unwrapped(_Last);
-		bool first = _Pred(*_UFirst);
-		++_UFirst;
-		for(; _UFirst != _ULast; ++_UFirst) {
-			if(_Pred(*_UFirst) != (first))
-				return (false);
-		}
-		return (true);
-	}
-
-
-	template <class TTargetType,class TInverter>
-	struct ConditionNode {
-	public:
-		TInverter inverter;
-		ConditionNode(TInverter inverter) : inverter{inverter} {}
-		virtual bool test(const std::map<short,TTargetType*>& targets) = 0;
-	};
-
-	template <class TTargetType,class TInverter,class TPredicate>
-	struct ConditionTester: public ConditionNode<TTargetType, TInverter> {
-		TPredicate predicate;
-		ConditionTester(TInverter inverter,TPredicate predicate):ConditionNode(inverter),predicate{predicate}{}
-		bool test(const std::map<short,TTargetType*>& targets) override;
-	};
-
-	template <class TTargetType,class TInverter>
-	struct ConditionContainer: public ConditionNode<TTargetType,TInverter> {
-		using pConditionNode_t = shared_ptr<ConditionNode<TTargetType,TInverter>>;
-		using pConditionNode_iterator_t = typename vector<pConditionNode_t>::const_iterator;
-		using logicFunction_t=std::function<bool(pConditionNode_iterator_t,pConditionNode_iterator_t,std::function<bool(pConditionNode_t)>)>;
-		std::vector<pConditionNode_t> nodes;
-		logicFunction_t logicFunction;
-		ConditionContainer(TInverter inverter,logicFunction_t logicFunction):ConditionNode(inverter),logicFunction{ logicFunction }{}
-		void push_back(std::shared_ptr<ConditionNode<TTargetType,TInverter>> conditionNode);
-		bool test(const std::map<short,TTargetType*>& targets) override;
-	};
-
-	using inverter_t=std::function<bool(bool)>;
-	using predicate_t = std::function<bool(std::map<short,block_list*>)>;
-
-	std::shared_ptr<ConditionNode<block_list,inverter_t>> createConditionNode(const YAML::Node& node);
-	predicate_t createPredicate(std::vector<string>&,const std::string& nodeLine);
-	inverter_t createInverter(const std::vector<string>& container,const std::string& line);
-	template <class TTargetType,class TInverter,class TPredicate>
-	shared_ptr<ConditionTester<TTargetType,TInverter,TPredicate>> createConditionTester(const std::vector<string>& container,const std::string& line);
-	namespace predicates {
-
-		struct default_predicate {
-			short target_type_id;
-			default_predicate() {}
-			default_predicate(short target_type_id): target_type_id{target_type_id}{}
-			inline bool operator()(const std::map<short,block_list*> targets) {
-				return true;
-			}
-		};
-		template <class TComparator>
-		struct percent_health: public default_predicate {
-			TComparator comparator;
-			int threshold;
-			percent_health(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				block_list* target = targets.at(target_type_id);
-				return this->comparator(get_percentage(status_get_hp(target),status_get_max_hp(target)),this->threshold);
-			}
-		};
-		template <class TComparator>
-		struct health: public default_predicate {
-			TComparator comparator;
-			int threshold;
-			health(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return this->comparator(status_get_hp(targets.at(target_type_id)),this->threshold);
-			}
-		};
-
-		template <class TComparator>
-		struct element_armor: public default_predicate {
-			TComparator comparator;
-			short element;
-			short level;
-			element_armor(short target_type_id,TComparator comparator,short element,short level): default_predicate(target_type_id),comparator{comparator},element{element},level{level}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				block_list* target = targets.at(target_type_id);
-				return status_get_element(target) == element
-					&& this->comparator(status_get_element_level(target),level);
-			}
-		};
-		struct element_attack: public default_predicate {
-			short element;
-			element_attack(short target_type_id,short element): default_predicate(target_type_id),element{element}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return status_get_attack_element(targets.at(target_type_id)) == this->element;
-			}
-		};
-		template <class TComparator>
-		struct element_resist: public default_predicate {
-			TComparator comparator;
-			short element;
-			int threshold;
-			element_resist(short target_type_id,TComparator comparator,short element,int threshold): default_predicate(target_type_id),comparator{comparator},element{element},threshold{threshold}{
-			}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				map_session_data* sd;
-				if(sd = BL_CAST(BL_PC,targets.at(target_type_id)))
-					return comparator(sd->indexed_bonus.subele_script[element],threshold);
-				else
-					return comparator(0,threshold); // 0 until mob elemental resistance feature is added
-			}
-		};
-		struct cell: public default_predicate {
-			cell_chk mCell;
-			cell(short target_type_id,cell_chk cell): default_predicate(target_type_id),mCell{mCell}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				block_list* target = targets.at(target_type_id);
-				return map_getcell(target->m,target->x,target->y,mCell);
-			}
-		};
-		struct status: public default_predicate {
-			int mStatus;
-			status(short target_type_id,int mStatus): default_predicate(target_type_id),mStatus{mStatus}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return status_get_sc(targets.at(target_type_id))->data[mStatus] != NULL;
-			}
-		};
-		template <class TComparator>
-		struct job: public default_predicate {
-			TComparator comparator;
-			int job;
-			job(short target_type_id,TComparator comparator,int job): default_predicate(target_type_id),comparator{comparator},job{job}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return status_get_class(targets.at(target_type_id)) == job;
-			}
-		};
-		template <class TComparator>
-		struct attack_range: public default_predicate {
-			TComparator comparator;
-			int range;
-			attack_range(short target_type_id,TComparator comparator,int range): default_predicate(target_type_id),comparator{comparator},range{range}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return this->comparator(status_get_range(targets.at(target_type_id)),this->range);
-			}
-		};
-		template <class TComparator>
-		struct target_distance: public default_predicate {
-			TComparator comparator;
-			int mDistance; // Conflict with distance_bl macro if named distance 
-			target_distance(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return comparator(distance_bl(targets.at(MST_SELF),targets.at(target_type_id)),this->mDistance);
-			}
-		};
-		template <class TComparator>
-		struct target_distance_from_ally: public default_predicate {
-			TComparator comparator;
-			int mDistance;
-			target_distance_from_ally(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return comparator(distance_bl(targets.at(MST_FRIEND),targets.at(target_type_id)),this->mDistance);
-			}
-		};
-		template <class TComparator>
-		struct target_distance_from_master: public default_predicate {
-			TComparator comparator;
-			int mDistance;
-			target_distance_from_master(short target_type_id,TComparator comparator,int mDistance): default_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				return comparator(distance_bl(targets.at(MST_MASTER),targets.at(target_type_id)),this->mDistance);
-			}
-		};
-		template <class TComparator>
-		struct physical_reflect: public default_predicate {
-			TComparator comparator;
-			int threshold;
-			physical_reflect(short target_type_id,TComparator comparator,int threshold): default_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
-			inline bool operator()(const std::map<short,block_list*>& targets) {
-				int totalReflect=0;
-				block_list* target = targets.at(target_type_id);
-				status_change *sc = status_get_sc(target);
-				if(sc->data[SC_REFLECTSHIELD])
-					totalReflect+=sc->data[SC_REFLECTSHIELD]->val2;
-				map_session_data* ssd = BL_CAST(BL_PC,target);
-				if(ssd && ssd->bonus.short_weapon_damage_return != 0)
-					totalReflect+=ssd->bonus.short_weapon_damage_return;
-				return comparator(totalReflect,this->threshold);
-			}
-		};
-
-
-	}
-
-	class ConditionLooper {
-	public:
-		bool get_status(std::map<short,block_list*> targets) { return false; };
-		bool get_status(block_list*) {
-			return false;
-		}
-	};
-
-	class ConditionLooperClassic:public ConditionLooper {
-	private:
-		bool invertResult;
-		int cond2;
-
-
-	public:
-		ConditionLooperClassic(bool t1,int c2):invertResult{t1},cond2{c2}{}
-		bool get_status(block_list*);
-	};
-
-	class ConditionLooperExpanded:public ConditionLooper {
-	private:
-		std::shared_ptr<ConditionContainer<block_list,inverter_t>> CTcontainer;
-		std::map<short,block_list*> targets;
-	public:
-		ConditionLooperExpanded(std::shared_ptr<ConditionContainer<block_list,inverter_t>> g,std::map<short,block_list*> tar):CTcontainer{g},targets{tar}{}
-		//	bool operator()(block_list*);
-		bool get_status(block_list*bl);
-
-	};
-}
 using inverter_t=std::function<bool(bool)>;
-class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ConditionContainer<block_list,inverter_t>> {
+using predicate_t = std::function<bool(std::map<e_mob_skill_target,block_list*>)>;
+
+
+struct ConditionNode {
+public:
+	inverter_t inverter;
+	ConditionNode(inverter_t inverter): inverter{inverter} {}
+
+	/// <summary>
+	/// Calls the predicate(s) on the targets matching its/their stored targets ids
+	/// </summary>
+	/// <param name="targets"> : map filled with surrounding potential targets for the predicate(s)</param>
+	/// <returns>the predicate test</returns>
+	virtual bool test(const std::map<e_mob_skill_target,block_list*>& targets) = 0;
+};
+
+struct ConditionTest: public ConditionNode {
+	//
+	predicate_t predicate;
+	ConditionTest(inverter_t inverter,predicate_t predicate):ConditionNode(inverter),predicate{predicate}{}
+
+	/**
+	 * @brief Calls the predicate on the targets matching its stored targets ids
+	 * @param targets  map filled with surrounding potential targets for the predicate
+	 * @return the predicate test result
+	*/
+	bool test(const std::map<e_mob_skill_target,block_list*>& targets) override;
+};
+//Alias for comparator predicates such as greater, greater_equal
+using comparator_t = std::function<bool(int, int)>;
+//Pointer to the base class that can be either a condition tester or a container of tests
+using pConditionNode_t = std::shared_ptr<ConditionNode>;
+//Short way to ConditionNode const_iterator
+using pConditionNode_iterator_t = typename std::vector<pConditionNode_t>::const_iterator;
+//Representation of a logic gate such as NAND,XOR
+using logicGateFunc_t = std::function<bool(pConditionNode_iterator_t, pConditionNode_iterator_t, std::function<bool(pConditionNode_t)>)>;
+/**/
+class ConditionContainer: public ConditionNode {
+private:
+	std::vector<std::shared_ptr<ConditionNode>> nodes;
+	logicGateFunc_t logicFunction;
+public:
+	ConditionContainer(inverter_t inverter, logicGateFunc_t logicFunction) :ConditionNode(inverter), logicFunction{ logicFunction }{}
+	/**
+	 * @brief
+	 * @param conditionNode
+	*/
+	void push_back(std::shared_ptr<ConditionNode> conditionNode);
+	/**
+	 * @brief
+	 * @param targets
+	 * @return
+	*/
+	bool test(const std::map<e_mob_skill_target, block_list*>& targets) override;
+};
+class ExpandedConditionParsingError : public std::runtime_error {
+private:
+	std::string msg;
+	static const std::string build_what(const std::string& msg);
+public:
+	ExpandedConditionParsingError(const std::string& msg_) : std::runtime_error(build_what(msg_)), msg(msg_) {}
+	ExpandedConditionParsingError(const ExpandedConditionParsingError&) = default;
+};
+/**
+ * @brief
+ * @param compAndValue
+ * @return
+*/
+std::pair<comparator_t, int> getComparatorAndValue(const std::string& compAndValue);
+/**
+ * @brief
+ * @param container
+ * @param line
+ * @return
+*/
+predicate_t createPredicate(std::vector<std::string>& container, const std::string& line);
+/**
+ * @brief 
+ * @param container 
+ * @param line 
+ * @return 
+*/
+inverter_t createInverter(std::vector<std::string>& container, const std::string& line);
+/**
+ * @brief 
+ * @param container 
+ * @param line 
+ * @return 
+*/
+std::shared_ptr<ConditionTest> createConditionTester(std::vector<std::string>& container, const std::string& line);
+/**
+ * @brief 
+ * @param v 
+ * @return 
+*/
+std::shared_ptr<ConditionContainer> findContainerAndResetInverter(const std::vector<std::string>& v);
+/**
+ * @brief 
+ * @param line 
+ * @param container 
+*/
+void parseLineAndFill(const std::string& line, std::vector<std::string>& container);
+/**
+ * @brief 
+ * @param node 
+ * @param entry_name 
+ * @return 
+*/
+std::shared_ptr<ConditionNode> createConditionNode(const YAML::Node& node, const std::string& entry_name);
+/**
+ * @brief Convert each element of the yaml sequence to a ConditionNode element
+ * @param node Sequence's element that will be parsed
+ * @param conditionContainer Container element. Can hold ConditionTester elements or its own kind
+ * @param entry_name 
+*/
+void loopThroughSequenceAndCreateConditionNodes(const YAML::Node& node, std::shared_ptr<ConditionContainer>conditionContainer,const std::string& entry_name );
+
+}//namespace ai_expanded
+
+class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ConditionContainer> {
 public:
 	MobExpandedAiConditionsDatabase(): TypesafeYamlDatabase("MOB_EXPANDED_AI_CONDITIONS_DB",1) {}
 	const std::string getDefaultLocation();
@@ -655,52 +563,7 @@ public:
 	uint64 parseBodyNode(const YAML::Node &node);
 };
 
-enum e_mob_skill_target {
-	MST_TARGET	=	0,
-	MST_RANDOM,	//Random Target!
-	MST_SELF,
-	MST_FRIEND,
-	MST_MASTER,
-	MST_AROUND5,
-	MST_AROUND6,
-	MST_AROUND7,
-	MST_AROUND8,
-	MST_AROUND1,
-	MST_AROUND2,
-	MST_AROUND3,
-	MST_AROUND4,
-	MST_AROUND	=	MST_AROUND4,
-};
-enum e_mob_skill_condition {
-	MSC_ALWAYS	=	0x0000,
-	MSC_MYHPLTMAXRATE,
-	MSC_MYHPINRATE,
-	MSC_FRIENDHPLTMAXRATE,
-	MSC_FRIENDHPINRATE,
-	MSC_MYSTATUSON,
-	MSC_MYSTATUSOFF,
-	MSC_FRIENDSTATUSON,
-	MSC_FRIENDSTATUSOFF,
-	MSC_ENEMYSTATUSON,
-	MSC_ENEMYSTATUSOFF,
-	MSC_ATTACKPCGT,
-	MSC_ATTACKPCGE,
-	MSC_SLAVELT,
-	MSC_SLAVELE,
-	MSC_CLOSEDATTACKED,
-	MSC_LONGRANGEATTACKED,
-	MSC_AFTERSKILL,
-	MSC_SKILLUSED,
-	MSC_CASTTARGETED,
-	MSC_RUDEATTACKED,
-	MSC_MASTERHPLTMAXRATE,
-	MSC_MASTERSTATUSON,
-	MSC_MASTERSTATUSOFF,
-	MSC_MASTERATTACKED,
-	MSC_ALCHEMIST,
-	MSC_SPAWN,
-	MSC_EXPANDED
-};
+
 // The data structures for storing delayed item drops
 struct item_drop {
 	struct item item_data;
