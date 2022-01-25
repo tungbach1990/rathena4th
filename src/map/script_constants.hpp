@@ -8077,6 +8077,7 @@
 	export_constant(MD_NORANDOMWALK);
 	export_constant(MD_NOCAST);
 	export_constant(MD_CANATTACK);
+	export_constant(MD_SKILLONLY);
 	export_constant(MD_CASTSENSORCHASE);
 	export_constant(MD_CHANGECHASE);
 	export_constant(MD_ANGRY);
@@ -8091,6 +8092,7 @@
 	export_constant(MD_IGNOREMISC);
 	export_constant(MD_KNOCKBACKIMMUNE);
 	export_constant(MD_TELEPORTBLOCK);
+	export_constant(MD_PCSKILLBEHAVIOR);
 	export_constant(MD_FIXEDITEMDROP);
 	export_constant(MD_DETECTOR);
 	export_constant(MD_STATUSIMMUNE);
