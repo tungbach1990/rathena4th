@@ -1,25 +1,3 @@
-##Format:
-## - arbitraryname1:
-##     target:          ##current targeted enemy
-##       cond1: val
-##       cond2: val
-##       exclude:
-##         cond3: val
-##         cond4: val
-##       cond5: val
-##       friend:
-##         cond1: val
-##         cond2: val
-##         exclude:
-##           cond3: val
-##           cond4: val
-##         cond5: val
-##       self:
-##         cond6: val
-## - arbitraryname2:
-##       etc...
-## Don't forget to leave a space " " after a ":"
-
 Header:
   Type: MOB_EXPANDED_AI_CONDITIONS_DB
   Version: 1

@@ -3966,7 +3966,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 			flag = 1; //Trigger skill.
 		else if (ms[i]->cond1 == MSC_SKILLUSED)
 			flag = ((event & 0xffff) == MSC_SKILLUSED && ((event >> 16) == c2 || c2 == 0));
-		else if (event == -1) {
+		else if(event == -1) {
 			//Avoid entering on defined events to avoid "hyper-active skill use" due to the overflow of calls to this function in battle.
 
 			switch (ms[i]->cond1)
@@ -4179,9 +4179,9 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 		if (!(battle_config.mob_ai & 0x200)) { //pass on delay to same skill.
 			for (int j = 0; j < ms.size(); j++)
 				if (ms[j]->skill_id == ms[i]->skill_id)
-					md->skilldelay[j] = tick;
+					md->skilldelay[j]=tick;
 		} else
-			md->skilldelay[i] = tick;
+			md->skilldelay[i]=tick;
 		map_freeblock_unlock();
 		return 1;
 	}
@@ -4393,7 +4393,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 			} else if (inf&INF_SUPPORT_SKILL) {
 				ms->target = MST_FRIEND;
 				ms->cond1 = MSC_FRIENDHPLTMAXRATE;
-				ms->cond2= 90 ;
+				ms->cond2 = 90;
 				if (skill_id == AL_HEAL)
 					ms->permillage = 5000; //Higher skill rate usage for heal.
 				else if (skill_id == ALL_RESURRECTION)
@@ -6413,7 +6413,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	if (um_mobskillstatename2id.count(str_state))
 		ms->state=um_mobskillstatename2id.at(str_state);
 	else {
-		ShowError("mob_parse_row_mobskilldb: Unrecognized state '%s' in line %d\n", str_state, current);
+		ShowError("mob_parse_row_mobskilldb: Unrecognized state '%s' in line %d\n", str[2], current);
 		return false;
 	}
 

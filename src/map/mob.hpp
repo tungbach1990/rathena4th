@@ -443,7 +443,9 @@ private:
 	bool parseDropNode(std::string nodeName, YAML::Node node, uint8 max, s_mob_drop *drops);
 
 public:
-	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
+	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {
+
+	}
 
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const YAML::Node &node) override;
