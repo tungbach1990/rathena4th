@@ -374,9 +374,13 @@ struct s_mob_chat {
 
 class MobChatDatabase : public TypesafeYamlDatabase<uint16, s_mob_chat> {
 public:
-	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {}
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
+
+	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {
+
+	}
+
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode(const YAML::Node &node) override;
 };
 
 struct s_mob_item_drop_ratio {
@@ -387,9 +391,13 @@ struct s_mob_item_drop_ratio {
 
 class MobItemRatioDatabase : public TypesafeYamlDatabase<t_itemid, s_mob_item_drop_ratio> {
 public:
-	MobItemRatioDatabase() : TypesafeYamlDatabase("MOB_ITEM_RATIO_DB", 1) {}
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
+	MobItemRatioDatabase() : TypesafeYamlDatabase("MOB_ITEM_RATIO_DB", 1) {
+
+	}
+
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode(const YAML::Node &node) override;
+
 };
 
 struct spawn_info {
@@ -437,9 +445,9 @@ private:
 public:
 	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
 
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
-	void loadingFinished();
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode(const YAML::Node &node) override;
+	void loadingFinished() override;
 };
 
 extern MobDatabase mob_db;
@@ -521,9 +529,9 @@ public:
 
 	}
 
-	void clear() { };
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node& node);
+	void clear() override{ };
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode(const YAML::Node& node) override;
 };
 
 struct s_randomsummon_entry {
@@ -543,8 +551,8 @@ public:
 
 	}
 
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode(const YAML::Node &node) override;
 };
 
 
