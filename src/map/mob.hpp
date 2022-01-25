@@ -14,6 +14,7 @@
 #include "status.hpp" // struct status data, struct status_change
 #include "unit.hpp" // unit_stop_walking(), unit_stop_attack()
 #include <functional>
+
 struct guardian_data;
 
 //This is the distance at which @autoloot works,
@@ -242,7 +243,7 @@ struct s_mob_skill {
 	short cancel;
 	e_mob_skill_condition cond1;
 	short cond2;
-	std::string literal_cond2; // For expanded conditions
+	std::string expanded_cond; // For expanded conditions
 	e_mob_skill_target target;
 	int val[5];
 	short emotion;
@@ -251,64 +252,100 @@ struct s_mob_skill {
 
 
 namespace expanded_ai {
-
-
+/// This represent the type of either an active or disabled inverter.
 using inverter_t=std::function<bool(bool)>;
-using predicate_t = std::function<bool(std::map<e_mob_skill_target,block_list*>)>;
+struct ExpandedCondition;
 
 
-struct ConditionNode {
+/**
+ * @brief : logic gate function wrapper for increased readability
+*/
+class LogicGate {
 public:
-	inverter_t inverter;
-	ConditionNode(inverter_t inverter): inverter{inverter} {}
-
-	/// <summary>
-	/// Calls the predicate(s) on the targets matching its/their stored targets ids
-	/// </summary>
-	/// <param name="targets"> : map filled with surrounding potential targets for the predicate(s)</param>
-	/// <returns>the predicate test</returns>
-	virtual bool test(const std::map<e_mob_skill_target,block_list*>& targets) = 0;
+	LogicGate() {}
+	/**
+	 * @brief Maps a name to a logic gate.
+	*/
+	static std::shared_ptr<LogicGate> getLogicGate(const std::string& name);
+	/**
+	 * @brief Applies the logical tests on the condition group
+	 * @param conditions The conditions to put through the gate
+	 * @param targets : targets of the condition tests
+	 * @return result of the test
+	*/
+	virtual bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> conditions, const std::map<e_mob_skill_target, block_list*>& targets) const = 0;
 };
 
-struct ConditionTest: public ConditionNode {
-	//
-	predicate_t predicate;
-	ConditionTest(inverter_t inverter,predicate_t predicate):ConditionNode(inverter),predicate{predicate}{}
+class ExpandedCondition{
+protected:
+	/// Disabled by default
+	inverter_t inverter = [](bool keptResult) {return keptResult; };
+public:
+	const std::string name;
+	ExpandedCondition(std::string name) :name{ name }{}
+	ExpandedCondition(std::string name, inverter_t inverter) :name{ name },inverter { inverter }{}
+
+    /**
+     * @brief The main function that will try to parse the yaml line.
+     * @param node : the yaml line to parse into a condition
+     * @return Either a simple condition, a stored or newly made container
+    */
+	static std::shared_ptr<ExpandedCondition> createExpandedCondition(const YAML::Node& node);
+	/**
+	 * @brief Calls the predicate(s) on the targets matching its/their stored targets ids
+	 * @param targets map filled with surrounding potential targets for the predicate(s)
+	 * @return the predicate test
+	*/
+	virtual bool test(const std::map<e_mob_skill_target,block_list*>& targets) const = 0;
 
 	/**
-	 * @brief Calls the predicate on the targets matching its stored targets ids
-	 * @param targets  map filled with surrounding potential targets for the predicate
-	 * @return the predicate test result
+	 * @brief Setter to use when a container is reused by another and would need to be inverted
+	 * @param inverter 
 	*/
-	bool test(const std::map<e_mob_skill_target,block_list*>& targets) override;
+	void setInverter(inverter_t inverter);
+
+
 };
-//Alias for comparator predicates such as greater, greater_equal
-using comparator_t = std::function<bool(int, int)>;
-//Pointer to the base class that can be either a condition tester or a container of tests
-using pConditionNode_t = std::shared_ptr<ConditionNode>;
-//Short way to ConditionNode const_iterator
-using pConditionNode_iterator_t = typename std::vector<pConditionNode_t>::const_iterator;
-//Representation of a logic gate such as NAND,XOR
-using logicGateFunc_t = std::function<bool(pConditionNode_iterator_t, pConditionNode_iterator_t, std::function<bool(pConditionNode_t)>)>;
-/**/
-class ConditionContainer: public ConditionNode {
+template <class TPredicate>
+class SingleCondition: public ExpandedCondition {
 private:
-	std::vector<std::shared_ptr<ConditionNode>> nodes;
-	logicGateFunc_t logicFunction;
+	std::shared_ptr<TPredicate> predicate;
 public:
-	ConditionContainer(inverter_t inverter, logicGateFunc_t logicFunction) :ConditionNode(inverter), logicFunction{ logicFunction }{}
-	/**
-	 * @brief
-	 * @param conditionNode
-	*/
-	void push_back(std::shared_ptr<ConditionNode> conditionNode);
-	/**
-	 * @brief
-	 * @param targets
-	 * @return
-	*/
-	bool test(const std::map<e_mob_skill_target, block_list*>& targets) override;
+	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate) :ExpandedCondition(name,inverter),predicate{ predicate }{}
+	bool test(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+
 };
+
+///Condition Container.
+class ConditionContainer : public ExpandedCondition {
+private:
+	std::vector<std::shared_ptr<ExpandedCondition>> nodes;
+	std::shared_ptr<LogicGate> logicGate;
+
+public:
+	ConditionContainer(std::string name, std::shared_ptr<LogicGate> logicGate) :ExpandedCondition(name), logicGate{ logicGate }{}
+	/**
+	 * @brief Loops through the conditions and if they are containers call that fonction recursively
+	 * @param targets : The potential targets against which will be tested the conditions
+	 * @return The final outcome after going through the logic gates.
+	*/
+	bool test(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+
+	/**
+	 * @brief Convert each element of the yaml sequence to a ExpandedCondition element
+	 * @param node Sequence's element that will be parsed
+	 * @param conditionContainer Container element. Can hold ConditionTester elements or its own kind
+	 * @param entry_name
+	*/
+	void parseAndPushBackExpandedConditions(const YAML::Node& node);
+};
+/**
+ * @brief Parses a string that will be used to create the conditions. Depends on string to ids maps
+ * @param line : Node's fields to be parsed
+ * @return : uMap with parsed fields
+*/
+std::unordered_map<std::string, std::string> parseFields(const std::string& line);
+
 class ExpandedConditionParsingError : public std::runtime_error {
 private:
 	std::string msg;
@@ -317,65 +354,14 @@ public:
 	ExpandedConditionParsingError(const std::string& msg_) : std::runtime_error(build_what(msg_)), msg(msg_) {}
 	ExpandedConditionParsingError(const ExpandedConditionParsingError&) = default;
 };
-/**
- * @brief
- * @param compAndValue
- * @return
-*/
-std::pair<comparator_t, int> getComparatorAndValue(const std::string& compAndValue);
-/**
- * @brief
- * @param container
- * @param line
- * @return
-*/
-predicate_t createPredicate(std::vector<std::string>& container, const std::string& line);
-/**
- * @brief 
- * @param container 
- * @param line 
- * @return 
-*/
-inverter_t createInverter(std::vector<std::string>& container, const std::string& line);
-/**
- * @brief 
- * @param container 
- * @param line 
- * @return 
-*/
-std::shared_ptr<ConditionTest> createConditionTester(std::vector<std::string>& container, const std::string& line);
-/**
- * @brief 
- * @param v 
- * @return 
-*/
-std::shared_ptr<ConditionContainer> findContainerAndResetInverter(const std::vector<std::string>& v);
-/**
- * @brief 
- * @param line 
- * @param container 
-*/
-void parseLineAndFill(const std::string& line, std::vector<std::string>& container);
-/**
- * @brief 
- * @param node 
- * @param entry_name 
- * @return 
-*/
-std::shared_ptr<ConditionNode> createConditionNode(const YAML::Node& node, const std::string& entry_name);
-/**
- * @brief Convert each element of the yaml sequence to a ConditionNode element
- * @param node Sequence's element that will be parsed
- * @param conditionContainer Container element. Can hold ConditionTester elements or its own kind
- * @param entry_name 
-*/
-void loopThroughSequenceAndCreateConditionNodes(const YAML::Node& node, std::shared_ptr<ConditionContainer>conditionContainer,const std::string& entry_name );
-
 }//namespace ai_expanded
 
-class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ConditionContainer> {
+
+class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ExpandedCondition> {
 public:
-	MobExpandedAiConditionsDatabase(): TypesafeYamlDatabase("MOB_EXPANDED_AI_CONDITIONS_DB",1) {}
+	MobExpandedAiConditionsDatabase(): TypesafeYamlDatabase("MOB_EXPANDED_AI_CONDITIONS_DB",1) {
+		
+	}
 	const std::string getDefaultLocation();
 	uint64 parseBodyNode(const YAML::Node &node);
 };
@@ -449,9 +435,7 @@ private:
 	bool parseDropNode(std::string nodeName, YAML::Node node, uint8 max, s_mob_drop *drops);
 
 public:
-	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {
-
-	}
+	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
 
 	const std::string getDefaultLocation();
 	uint64 parseBodyNode(const YAML::Node &node);
