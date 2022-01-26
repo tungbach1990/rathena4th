@@ -5382,6 +5382,8 @@ static bool mob_read_sqldb_sub(std::vector<std::string> str) {
 	if (!str[++index].empty())
 		modes["CanAttack"] = std::stoi(str[index]) ? "true" : "false";
 	if (!str[++index].empty())
+		modes["SkillOnly"] = std::stoi(str[index]) ? "true" : "false";
+	if (!str[++index].empty())
 		modes["CastSensorChase"] = std::stoi(str[index]) ? "true" : "false";
 	if (!str[++index].empty())
 		modes["ChangeChase"] = std::stoi(str[index]) ? "true" : "false";
@@ -5409,6 +5411,8 @@ static bool mob_read_sqldb_sub(std::vector<std::string> str) {
 		modes["KnockBackImmune"] = std::stoi(str[index]) ? "true" : "false";
 	if (!str[++index].empty())
 		modes["TeleportBlock"] = std::stoi(str[index]) ? "true" : "false";
+	if (!str[++index].empty())
+		modes["PcSkillBehavior"] = std::stoi(str[index]) ? "true" : "false";
 	if (!str[++index].empty())
 		modes["FixedItemDrop"] = std::stoi(str[index]) ? "true" : "false";
 	if (!str[++index].empty())

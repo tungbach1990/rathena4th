@@ -2452,18 +2452,31 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 	}
 
 	//Skill Range Criteria
-	if (battle_config.skillrange_by_distance &&
+	if (!(status_get_mode(src) & MD_PCSKILLBEHAVIOR) && battle_config.skillrange_by_distance &&
 		(src->type&battle_config.skillrange_by_distance)
 	) { //based on distance between src/target [Skotlex]
 		if (check_distance_bl(src, target, 3))
 			return BF_SHORT;
 		return BF_LONG;
 	}
-
+	
 	//based on used skill's range
-	if (skill_get_range2(src, skill_id, skill_lv, true) < 4)
-		return BF_SHORT;
-	return BF_LONG;
+	switch (skill_id) {
+		case NPC_PULSESTRIKE:
+		case NPC_HELLJUDGEMENT:
+		case NPC_ICEBREATH:
+		case NPC_THUNDERBREATH:
+		case NPC_FIREBREATH:
+		case NPC_ACIDBREATH:
+			if (check_distance_bl(src, target, 3))
+				return BF_SHORT;
+			return BF_LONG;
+		default:
+			if (skill_get_range2(src, skill_id, skill_lv, true) < 4)
+				return BF_SHORT;
+			return BF_LONG;
+	}
+
 }
 
 static int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id)
