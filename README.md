@@ -107,6 +107,13 @@ Then you have to add skill condition in the usual mob_skill_db.yml, with the lab
 1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,friend,expanded,friendcellempty,,,,,,,
 1637,Margaretha Sorin@PR_STRECOVERY,any,72,1,10000,1000,10000,no,friend,expanded,friendrecoverable,,,,,,,
 ```
+Then, in mob_db you can add the new mods that go particulary well with increased ai : 
+```
+    Modes:
+      SkillOnly: true
+      PcSkillBehavior: true     
+```
+SkillOnly will force the mob to always use skills, making him play more like players do, and PcSkillBehavior will make its skills be either ranged/melee depending on the range and not distance, as players' behave.
 Bonus : a crazy asura condition complex, try to figure out what it does ;-)
 ```
  - asura:
@@ -123,4 +130,5 @@ Bonus : a crazy asura condition complex, try to figure out what it does ;-)
        - enemy neutralresist >=50%
        - enemy ghostarmor >0
 ```
-`
+
+
