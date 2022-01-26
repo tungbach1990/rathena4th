@@ -81,7 +81,7 @@ Installation : copy mob_expanded_ai_conditions_db.yml from import-tmpl onto impo
 There are already some pre-defined entries.
 
 example : inside mob_expanded_ai_conditions_db.yml
-
+```
  - friendrecoverable:
    - or:
      - friend sleep    
@@ -100,15 +100,15 @@ example : inside mob_expanded_ai_conditions_db.yml
    - not friend pneuma
    - not friend landprotector
    - not friend icewall
-
+```
 Then you have to add skill condition in the usual mob_skill_db.yml, with the label "expanded"
-
+```
 1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,self,expanded,selfcellempty,,,,,,,
 1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,friend,expanded,friendcellempty,,,,,,,
 1637,Margaretha Sorin@PR_STRECOVERY,any,72,1,10000,1000,10000,no,friend,expanded,friendrecoverable,,,,,,,
-
+```
 Bonus : a crazy asura condition complex, try to figure out what it does ;-)
-
+```
  - asura:
 #   - self spiritball >=5 # to be implemented
    - self explosionspirits
@@ -122,4 +122,5 @@ Bonus : a crazy asura condition complex, try to figure out what it does ;-)
      - nxor :
        - enemy neutralresist >=50%
        - enemy ghostarmor >0
-
+```
+`
