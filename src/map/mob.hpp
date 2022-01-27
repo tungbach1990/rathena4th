@@ -254,7 +254,7 @@ struct s_mob_skill {
 namespace expanded_ai {
 /// This represent the type of either an active or disabled inverter.
 using inverter_t=std::function<bool(bool)>;
-struct ExpandedCondition;
+class ExpandedCondition;
 
 
 /**
@@ -277,13 +277,9 @@ public:
 };
 
 class ExpandedCondition{
-protected:
-	/// Disabled by default
-	inverter_t inverter = [](bool keptResult) {return keptResult; };
 public:
 	const std::string name;
 	ExpandedCondition(std::string name) :name{ name }{}
-	ExpandedCondition(std::string name, inverter_t inverter) :name{ name },inverter { inverter }{}
 
     /**
      * @brief The main function that will try to parse the yaml line.
@@ -296,23 +292,23 @@ public:
 	 * @param targets map filled with surrounding potential targets for the predicate(s)
 	 * @return the predicate test
 	*/
-	virtual bool test(const std::map<e_mob_skill_target,block_list*>& targets) const = 0;
+	virtual bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) const = 0;
 
-	/**
-	 * @brief Setter to use when a container is reused by another and would need to be inverted
-	 * @param inverter 
-	*/
-	void setInverter(inverter_t inverter);
 
 
 };
 template <class TPredicate>
 class SingleCondition: public ExpandedCondition {
 private:
+	/**
+	 * @brief A test function object that is either a simple parsed line or a wrapper for a stored condition container which can be inverted
+	*/
 	std::shared_ptr<TPredicate> predicate;
+	inverter_t inverter;
+
 public:
-	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate) :ExpandedCondition(name,inverter),predicate{ predicate }{}
-	bool test(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate) :ExpandedCondition(name), inverter{ inverter }, predicate{ predicate }{}
+	bool operator()(const std::map<e_mob_skill_target, block_list*>& targets)const override;
 
 };
 
@@ -325,11 +321,9 @@ private:
 public:
 	ConditionContainer(std::string name, std::shared_ptr<LogicGate> logicGate) :ExpandedCondition(name), logicGate{ logicGate }{}
 	/**
-	 * @brief Loops through the conditions and if they are containers call that fonction recursively
-	 * @param targets : The potential targets against which will be tested the conditions
-	 * @return The final outcome after going through the logic gates.
+	 * @brief  Loops through the conditions. Some of them can be wrappers of already stored containers with an inverter set.
 	*/
-	bool test(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+	bool operator()(const std::map<e_mob_skill_target, block_list*>& targets)const override;
 
 	/**
 	 * @brief Convert each element of the yaml sequence to a ExpandedCondition element
