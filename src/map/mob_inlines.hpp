@@ -270,7 +270,7 @@ class LogicalAND : public LogicGate {
 public:
 	LogicalAND(){}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override  {
-		return std::all_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return std::all_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 
@@ -278,35 +278,35 @@ class LogicalOR : public LogicGate {
 public:
 	LogicalOR(){}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override  {
-		return std::any_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return std::any_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 class LogicalNAND : public LogicGate {
 public:
 	LogicalNAND() {}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override {
-		return any_false_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return any_false_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 class LogicalNOR : public LogicGate {
 public:
 	LogicalNOR() {}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override {
-		return std::none_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return std::none_of(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 class LogicalXOR : public LogicGate {
 public:
 	LogicalXOR() {}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override {
-		return one_only(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return one_only(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 class LogicalNXOR : public LogicGate {
 public:
 	LogicalNXOR() {}
 	inline bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> nodes, const std::map<e_mob_skill_target, block_list*>& targets)const override {
-		return all_or_none(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return it->test(targets); });
+		return all_or_none(nodes.cbegin(), nodes.cend(), [&](const auto& it) {return (*it)(targets); });
 	}
 };
 }//logic_gates

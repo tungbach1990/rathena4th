@@ -3847,7 +3847,7 @@ int mob_get_under_condition_sub(struct block_list* bl, va_list ap) {
 		targets[MST_TARGET] = bl;
 	if (btarget == BCT_FRIEND)
 		targets[MST_FRIEND] = bl;
-	if (expanded_condition->test(targets)) // Starts the loop amongst expanded conditions
+	if ((*expanded_condition)(targets)) // Starts the loop amongst expanded conditions
 		bl_list[(*c)++] = bl;
 
 	return 0;
@@ -4061,7 +4061,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 				std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition = mob_expanded_ai_conditions_db.find(ms[i]->expanded_cond);
 				
 				if ((expanded_condition) != nullptr) {	
-					int maxmobs = ms[i]->val[0];
+					int minmobs = ms[i]->val[0];
+					int maxmobs = ms[i]->val[1];
 					int qts = 0;
 					block_list** bl_list = nullptr;
 					e_battle_check_target e_battle = BCT_ENEMY;
@@ -4069,9 +4070,12 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					case MST_FRIEND:
 						e_battle = BCT_FRIEND;
 					case MST_RANDOM:
-						maxmobs = maxmobs >= 1 ? maxmobs : 1;
+						minmobs = minmobs >= 1 ? minmobs : 1;
+						maxmobs = maxmobs >= 1 ? maxmobs : 24;
+						if (maxmobs < minmobs)
+							maxmobs = minmobs = 1;
 						
-						if ((bl_list = mob_get_all_under_condition(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), expanded_condition, targets, e_battle, &qts)) != NULL && qts >= maxmobs) {
+						if ((bl_list = mob_get_all_under_condition(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), expanded_condition, targets, e_battle, &qts)) != NULL && qts >= minmobs && qts <= maxmobs) {
 							bl = bl_list[rnd() % qts];
 							flag = 1;
 						} else
@@ -4089,7 +4093,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					case MST_SELF:	
 						bl = &md->bl;
 					default: // MST_TARGET
-						flag = expanded_condition->test(targets);
+						flag = (*expanded_condition)(targets);
 						break;
 					}
 				} else {
@@ -5940,12 +5944,12 @@ using namespace std;
 using namespace logic_gates;
 
 template <class TPredicate>
-bool SingleCondition<TPredicate>::test(const std::map<e_mob_skill_target, block_list*>& targets) const {
+bool SingleCondition<TPredicate>::operator()(const std::map<e_mob_skill_target, block_list*>& targets) const {
 	return inverter((*predicate)(targets));
 }
 
-bool ConditionContainer::test(const std::map<e_mob_skill_target, block_list*>& targets) const {
-	return inverter((*logicGate)(nodes, targets));
+bool ConditionContainer::operator()(const std::map<e_mob_skill_target, block_list*>& targets) const {
+	return (*logicGate)(nodes, targets);
 }
 
 namespace {
@@ -6109,14 +6113,14 @@ shared_ptr<SingleCondition<predicates::condition_predicate>> createSingleConditi
 	return make_shared<SingleCondition<predicates::condition_predicate>>(parsed_fields.at("predicate"), inverter, predicate);
 }
 
-shared_ptr<ExpandedCondition> findIfExistsInDatabase(unordered_map<string, string>& parsedFields) {
+shared_ptr<SingleCondition<ExpandedCondition>> findIfExistsInDatabase(unordered_map<string, string>& parsedFields) {
 	std::shared_ptr<ExpandedCondition> storedCondition;
+	shared_ptr<SingleCondition<ExpandedCondition>> wrappedCondition;
 	if (parsedFields.count("stored")) {
 		storedCondition = mob_expanded_ai_conditions_db.find(parsedFields.at("stored"));
-		if (parsedFields.count("inverter"))
-			storedCondition->setInverter(createInverter(parsedFields));
+		wrappedCondition = make_shared<SingleCondition<ExpandedCondition>>(storedCondition->name, createInverter(parsedFields), storedCondition);
 	}
-	return storedCondition;
+	return wrappedCondition;
 }
 }// namespace
 
@@ -6237,10 +6241,10 @@ shared_ptr<ExpandedCondition> ExpandedCondition::createExpandedCondition(const Y
 	} else {
 		unordered_map<string, string> parsedFields = parseFields(node.as<string>());
 
-		//First search for an existing container.
-		shared_ptr<ExpandedCondition> expandedCondition = findIfExistsInDatabase(parsedFields);
-		if (expandedCondition != nullptr)
-			return expandedCondition;
+		//First search for an existing container and wrap it inside a SingleCondition
+		shared_ptr<SingleCondition<ExpandedCondition>> storedCondition = findIfExistsInDatabase(parsedFields);
+		if (storedCondition != nullptr)
+			return storedCondition;
 
 		else {
 			// Try to parse the node into a single condition test;
@@ -6265,9 +6269,6 @@ void ConditionContainer::parseAndPushBackExpandedConditions(const Node& node) {
 	}
 }
 
-void ExpandedCondition::setInverter(inverter_t inverter){
-	this->inverter = inverter;
-}
 const std::string ExpandedConditionParsingError::build_what(const std::string& msg) {
 
 	std::stringstream output;
