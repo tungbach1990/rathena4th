@@ -4067,34 +4067,34 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					block_list** bl_list = nullptr;
 					e_battle_check_target e_battle = BCT_ENEMY;
 					switch (skill_target) {
-					case MST_FRIEND:
-						e_battle = BCT_FRIEND;
-					case MST_RANDOM:
-						minmobs = minmobs >= 1 ? minmobs : 1;
-						maxmobs = maxmobs >= 1 ? maxmobs : 24;
-						if (maxmobs < minmobs)
-							maxmobs = minmobs = 1;
-						
-						if ((bl_list = mob_get_all_under_condition(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), expanded_condition, targets, e_battle, &qts)) != NULL && qts >= minmobs && qts <= maxmobs) {
-							bl = bl_list[rnd() % qts];
-							flag = 1;
-						} else
-							flag = 0;
-						break;
-					case MST_MASTER:
-						if (mbl == nullptr)
-							continue;
-						bl = mbl;
-					case MST_AROUND5:
-					case MST_AROUND6:
-					case MST_AROUND7:
-					case MST_AROUND8:
-						bl = map_id2bl(md->target_id);
-					case MST_SELF:	
-						bl = &md->bl;
-					default: // MST_TARGET
-						flag = (*expanded_condition)(targets);
-						break;
+						case MST_FRIEND:
+							e_battle = BCT_FRIEND;
+						case MST_RANDOM:
+							minmobs = minmobs >= 1 ? minmobs : 1;
+							maxmobs = maxmobs >= 1 ? maxmobs : 24;
+							if (maxmobs < minmobs)
+								maxmobs = minmobs = 1;
+
+							if ((bl_list = mob_get_all_under_condition(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), expanded_condition, targets, e_battle, &qts)) != NULL && qts >= minmobs && qts <= maxmobs) {
+								bl = bl_list[rnd() % qts];
+								flag = 1;
+							} else
+								flag = 0;
+							break;
+						case MST_MASTER:
+							if (mbl == nullptr)
+								continue;
+							bl = mbl;
+							flag = (*expanded_condition)(targets);
+							break;
+						case MST_SELF:
+							bl = &md->bl;
+							flag = (*expanded_condition)(targets);
+							break;
+						default:
+							bl = map_id2bl(md->target_id);
+							flag = (*expanded_condition)(targets);
+							break;
 					}
 				} else {
 					ShowError("mob_skill_db:Invalid expanded condition '%s' for mobid %d skill %d-removing from db\n", ms[i]->expanded_cond, md->mob_id, ms[i]->skill_id);
