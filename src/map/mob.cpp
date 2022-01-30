@@ -3848,43 +3848,22 @@ int mob_get_under_condition_sub(struct block_list* bl, va_list ap) {
 	if (btarget == BCT_FRIEND)
 		targets[MST_FRIEND] = bl;
 	if ((*expanded_condition)(targets)) // Starts the loop amongst expanded conditions
-		bl_list[(*c)++] = bl;
+			bl_list[(*c)++] = bl;
 
 	return 0;
 }
-block_list* mob_get_under_condition(struct mob_data* md, int range,std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition,
-	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction) {
 
-	struct block_list *bl_list[24];
-	int c = 0;
-	memset(bl_list, 0, sizeof(bl_list));
-	map_foreachinallrange(mob_get_under_condition_sub, &md->bl, range, BL_PC | BL_MOB | BL_MER, bl_list, &c, md, expanded_condition, targets, target_faction);
 
-	if ( c == 0 )
-		return NULL;
+bool mob_get_all_under_condition(struct mob_data* md, int range, std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition,
+	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction, block_list** bl_list, int* c,int min, int max) {
 
-	if( c > 24 )
-		c = 24;
-
-	return bl_list[rnd()%c];
-
-}
-
-block_list** mob_get_all_under_condition(struct mob_data* md, int range, std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition,
-	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction, int* c) {
-
-	struct block_list* bl_list[24];
-	
-	memset(bl_list, 0, sizeof(bl_list));
-	map_foreachinallrange(mob_get_under_condition_sub, &md->bl, range, BL_PC | BL_MOB | BL_MER, bl_list, c, md, expanded_condition, targets, target_faction);
-
+	map_foreachinallrange(mob_get_under_condition_sub, &md->bl, range, BL_PC | BL_MOB | BL_MER, bl_list,c, md, expanded_condition, targets, target_faction);
 	if (*c == 0)
-		return NULL;
-
+		return false;
 	if (*c > 24)
 		*c = 24;
 
-	return bl_list;
+	return true;
 
 }
 
@@ -3916,7 +3895,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 {
 	struct block_list *fbl = nullptr; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
 	struct block_list *mbl= nullptr; // Master bl //
-	struct block_list* bl = nullptr;
+	struct block_list* tbl = nullptr; // Mob's current target
+	struct block_list* bl = nullptr; // Skill final target
 	
 	e_mob_skill_target skill_target;
 
@@ -3935,6 +3915,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 	int i = battle_config.mob_ai&0x100?rnd()%ms.size():0;
 	for (int n = 0; n < ms.size(); i++, n++) {
 		bl = nullptr;
+		tbl = nullptr;
 		fbl = nullptr;
 		mbl = nullptr;
 		int flag=0;
@@ -4053,8 +4034,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 			case MSC_EXPANDED:
 			{
 				std::map<e_mob_skill_target, block_list*> targets;
-				if ((bl = map_id2bl(md->target_id)) != NULL)
-					targets[MST_TARGET] = bl;
+				if ((tbl = map_id2bl(md->target_id)) != NULL)
+					targets[MST_TARGET] = tbl;
 				if ((mbl = map_id2bl(md->master_id)) != NULL)
 					targets[MST_MASTER] = mbl;
 				targets[MST_SELF] = &md->bl;					
@@ -4064,18 +4045,25 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 					int minmobs = ms[i]->val[0];
 					int maxmobs = ms[i]->val[1];
 					int qts = 0;
-					block_list** bl_list = nullptr;
+					const int mob_limit = 24;
+					int skill_range = skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true);
+					struct block_list* bl_list[mob_limit];
+					memset(bl_list, 0, sizeof(bl_list));
+
 					e_battle_check_target e_battle = BCT_ENEMY;
 					switch (skill_target) {
 						case MST_FRIEND:
 							e_battle = BCT_FRIEND;
 						case MST_RANDOM:
 							minmobs = minmobs >= 1 ? minmobs : 1;
-							maxmobs = maxmobs >= 1 ? maxmobs : 24;
+							maxmobs = maxmobs >= 1 ? maxmobs : mob_limit;
 							if (maxmobs < minmobs)
 								maxmobs = minmobs = 1;
 
-							if ((bl_list = mob_get_all_under_condition(md, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true), expanded_condition, targets, e_battle, &qts)) != NULL && qts >= minmobs && qts <= maxmobs) {
+							if (mob_get_all_under_condition(md, skill_range,expanded_condition, targets, e_battle, bl_list,&qts,minmobs,maxmobs)
+								&& qts >= minmobs
+								&& qts <= maxmobs)
+							{
 								bl = bl_list[rnd() % qts];
 								flag = 1;
 							} else
@@ -4092,7 +4080,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 							flag = (*expanded_condition)(targets);
 							break;
 						default:
-							bl = map_id2bl(md->target_id);
+							bl = tbl;
 							flag = (*expanded_condition)(targets);
 							break;
 					}
