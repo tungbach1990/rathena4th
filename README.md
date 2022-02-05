@@ -14,6 +14,7 @@
 4. [More Documentation](#4-more-documentation)
 5. [How to Contribute](#5-how-to-contribute)
 6. [License](#6-license)
+7. [MOD : Expanded AI condition](#7-expanded-ai-condition-mod)
 
 ## 1. Prerequisites
 Before installing rAthena there are certain tools and applications you will need which
