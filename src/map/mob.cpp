@@ -6090,6 +6090,7 @@ shared_ptr<predicates::condition_predicate> createConditionPredicate(unordered_m
 			return make_shared<predicates::knockback>(target);
 		return  make_shared<predicates::mode>(target, mode);
 	}
+	throw ExpandedConditionParsingError("wrong target " + predicate_str);
 }
 shared_ptr<SingleCondition<predicates::condition_predicate>> createSingleCondition(unordered_map<string, string>& parsed_fields) {
 	inverter_t inverter = createInverter(parsed_fields); 
@@ -6272,18 +6273,27 @@ uint64 MobExpandedAiConditionsDatabase::parseBodyNode(const YAML::Node &node) {
 	// so we just have to use begin() to get that only pair.
 	const auto entry = node.begin();
 
-	//Each element of the sequence is either a string or a single element map<string,"sequence">
-	const auto& sequence_of_conditions = entry->second.as<YAML::Node>();
 
-	const string& container_name = entry->first.as<std::string>();
-	// Main conditions' testers container with an implicit "and" gate.
-	std::shared_ptr<ConditionContainer> main_container = std::make_shared<ConditionContainer>(container_name,LogicGate::getLogicGate("and"));
+	try {
+		//Each element of the sequence is either a string or a single element map<string,"sequence">
+		const auto& sequence_of_conditions = entry->second.as<YAML::Node>();
 
-	main_container->parseAndPushBackExpandedConditions(sequence_of_conditions);
+		const string& container_name = entry->first.as<std::string>();
+		// Main conditions' testers container with an implicit "and" gate.
+		std::shared_ptr<ConditionContainer> main_container = std::make_shared<ConditionContainer>(container_name, LogicGate::getLogicGate("and"));
 
-	mob_expanded_ai_conditions_db.put(main_container->name, main_container);
+		main_container->parseAndPushBackExpandedConditions(sequence_of_conditions);
 
-	return 1;
+		mob_expanded_ai_conditions_db.put(main_container->name, main_container);
+		return 1;
+	}
+	catch (YAML::TypedBadConversion<YAML::Node> e) {
+		ShowError("Format error in mob_expanded_condition_db.yml. Should be ' - myentryname : '\n");
+		return 0;
+	}
+
+
+	
 }
 
 const std::string MobExpandedAiConditionsDatabase::getDefaultLocation() {
