@@ -534,6 +534,7 @@
 	export_constant(MF_NORENEWALDROPPENALTY);
 	export_constant(MF_NORENEWALEXPPENALTY);
 	export_constant(MF_NOPETCAPTURE);
+	export_constant(MF_NOBUYINGSTORE);
 
 	/* setcell types */
 	export_constant(CELL_WALKABLE);
@@ -546,6 +547,7 @@
 	export_constant(CELL_NOCHAT);
 	export_constant(CELL_MAELSTROM);
 	export_constant(CELL_ICEWALL);
+	export_constant(CELL_NOBUYINGSTORE);
 
 	/* getcell types */
 	export_constant(CELL_CHKWALL);
@@ -564,6 +566,7 @@
 	export_constant(CELL_CHKNOCHAT);
 	export_constant(CELL_CHKMAELSTROM);
 	export_constant(CELL_CHKICEWALL);
+	export_constant(CELL_CHKNOBUYINGSTORE);
 
 	/* parameters */
 	export_parameter("StatusPoint",SP_STATUSPOINT);
@@ -843,6 +846,7 @@
 	export_constant2("bCritDefRate",SP_CRIT_DEF_RATE);
 	export_constant2("bMagicSubDefEle", SP_MAGIC_SUBDEF_ELE);
 	export_constant2("bReduceDamageReturn",SP_REDUCE_DAMAGE_RETURN);
+	export_constant2("bAbsorbDmgMaxHP2", SP_ABSORB_DMG_MAXHP2);
 	export_constant2("bAddItemSPHealRate", SP_ADD_ITEM_SPHEAL_RATE);
 	export_constant2("bAddItemGroupSPHealRate", SP_ADD_ITEMGROUP_SPHEAL_RATE);
 	export_constant2("bWeaponSubSize", SP_WEAPON_SUBSIZE);
@@ -936,7 +940,7 @@
 	export_constant2("VAR_SHOES",LOOK_SHOES);
 
 	/* status changes */
-	export_constant2("Eff_Stone",SC_STONE);
+	export_constant2("Eff_Stone",SC_STONEWAIT);
 	export_constant2("Eff_Freeze",SC_FREEZE);
 	export_constant2("Eff_Stun",SC_STUN);
 	export_constant2("Eff_Sleep",SC_SLEEP);
@@ -952,6 +956,7 @@
 	export_constant2("Eff_Crystalize",SC_CRYSTALIZE);
 	export_constant2("Eff_Freezing",SC_FREEZING);
 	export_constant2("Eff_Heat",SC_BURNT);
+	export_constant2("Eff_Deepsleep",SC_DEEPSLEEP);
 
 	export_constant2("SC_ALL",SC_NONE);
 
@@ -967,6 +972,7 @@
 	export_constant(SC_BLIND);
 	export_constant(SC_BLEEDING);
 	export_constant(SC_DPOISON);
+	export_constant(SC_STONEWAIT);
 	export_constant(SC_PROVOKE);
 	export_constant(SC_ENDURE);
 	export_constant(SC_TWOHANDQUICKEN);
@@ -5649,6 +5655,12 @@
 	export_constant(IG_SHADOW_CUBE_PENDANT);
 	export_constant(IG_SHADOW_CUBE_EARING);
 	export_constant(IG_ANGELPORING_BOX);
+	export_constant(IG_HELM_OF_FAITH_BOX);
+	export_constant(IG_2022_LUNARNEWYEARS_BOX);
+	export_constant(IG_2020_REWARD_BOX);
+	export_constant(IG_COSTUME_MILE_PACK_26_1);
+	export_constant(IG_COSTUME_MILE_PACK_26_2);
+	export_constant(IG_COSTUME_MILE_PACK_26_3);
 
 	/* unit stop walking */
 	export_constant(USW_NONE);
@@ -8390,6 +8402,7 @@
 	export_constant(INF2_IGNORECICADA);
 	export_constant(INF2_SHOWSCALE);
 	export_constant(INF2_IGNOREGTB);
+	export_constant(INF2_TOGGLEABLE);
 
 	/* skill no near npc flags */
 	export_constant(SKILL_NONEAR_WARPPORTAL);
@@ -8768,7 +8781,6 @@
 	export_constant(SCB_RANGE);
 	export_constant(SCB_REGEN);
 	export_constant(SCB_DYE);
-	export_constant(SCB_BATTLE);
 	export_constant(SCB_MAXAP);
 	export_constant(SCB_POW);
 	export_constant(SCB_STA);
@@ -8782,7 +8794,6 @@
 	export_constant(SCB_MRES);
 	export_constant(SCB_HPLUS);
 	export_constant(SCB_CRATE);
-	export_constant(SCB_ALL);
 
 	/* status change states */
 	export_constant(SCS_NONE);
@@ -8897,6 +8908,11 @@
 	export_constant(SCF_SENDVAL1);
 	export_constant(SCF_SENDVAL2);
 	export_constant(SCF_SENDVAL3);
+	export_constant(SCF_NOFORCEDEND);
+	export_constant(SCF_NOWARNING);
+	export_constant(SCF_REMOVEONUNEQUIP);
+	export_constant(SCF_REMOVEONUNEQUIPWEAPON);
+	export_constant(SCF_REMOVEONUNEQUIPARMOR);
 
 	#undef export_constant
 	#undef export_constant2

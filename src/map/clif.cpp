@@ -6283,7 +6283,7 @@ void clif_skill_produce_mix_list( struct map_session_data *sd, int skill_id, int
 	int count = 0;
 	for( int i = 0; i < MAX_SKILL_PRODUCE_DB; i++ ){
 		if (skill_can_produce_mix(sd,skill_produce_db[i].nameid, trigger, 1) &&
-			(skill_id <= 0 || (skill_id > 0 && skill_produce_db[i].req_skill == skill_id))
+			(skill_id <= 0 || skill_produce_db[i].req_skill == skill_id)
 			)
 		{
 			p->items[count].itemId = client_nameid( skill_produce_db[i].nameid );
@@ -6452,7 +6452,7 @@ void clif_status_change(struct block_list *bl, int type, int flag, t_tick tick, 
 	if (type == EFST_ILLUSION && !battle_config.display_hallucination) // Disable Hallucination.
 		return;
 
-#if PACKETVER_MAIN_NUM < 20191120 || PACKETVER_RE_NUM < 20191106
+#if !( PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 )
 	// Older clients display normal riding icon.
 	if (type == EFST_MADOGEAR)
 		type = EFST_RIDING;
@@ -8672,7 +8672,7 @@ void clif_mvp_exp(struct map_session_data *sd, t_exp exp) {
 	fd = sd->fd;
 	WFIFOHEAD(fd, packet_len(0x10b));
 	WFIFOW(fd,0) = 0x10b;
-	WFIFOL(fd,2) = (uint32)min( exp, MAX_EXP );
+	WFIFOL(fd,2) = (uint32)u64min( exp, MAX_EXP );
 	WFIFOSET(fd, packet_len(0x10b));
 #endif
 }
@@ -10961,7 +10961,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_hominfo(sd,sd->hd,0); //for some reason, at least older clients want this sent twice
 		clif_homskillinfoblock(sd);
 		if( battle_config.hom_setting&HOMSET_COPY_SPEED )
-			status_calc_bl(&sd->hd->bl, SCB_SPEED); //Homunc mimic their master's speed on each map change
+			status_calc_bl(&sd->hd->bl, { SCB_SPEED }); //Homunc mimic their master's speed on each map change
 		if( !(battle_config.hom_setting&HOMSET_NO_INSTANT_LAND_SKILL) )
 			skill_unit_move(&sd->hd->bl,gettick(),1); // apply land skills immediately
 	}
@@ -10972,7 +10972,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_spawn(&sd->md->bl);
 		clif_mercenary_info(sd);
 		clif_mercenary_skillblock(sd);
-		status_calc_bl(&sd->md->bl, SCB_SPEED); // Mercenary mimic their master's speed on each map change
+		status_calc_bl(&sd->md->bl, { SCB_SPEED }); // Mercenary mimic their master's speed on each map change
 	}
 
 	if( sd->ed ) {
@@ -10983,7 +10983,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 		clif_elemental_updatestatus(sd,SP_HP);
 		clif_hpmeter_single(sd->fd,sd->ed->bl.id,sd->ed->battle_status.hp,sd->ed->battle_status.max_hp);
 		clif_elemental_updatestatus(sd,SP_SP);
-		status_calc_bl(&sd->ed->bl, SCB_SPEED); //Elemental mimic their master's speed on each map change
+		status_calc_bl(&sd->ed->bl, { SCB_SPEED }); //Elemental mimic their master's speed on each map change
 	}
 
 	if(sd->state.connect_new) {
@@ -11096,7 +11096,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 			struct map_data *pmap = map_getmapdata(sd->state.pmap);
 
 			if ((pmap != nullptr && (mapdata_flag_gvg(pmap) || pmap->flag[MF_BATTLEGROUND])) || (mapdata != nullptr && (mapdata_flag_gvg(mapdata) || mapdata->flag[MF_BATTLEGROUND])))
-				status_calc_bl(&sd->bl, SCB_FLEE); //Refresh flee penalty
+				status_calc_bl(&sd->bl, { SCB_FLEE }); //Refresh flee penalty
 		}
 
 		if( night_flag && mapdata->flag[MF_NIGHTENABLED] )
@@ -18944,6 +18944,15 @@ static void clif_parse_ReqOpenBuyingStore( int fd, struct map_session_data* sd )
 		return;
 	}
 
+	if (map_getmapflag(sd->bl.m, MF_NOBUYINGSTORE)) {
+		clif_displaymessage(sd->fd, msg_txt(sd, 276)); // "You can't open a shop on this map"
+		return;
+	}
+	if (map_getcell(sd->bl.m, sd->bl.x, sd->bl.y, CELL_CHKNOBUYINGSTORE)) {
+		clif_displaymessage(sd->fd, msg_txt(sd, 204)); // "You can't open a shop on this cell."
+		return;
+	}
+
 	char storename[MESSAGE_SIZE];
 
 	safestrncpy( storename, p->storeName, sizeof( storename ) );
@@ -19253,6 +19262,7 @@ static void clif_parse_SearchStoreInfo( int fd, struct map_session_data *sd ){
 ///     0 = no "next" label
 ///     1 = "next" label to retrieve more results
 void clif_search_store_info_ack( struct map_session_data* sd ){
+#if PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 	nullpo_retv( sd );
 
 	int fd = sd->fd;
@@ -19306,6 +19316,7 @@ void clif_search_store_info_ack( struct map_session_data* sd ){
 	}
 
 	WFIFOSET( fd, len );
+#endif
 }
 
 
@@ -20855,9 +20866,9 @@ void clif_parse_merge_item_req(int fd, struct map_session_data* sd) {
 	}
 
 	for (i = 0, j = 0; i < n; i++) {
-		unsigned short idx = RFIFOW(fd, info->pos[1] + i*2) - 2;
+		uint16 idx = server_index( RFIFOW( fd, info->pos[1] + i * 2 ) );
 
-		if( idx < 0 || idx >= MAX_INVENTORY ){
+		if( idx >= MAX_INVENTORY ){
 			return;
 		}
 
