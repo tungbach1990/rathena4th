@@ -14,7 +14,6 @@
 4. [More Documentation](#4-more-documentation)
 5. [How to Contribute](#5-how-to-contribute)
 6. [License](#6-license)
-7. [MOD : Expanded AI condition](#7-expanded-ai-condition-mod)
 
 ## 1. Prerequisites
 Before installing rAthena there are certain tools and applications you will need which
@@ -71,65 +70,3 @@ Details on how to contribute to rAthena can be found in [CONTRIBUTING.md](https:
 
 ## 6. License
 Copyright (c) rAthena Development Team - Licensed under [GNU General Public License v3.0](https://github.com/rathena/rathena/blob/master/LICENSE)
-
-## 7. Expanded AI condition mod
-
-Hi. This is an expanded ai mod that allows to define complex conditions for skill decision with a yml config file.
-It was designed to be accessible to everyone, designers, scripters, developpers, even players.
-I hope you will have a great deal of fun giving ai a new life.
-
-Installation : copy mob_expanded_ai_conditions_db.yml from import-tmpl onto import folder
-There are already some pre-defined entries.
-
-example : inside mob_expanded_ai_conditions_db.yml
-```
- - friendrecoverable:
-   - or:
-     - friend sleep    
-     - friend stone
-     - friend stun
-     - friend freeze
-
- - selfcellempty:
-   - not self safetywall
-   - not self pneuma
-   - not self landprotector
-   - not self icewall
-  
- - friendcellempty:
-   - not friend safetywall
-   - not friend pneuma
-   - not friend landprotector
-   - not friend icewall
-```
-Then you have to add skill condition in the usual mob_skill_db.yml, with the label "expanded"
-```
-1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,self,expanded,selfcellempty,,,,,,,
-1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,friend,expanded,friendcellempty,,,,,,,
-1637,Margaretha Sorin@PR_STRECOVERY,any,72,1,10000,1000,10000,no,friend,expanded,friendrecoverable,,,,,,,
-```
-Then, in mob_db you can add the new mods that go particulary well with increased ai : 
-```
-    Modes:
-      SkillOnly: true
-      PcSkillBehavior: true     
-```
-SkillOnly will force the mob to always use skills, making him play more like players do, and PcSkillBehavior will make its skills be either ranged/melee depending on the range and not distance, as players' behave.
-Bonus : a crazy asura condition complex, try to figure out what it does ;-)
-```
- - asura:
-#   - self spiritball >=5 # to be implemented
-   - self explosionspirits
-   - not enemy safetywall
-   - not ignore_neutral
-   - nand:
-     - enemy neutralresist >=50%
-     - enemy ghostarmor >0
-   - nand:
-     - enemy reflectphy >=10%
-     - nxor :
-       - enemy neutralresist >=50%
-       - enemy ghostarmor >0
-```
-
-
