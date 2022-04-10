@@ -4096,16 +4096,6 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 							} else
 								flag = 0;
 							break;
-						case MST_SKILL:
-							if ((bl = battle_getskill(&md->bl, skill_range+bonus_range)) != NULL) {							
-								if (aggro_mod != 0 && md->ud.walktimer == INVALID_TIMER) {
-									unit_walktobl(&md->bl, bl, skill_range+1, 1);
-									unit_stop_walking(&md->bl, USW_MOVE_ONCE);
-								}
-								flag = 1;
-							} else
-								flag = 0;
-							break;
 						case MST_MASTER:
 							if (mbl == nullptr)
 								continue;
@@ -6165,8 +6155,6 @@ shared_ptr<predicates::condition_predicate> createConditionPredicate(unordered_m
 		return  make_shared<predicates::element_resist<comparator_t>>(target, comparator, um_eleid2elename.at(parsed_fields.at("element")), value);
 	} else if (predicate_str == "attack") {
 		return  make_shared<predicates::attack<comparator_t>>(target, comparator, value);
-	} else if (predicate_str == "spiritball") {
-		return  make_shared<predicates::spiritball<comparator_t>>(target, comparator, value);
 	} else if (predicate_str == "mode") {
 		e_mode mode = um_modename2modeid.at(parsed_fields.at("mode"));
 		if (mode == MD_KNOCKBACKIMMUNE)
@@ -6264,7 +6252,6 @@ unordered_map<string, string> parseFields(const string& line) {
 		"distance_from_master",
 		"reflectphy",
 		"attack",
-		"spiritball",
 		"isaligned",
 	};
 	

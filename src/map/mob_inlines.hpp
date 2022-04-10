@@ -220,17 +220,6 @@ struct knockback : public condition_predicate {
 	}
 };
 
-
-template <class TComparator>
-struct spiritball : public condition_predicate {
-	TComparator comparator;
-	int balls;
-	spiritball(e_mob_skill_target target_type_id, TComparator comparator, int balls) : condition_predicate(target_type_id), comparator{ comparator }, balls{ balls }{}
-	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
-		return checkTarget(targets) && comparator(status_get_spiritball(targets.at(this->target_type_id)), this->balls);
-	}
-};
-
 struct type : public condition_predicate {
 	bl_type mtype;
 	type(e_mob_skill_target target_type_id, bl_type type) : condition_predicate(target_type_id), mtype{ type }{}
