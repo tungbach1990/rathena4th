@@ -286,7 +286,7 @@ public:
      * @param node : the yaml line to parse into a condition
      * @return Either a simple condition, a stored or newly made container
     */
-	static std::shared_ptr<ExpandedCondition> createExpandedCondition(const YAML::Node& node);
+	static std::shared_ptr<ExpandedCondition> createExpandedCondition(const ryml::NodeRef& node);
 	/**
 	 * @brief Calls the predicate(s) on the targets matching its/their stored targets ids
 	 * @param targets map filled with surrounding potential targets for the predicate(s)
@@ -328,10 +328,10 @@ public:
 	/**
 	 * @brief Convert each element of the yaml sequence to a ExpandedCondition element
 	 * @param node Sequence's element that will be parsed
-	 * @param conditionContainer Container element. Can hold ConditionTester elements or its own kind
+	 * @param conditionContainer Container element. Currently used to hold only SingleConditions
 	 * @param entry_name
 	*/
-	void parseAndPushBackExpandedConditions(const YAML::Node& node);
+	void parseAndPushBackExpandedConditions(const ryml::NodeRef& node);
 };
 /**
  * @brief Parses a string that will be used to create the conditions. Depends on string to ids maps
@@ -340,14 +340,6 @@ public:
 */
 std::unordered_map<std::string, std::string> parseFields(const std::string& line);
 
-class ExpandedConditionParsingError : public std::runtime_error {
-private:
-	std::string msg;
-	static const std::string build_what(const std::string& msg);
-public:
-	ExpandedConditionParsingError(const std::string& msg_) : std::runtime_error(build_what(msg_)), msg(msg_) {}
-	ExpandedConditionParsingError(const ExpandedConditionParsingError&) = default;
-};
 }//namespace ai_expanded
 
 
@@ -357,7 +349,7 @@ public:
 		
 	}
 	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
+	uint64 parseBodyNode(const ryml::NodeRef& node);
 };
 
 struct s_mob_chat {
@@ -436,9 +428,7 @@ private:
 	bool parseDropNode(std::string nodeName, const ryml::NodeRef& node, uint8 max, s_mob_drop *drops);
 
 public:
-	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {
-
-	}
+	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
 
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;

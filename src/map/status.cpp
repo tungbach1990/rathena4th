@@ -1588,7 +1588,7 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 		}
 
 		if (sc->option) {
-			if ((sc->option&OPTION_HIDE) && src->type == BL_PC && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
+			if ((sc->option&OPTION_HIDE) && (src->type == BL_PC || status_get_mode(src)& MD_PCSKILLBEHAVIOR) && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
 				// Non players can use all skills while hidden.
 				return false;
 			}
@@ -2106,7 +2106,7 @@ void status_calc_misc(struct block_list *bl, struct status_data *status, int lev
 #endif
 
 	//Critical
-	if( bl->type&battle_config.enable_critical ) {
+	if( bl->type&battle_config.enable_critical || status_get_mode(bl) & MD_PCSKILLBEHAVIOR) {
 		stat = status->cri;
 		stat += 10 + (status->luk*10/3); // (every 1 luk = +0.3 critical)
 		status->cri = cap_value(stat, 1, SHRT_MAX);
@@ -7724,6 +7724,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
  */
 static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
+
 	/// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
 	if( bl->type == BL_MOB && status_get_class_(bl) == CLASS_BOSS )
 		return 0;

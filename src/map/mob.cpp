@@ -3,6 +3,7 @@
 
 #include "mob.hpp"
 #include "mob_inlines.hpp"
+#include <set>
 #include <algorithm>
 #include <map>
 #include <math.h>
@@ -133,6 +134,8 @@ const std::unordered_map<std::string, sc_type> um_statusname2id{ // Subset used 
    {    "kaupe",				SC_KAUPE			},
    {    "eswoo",				SC_SWOO				},
    {    "eska",					SC_SKA				},
+   {    "fury",				    SC_FURY		        },
+   {    "berserk",				SC_BERSERK	        },
    {    "parry",				SC_PARRYING		    },
    {    "concentration",		SC_CONCENTRATION    },
    {    "aurablade",			SC_AURABLADE	    },
@@ -145,6 +148,9 @@ const std::unordered_map<std::string, sc_type> um_statusname2id{ // Subset used 
 	{	"union",				SC_FUSION			},
 	{	"breakfall",			SC_DODGE			},
 	{	"counterkickstance",	SC_READYCOUNTER		},
+	{	"devotion",				SC_DEVOTION		},
+	{	"providence",			SC_PROVIDENCE		},
+	{	"provoke",			SC_PROVOKE	},
 };
 
 const std::unordered_map<std::string, cell_chk> um_cellname2cellid{ // Subset used for mob ai
@@ -185,6 +191,21 @@ const std::unordered_map<std::string, e_mode> um_modename2modeid{ // Subset used
 		{"skillimmune",MD_SKILLIMMUNE},
 };
 
+const std::unordered_map<std::string, bl_type> um_bl_type_name2enumid{
+		{	"player",   BL_PC  },
+		{	"pc",   BL_PC  },
+		{	"mob",	BL_MOB },
+		{	"pet",	BL_PET },
+		{	"hom",	BL_HOM },
+		{	"mer",	BL_MER },
+		{	"item",	BL_ITEM},
+		{	"skill",BL_SKILL},
+		{	"npc",	BL_NPC },
+		{	"chat",	BL_CHAT},
+		{	"elem",	BL_ELEM},
+		{	"all",	BL_ALL },
+};
+
 const std::unordered_map<std::string, e_mob_skill_target> skill_target_name2enumid{
 		{	"target",	MST_TARGET	},
 		{	"randomtarget",	MST_RANDOM	},
@@ -200,6 +221,18 @@ const std::unordered_map<std::string, e_mob_skill_target> skill_target_name2enum
 		{	"around3",	MST_AROUND3	},
 		{	"around4",	MST_AROUND4	},
 		{	"around",	MST_AROUND	},
+};
+enum e_mob_found_mod {
+	MFM_KEEP,
+	MFM_SETTARGET,
+	MFM_LOCKTARGET,
+	MFM_LOCKSKILLONCE
+};
+const std::unordered_map<std::string, e_mob_found_mod> um_name2mfm{
+		{	"settarget",			MFM_SETTARGET		},
+		{	"locktarget",			MFM_LOCKTARGET		},
+		{	"lockskillonce",		MFM_LOCKSKILLONCE	},
+
 };
 
 const std::unordered_map<std::string, e_mob_skill_condition> mob_skill_condition2name{
@@ -1605,7 +1638,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,t_tick tick)
 		}
 
 		if(md->target_id) //Slave is busy with a target.
-			return 0;
+			return -1;
 
 		// Approach master if within view range, chase back to Master's area also if standing on top of the master.
 		if ((md->master_dist > MOB_SLAVEDISTANCE || md->master_dist == 0) && unit_can_move(&md->bl)) {
@@ -1966,9 +1999,12 @@ static bool mob_ai_sub_hard(struct mob_data *md, t_tick tick)
 
 	// Processing of slave monster
 	if (md->master_id > 0) {
-		if (mob_ai_sub_hard_slavemob(md, tick) == 1)
+		int rr = mob_ai_sub_hard_slavemob(md, tick);
+		if (rr == 1)
 			return true;
-		slave_lost_target = true;
+		else if(rr==0)
+			slave_lost_target = true;
+
 	}
 
 	// Scan area for targets
@@ -3783,9 +3819,9 @@ struct block_list *mob_getfriendstatus(struct mob_data *md, short cond1, short c
 
 int mob_get_under_condition_sub(struct block_list* bl, va_list ap) {
 	nullpo_ret(bl);
-	
-	struct block_list** bl_list;
-	nullpo_ret(bl_list = va_arg(ap, struct block_list**));
+
+	struct block_list** bls;
+	nullpo_ret(bls = va_arg(ap, struct block_list**));
 	int* c;
 	nullpo_ret(c = va_arg(ap, int*));
 	struct mob_data* md;
@@ -3800,7 +3836,7 @@ int mob_get_under_condition_sub(struct block_list* bl, va_list ap) {
 		return 0;
 	using map_t = ::std::map<e_mob_skill_target, block_list*>;
 	std::map<e_mob_skill_target, block_list*> targets = va_arg(ap,map_t);
-	e_battle_check_target btarget = va_arg(ap, e_battle_check_target);
+	e_battle_check_target btarget = static_cast<enum e_battle_check_target>(va_arg(ap, int));
 
 	if (battle_check_target(&md->bl, bl, btarget) < 0) // &md->bl is the src, bl is the target
 		return 0;
@@ -3809,16 +3845,15 @@ int mob_get_under_condition_sub(struct block_list* bl, va_list ap) {
 	if (btarget == BCT_FRIEND)
 		targets[MST_FRIEND] = bl;
 	if ((*expanded_condition)(targets)) // Starts the loop amongst expanded conditions
-			bl_list[(*c)++] = bl;
-
+			bls[(*c)++] = bl;
 	return 0;
 }
 
 
 bool mob_get_all_under_condition(struct mob_data* md, int range, std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition,
-	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction, block_list** bl_list, int* c,int min, int max) {
+	std::map<e_mob_skill_target, block_list*> targets, e_battle_check_target target_faction, block_list** bls, int* c,int min, int max) {
 
-	map_foreachinallrange(mob_get_under_condition_sub, &md->bl, range, BL_PC | BL_MOB | BL_MER, bl_list,c, md, expanded_condition, targets, target_faction);
+	map_foreachinallrange(mob_get_under_condition_sub, &md->bl, range, BL_PC | BL_MOB | BL_MER, bls,c, md, expanded_condition, targets, target_faction);
 	if (*c == 0)
 		return false;
 	if (*c > 24)
@@ -3853,19 +3888,10 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
  * Skill use judging
  *------------------------------------------*/
 int mobskill_use(struct mob_data *md, t_tick tick, int event)
-{
-	struct block_list *fbl = nullptr; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
-	struct block_list *mbl= nullptr; // Master bl //
-	struct block_list* tbl = nullptr; // Mob's current target
-	struct block_list* bl = nullptr; // Skill final target
-	
+{	
 	e_mob_skill_target skill_target;
-
 	nullpo_ret(md);
-
 	std::vector<std::shared_ptr<s_mob_skill>> &ms = md->db->skill;
-
-
 	if (!battle_config.mob_skill_rate || md->ud.skilltimer != INVALID_TIMER || ms.empty() || status_has_mode(&md->status,MD_NOCAST))
 		return 0;
 
@@ -3874,22 +3900,21 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 
 	//Pick a starting position and loop from that.
 	int i = battle_config.mob_ai&0x100?rnd()%ms.size():0;
+
 	for (int n = 0; n < ms.size(); i++, n++) {
-		bl = nullptr;
-		tbl = nullptr;
-		fbl = nullptr;
-		mbl = nullptr;
+		block_list *fbl = nullptr; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
+		block_list *mbl= nullptr; // Master bl //
+		block_list* tbl = nullptr; // Mob's current target
+		block_list* bl = nullptr; // Skill final target
 		int flag=0;
 		int c2 =ms[i]->cond2;
 
-		skill_target= status_has_mode(&md->db->status, MD_RANDOMTARGET) ? MST_RANDOM:ms[i]->target;
+		
 		if (i == ms.size())
 			i = 0;
-
+		skill_target= status_has_mode(&md->db->status, MD_RANDOMTARGET) ? MST_RANDOM:ms[i]->target;
 		if (DIFF_TICK(tick, md->skilldelay[i]) < ms[i]->delay)
 			continue;
-
-		
 
 		if (ms[i]->state != md->state.skillstate) {
 			if (md->state.skillstate != MSS_DEAD && (ms[i]->state == MSS_ANY ||
@@ -3908,7 +3933,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 			flag = ((event & 0xffff) == MSC_SKILLUSED && ((event >> 16) == c2 || c2 == 0));
 		else if(event == -1) {
 			//Avoid entering on defined events to avoid "hyper-active skill use" due to the overflow of calls to this function in battle.
-
+			fbl = mbl = tbl = bl = nullptr;
 			switch (ms[i]->cond1)
 			{
 			case MSC_ALWAYS:
@@ -4003,29 +4028,80 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 				std::shared_ptr<expanded_ai::ExpandedCondition> expanded_condition = mob_expanded_ai_conditions_db.find(ms[i]->expanded_cond);
 				
 				if ((expanded_condition) != nullptr) {	
-					int minmobs = ms[i]->val[0];
-					int maxmobs = ms[i]->val[1];
+					int minmobs = ms[i]->val[2];
+					int maxmobs = ms[i]->val[3];				
 					int qts = 0;
+					int aggro_mod = ms[i]->val[0];
+					int bonus_range = ms[i]->val[1];
 					const int mob_limit = 24;
 					int skill_range = skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true);
-					struct block_list* bl_list[mob_limit];
-					memset(bl_list, 0, sizeof(bl_list));
-
-					e_battle_check_target e_battle = BCT_ENEMY;
+					struct block_list* bls[mob_limit];
+					memset(bls, 0, sizeof(bls));
+					minmobs = minmobs >= 1 ? minmobs : 1;
+					maxmobs = maxmobs >= 1 ? maxmobs : mob_limit;
+					if (maxmobs < minmobs)
+						maxmobs = minmobs = 1;
 					switch (skill_target) {
 						case MST_FRIEND:
-							e_battle = BCT_FRIEND;
-						case MST_RANDOM:
-							minmobs = minmobs >= 1 ? minmobs : 1;
-							maxmobs = maxmobs >= 1 ? maxmobs : mob_limit;
-							if (maxmobs < minmobs)
-								maxmobs = minmobs = 1;
 
-							if (mob_get_all_under_condition(md, skill_range,expanded_condition, targets, e_battle, bl_list,&qts,minmobs,maxmobs)
+							if (mob_get_all_under_condition(md, skill_range + bonus_range, expanded_condition, targets, BCT_FRIEND, bls, &qts, minmobs, maxmobs)
 								&& qts >= minmobs
-								&& qts <= maxmobs)
-							{
-								bl = bl_list[rnd() % qts];
+								&& qts <= maxmobs) {
+
+								bl = bls[rnd() % qts];
+								if (aggro_mod != 0 && md->ud.walktimer == INVALID_TIMER) {
+									unit_walktobl(&md->bl, bl, skill_range, 1);
+									unit_stop_walking(&md->bl, USW_MOVE_ONCE);
+								}
+								flag = 1;
+							} else
+								flag = 0;
+							break;
+						case MST_RANDOM:
+							if (mob_get_all_under_condition(md, skill_range+bonus_range, expanded_condition, targets, BCT_ENEMY, bls, &qts, minmobs, maxmobs)
+								&& qts >= minmobs
+								&& qts <= maxmobs) {							
+								switch (aggro_mod) {
+									case MFM_SETTARGET:
+										bl = bls[rnd() % qts];
+										md->target_id = bl->id;
+										break;
+									case MFM_LOCKTARGET: { // do skill only once
+										int h;
+										ARR_FIND(0, qts, h, bls[h] == tbl);
+										if (h < qts)
+											bl=tbl;
+										else {
+											bl = bls[rnd() % qts];
+											md->target_id = bl->id;
+										}
+										break;
+									}
+									case MFM_LOCKSKILLONCE: { // do skill only once
+										int h;
+										ARR_FIND(0, qts, h, bls[h] == tbl);
+										if (h < qts)
+											continue;
+										else {
+											bl = bls[rnd() % qts];
+											md->target_id = bl->id;
+										}
+										break;
+									}
+									default:
+										bl = bls[rnd() % qts];
+										break;
+								} 
+								flag = 1;
+							} else
+								flag = 0;
+							break;
+						case MST_SKILL:
+							if ((bl = battle_getskill(&md->bl, skill_range+bonus_range)) != NULL) {							
+								if (aggro_mod != 0 && md->ud.walktimer == INVALID_TIMER) {
+									unit_walktobl(&md->bl, bl, skill_range+1, 1);
+									unit_stop_walking(&md->bl, USW_MOVE_ONCE);
+								}
 								flag = 1;
 							} else
 								flag = 0;
@@ -4044,7 +4120,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 							bl = tbl;
 							flag = (*expanded_condition)(targets);
 							break;
-					}
+					}			
+					
 				} else {
 					ShowError("mob_skill_db:Invalid expanded condition '%s' for mobid %d skill %d-removing from db\n", ms[i]->expanded_cond, md->mob_id, ms[i]->skill_id);
 					md->db->skill.erase(md->db->skill.begin() + i);
@@ -4052,6 +4129,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event)
 				}
 				break;
 			}
+			default:
+				break;
 			}
 		}
 		
@@ -5381,7 +5460,7 @@ static bool mob_read_sqldb_sub(std::vector<std::string> str) {
 	if (!str[++index].empty())
 		modes["TeleportBlock"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
-		  modes["PcSkillBehavior"] << (std::stoi(str[index]) ? "true" : "false");
+		modes["PcSkillBehavior"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
 		modes["FixedItemDrop"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
@@ -5921,7 +6000,7 @@ uint64 MobSummonDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	return 1;
 }
 namespace expanded_ai {
-using YAML::Node;
+
 using namespace std;
 using namespace logic_gates;
 
@@ -5965,7 +6044,7 @@ bool fillWithElement(string& element, string& suffix, const string& predicate) {
 	}
 	return false;
 }
-
+//http://www.martinbroadhurst.com/how-to-split-a-string-in-c.html
 template <class Container>
 void split(const std::string& str, Container& cont, char delim) {
 	std::size_t current, previous = 0;
@@ -6052,6 +6131,10 @@ shared_ptr<predicates::condition_predicate> createConditionPredicate(unordered_m
 	string& predicate_str = parsed_fields.at("predicate");
 	if (predicate_str == "exists")
 		return  make_shared<predicates::exists>(target);
+	else if (predicate_str == "isaligned")
+		return  make_shared<predicates::isaligned>(target);
+	else if (predicate_str == "isnew")
+		return  make_shared<predicates::isnew>(target);
 	else if (predicate_str == "percenthealth") {
 		return  make_shared<predicates::percent_health<comparator_t>>(target, comparator, value);
 	} else if (predicate_str == "health") {
@@ -6082,13 +6165,18 @@ shared_ptr<predicates::condition_predicate> createConditionPredicate(unordered_m
 		return  make_shared<predicates::element_resist<comparator_t>>(target, comparator, um_eleid2elename.at(parsed_fields.at("element")), value);
 	} else if (predicate_str == "attack") {
 		return  make_shared<predicates::attack<comparator_t>>(target, comparator, value);
+	} else if (predicate_str == "spiritball") {
+		return  make_shared<predicates::spiritball<comparator_t>>(target, comparator, value);
 	} else if (predicate_str == "mode") {
 		e_mode mode = um_modename2modeid.at(parsed_fields.at("mode"));
 		if (mode == MD_KNOCKBACKIMMUNE)
 			return make_shared<predicates::knockback>(target);
 		return  make_shared<predicates::mode>(target, mode);
+	} else if (predicate_str == "type") {
+		bl_type type = um_bl_type_name2enumid.at(parsed_fields.at("type"));
+		return  make_shared<predicates::type>(target, type);
 	}
-	throw ExpandedConditionParsingError("wrong target " + predicate_str);
+	throw std::runtime_error("wrong target " + predicate_str);
 }
 shared_ptr<SingleCondition<predicates::condition_predicate>> createSingleCondition(unordered_map<string, string>& parsed_fields) {
 	inverter_t inverter = createInverter(parsed_fields); 
@@ -6114,17 +6202,17 @@ unordered_map<string, string> parseFields(const string& line) {
 	split<vector<string>>(line, container, ' ');
 	
 	if (container.size() > 4 || container.size() < 1) {
-		throw ExpandedConditionParsingError(line);
+		throw std::runtime_error(line);
 	}
 	if (container.size() == 1) {
 		if (mob_expanded_ai_conditions_db.find(container[0]) == nullptr)
-			throw ExpandedConditionParsingError(container[0]);
+			throw std::runtime_error(container[0]);
 		parsed_fields.insert({ "stored",container[0] });
 		parsed_fields.insert({ "inverter","disabled"});
 		return parsed_fields;
 	} else if (container.size() == 2 && container[0] == "not") {
 		if (mob_expanded_ai_conditions_db.find(container[1]) == nullptr)
-			throw ExpandedConditionParsingError(container[1]);
+			throw std::runtime_error(container[1]);
 		parsed_fields.insert({ "stored",container[1] });
 		parsed_fields.insert({ "inverter","not"});
 		return parsed_fields;
@@ -6133,7 +6221,7 @@ unordered_map<string, string> parseFields(const string& line) {
 		parsed_fields.insert({ "inverter", "not" });
 		container.erase(container.begin());
 	} else if (container.size() >= 4) {
-		throw ExpandedConditionParsingError(line);
+		throw std::runtime_error(line);
 	} else
 		parsed_fields.insert({ "inverter", "disabled" });
 
@@ -6150,7 +6238,7 @@ unordered_map<string, string> parseFields(const string& line) {
 			pairComparatorValue = parse_comparator_and_value(container[2]);
 		}
 		catch (const std::invalid_argument&) {
-			throw ExpandedConditionParsingError(line);
+			throw std::runtime_error(line);
 		}
 		parsed_fields.insert({ "value", to_string(pairComparatorValue.second) });
 		parsed_fields.insert({ "comparator", pairComparatorValue.first });
@@ -6161,11 +6249,12 @@ unordered_map<string, string> parseFields(const string& line) {
 	if (skill_target_name2enumid.count(target_str))
 		parsed_fields.insert({ "target", target_str });
 	else
-		throw ExpandedConditionParsingError("wrong target " + target_str + " '" + line + "'");
+		throw std::runtime_error("wrong target " + target_str + " '" + line + "'");
 
 	const std::set<string> simple_predicates
 	{
 		"exists",
+		"isnew",
 		"percenthealth",
 		"health",
 		"job",
@@ -6175,21 +6264,25 @@ unordered_map<string, string> parseFields(const string& line) {
 		"distance_from_master",
 		"reflectphy",
 		"attack",
-		"mode"
+		"spiritball",
+		"isaligned",
 	};
 	
 	std::string predicate = container[1];
 
 	if (simple_predicates.count(predicate))
 		parsed_fields.insert({ "predicate", predicate }); // example:parsed_fields.at("predicate") == "percenthealth"
-	else if (um_modename2modeid.count(predicate)) { // modifies predicate
+	else if (um_modename2modeid.count(predicate)) { 
 		parsed_fields.insert({ "predicate", "mode"});
 		parsed_fields.insert({ "mode", predicate });
+	} else if (um_bl_type_name2enumid.count(predicate)) {
+		parsed_fields.insert({ "predicate", "type"});
+		parsed_fields.insert({ "type", predicate });
 	} else if (um_cellname2cellid.count(predicate)) {
 		parsed_fields.insert({ "predicate", "cell" });
 		parsed_fields.insert({ "cell", predicate });
 	} else if (!splitComposedPredicates(predicate, parsed_fields))
-		throw ExpandedConditionParsingError("wrong field " + predicate + " '" + line + "'");
+		throw std::runtime_error("wrong field " + predicate + " '" + line + "'");
 	return parsed_fields;
 }
 
@@ -6205,24 +6298,28 @@ shared_ptr<LogicGate> LogicGate::getLogicGate(const string& name) {
 	return um_logic_gates.at(name);
 }
 
-shared_ptr<ExpandedCondition> ExpandedCondition::createExpandedCondition(const YAML::Node& node) {
+shared_ptr<ExpandedCondition> ExpandedCondition::createExpandedCondition(const ryml::NodeRef& node) {
 
-	if (node.IsMap()) {
+	if (node.is_map()) {
 		// All maps should be logic gates so a new ConditionContainer is created
 		shared_ptr<ConditionContainer> conditionContainer;
-		const string& lGateName = node.begin()->first.as<string>(); // there is only one pair per map
+
+		std::string lGateName;
+		c4::from_chars(node.first_child().key(), &lGateName);// there is only one pair per map
 		try {
 
 			conditionContainer = make_shared<ConditionContainer>(lGateName, LogicGate::getLogicGate(lGateName));
-			const auto& sequenceOfExpandedConditions = node.begin()->second.as<Node>();
+			const auto& sequenceOfExpandedConditions = node.first_child();
 			conditionContainer->parseAndPushBackExpandedConditions(sequenceOfExpandedConditions);
 			return conditionContainer;
 		}
 		catch (exception e) {
-			throw ExpandedConditionParsingError(lGateName);
+			throw std::runtime_error(lGateName);
 		};
 	} else {
-		unordered_map<string, string> parsedFields = parseFields(node.as<string>());
+		std::string field;
+		c4::from_chars(node.val(), &field);
+		unordered_map<string, string> parsedFields = parseFields(field);
 
 		//First search for an existing container and wrap it inside a SingleCondition
 		shared_ptr<SingleCondition<ExpandedCondition>> storedCondition = findIfExistsInDatabase(parsedFields);
@@ -6237,46 +6334,42 @@ shared_ptr<ExpandedCondition> ExpandedCondition::createExpandedCondition(const Y
 	}
 }
 
-void ConditionContainer::parseAndPushBackExpandedConditions(const Node& node) {
-	for (size_t i = 0; i < node.size(); i++) { // loop through each node
+void ConditionContainer::parseAndPushBackExpandedConditions(const ryml::NodeRef& node) {
+	
+     for(ryml::NodeRef const& child : node.children()){
 		try {
-			std::shared_ptr<ExpandedCondition> expandedCondition = createExpandedCondition(node[i]);
+			std::shared_ptr<ExpandedCondition> expandedCondition = createExpandedCondition(child);
 			this->nodes.push_back(expandedCondition);
 		}
-		catch (const ExpandedConditionParsingError& ecpe) {
+		/*catch (const ExpandedConditionParsingError& ecpe) {
 			ShowError("%s for entry %s\n",ecpe.what(), name.c_str());
-		}
+		}*/
 		catch (const std::exception e) {
 			ShowError("%s for entry %s\n", e.what(), name.c_str());
 		}
 	}
 }
 
-const std::string ExpandedConditionParsingError::build_what(const std::string& msg) {
-
-	std::stringstream output;
-	output << "mob_expanded_conditions_db error: " << msg;
-	return output.str();
-}
 } // namespace expanded_ai
 /**
 *Reads and parses an entry from the mob_expanded_ai_conditions_db.
  * @param node: YAML node containing the entry.
  * @return count of successfully parsed entries
  */
-uint64 MobExpandedAiConditionsDatabase::parseBodyNode(const YAML::Node &node) {
+uint64 MobExpandedAiConditionsDatabase::parseBodyNode(const ryml::NodeRef& node) {
 	using namespace expanded_ai;
 
 	// All expanded conditions are single pair element maps
 	// so we just have to use begin() to get that only pair.
 	const auto entry = node.begin();
 
-
 	try {
 		//Each element of the sequence is either a string or a single element map<string,"sequence">
-		const auto& sequence_of_conditions = entry->second.as<YAML::Node>();
-
-		const string& container_name = entry->first.as<std::string>();
+		
+		const auto& sequence_of_conditions = node.first_child();
+		std::string container_name;
+		c4::from_chars(node.first_child().key(), &container_name);// there is only one pair per map
+		ShowMessage("%s", container_name);
 		// Main conditions' testers container with an implicit "and" gate.
 		std::shared_ptr<ConditionContainer> main_container = std::make_shared<ConditionContainer>(container_name, LogicGate::getLogicGate("and"));
 
@@ -6285,13 +6378,10 @@ uint64 MobExpandedAiConditionsDatabase::parseBodyNode(const YAML::Node &node) {
 		mob_expanded_ai_conditions_db.put(main_container->name, main_container);
 		return 1;
 	}
-	catch (YAML::TypedBadConversion<YAML::Node> e) {
+	catch (exception e) {
 		ShowError("Format error in mob_expanded_condition_db.yml. Should be ' - myentryname : '\n");
 		return 0;
 	}
-
-
-	
 }
 
 const std::string MobExpandedAiConditionsDatabase::getDefaultLocation() {
@@ -6502,10 +6592,16 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 			return false;
 		}
 	}
-	ms->expanded_cond=str_cond2; // For error message if calling ill-formed expanded condition
+	ms->expanded_cond=str_cond2;
 
-	ms->val[0] = (int)strtol(str[12],NULL,0);
-	ms->val[1] = (int)strtol(str[13],NULL,0);
+	const std::string& str_val0 = str[12];
+	if (str_val0 == "")
+		ms->val[0] = 0;
+	else if (um_name2mfm.count(str_val0)) {
+		ms->val[0] = um_name2mfm.at(str_val0);
+	} else
+		ms->val[0] = (int)strtol(str[12], NULL, 0);
+	ms->val[1] = (int)strtol(str[13], NULL, 0);
 	ms->val[2] = (int)strtol(str[14],NULL,0);
 	ms->val[3] = (int)strtol(str[15],NULL,0);
 	ms->val[4] = (int)strtol(str[16],NULL,0);
@@ -7043,7 +7139,7 @@ void mob_reload_itemmob_data(void) {
  */
 static int mob_reload_sub( struct mob_data *md, va_list args ){
 	// Slaves have to be killed
-	if( md->master_id != 0 ){
+	if( md->master_id != 0 && !(status_get_mode(&md->bl)&MD_PCSKILLBEHAVIOR)){
 		unit_remove_map( &md->bl, CLR_OUTSIGHT );
 		return 0;
 	}

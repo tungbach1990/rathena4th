@@ -5,6 +5,8 @@
 #define MOB_INLINES_HPP
 #include "mob.hpp"
 #include "unit.hpp"
+#include "pc.hpp"
+#include "../common/utils.hpp"
 
 namespace expanded_ai{
 namespace predicates {
@@ -18,7 +20,7 @@ protected:
 public:
 	condition_predicate(e_mob_skill_target target_type_id) : target_type_id{ target_type_id } {}
 	virtual bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) = 0;
-	inline bool condition_predicate::checkTarget(const std::map<e_mob_skill_target, block_list*>& targets) {
+	inline bool checkTarget(const std::map<e_mob_skill_target, block_list*>& targets) {
 		return targets.count(target_type_id);
 	}
 };
@@ -29,6 +31,14 @@ struct exists : public condition_predicate {
 		return checkTarget(targets);
 	}
 };
+
+struct isnew : public condition_predicate {
+	isnew(e_mob_skill_target target_type_id) : condition_predicate(target_type_id){}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		return checkTarget(targets) && targets.at(target_type_id)->id!=((mob_data*)targets.at(MST_SELF))->target_id;
+	}
+};
+
 
 template <class TComparator>
 struct percent_health: public condition_predicate {
@@ -152,7 +162,7 @@ struct distance_from_friend: public condition_predicate {
 	int mDistance;
 	distance_from_friend(e_mob_skill_target target_type_id,TComparator comparator,int mDistance): condition_predicate(target_type_id),comparator{comparator},mDistance{mDistance}{}
 	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
-		return checkTarget(targets) && comparator(distance_bl(targets.at(MST_FRIEND),targets.at(target_type_id)),this->mDistance);
+		return checkTarget(targets) && targets.count(MST_FRIEND) && comparator(distance_bl(targets.at(MST_FRIEND),targets.at(target_type_id)),this->mDistance);
 	}
 };
 template <class TComparator>
@@ -190,7 +200,8 @@ struct attack : public condition_predicate {
 	int mAttack;
 	attack(e_mob_skill_target target_type_id, TComparator comparator, int mAttack) : condition_predicate(target_type_id), comparator{ comparator }, mAttack{ mAttack }{}
 	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
-		return checkTarget(targets) && comparator(status_get_watk(targets.at(this->target_type_id)), this->mAttack);
+		block_list* target = targets.at(this->target_type_id);
+		return checkTarget(targets) && comparator(status_get_batk(target)+status_get_watk(target), this->mAttack);
 	}
 };
 
@@ -210,20 +221,47 @@ struct knockback : public condition_predicate {
 };
 
 
+template <class TComparator>
+struct spiritball : public condition_predicate {
+	TComparator comparator;
+	int balls;
+	spiritball(e_mob_skill_target target_type_id, TComparator comparator, int balls) : condition_predicate(target_type_id), comparator{ comparator }, balls{ balls }{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		return checkTarget(targets) && comparator(status_get_spiritball(targets.at(this->target_type_id)), this->balls);
+	}
+};
+
+struct type : public condition_predicate {
+	bl_type mtype;
+	type(e_mob_skill_target target_type_id, bl_type type) : condition_predicate(target_type_id), mtype{ type }{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		return checkTarget(targets) && (targets.at(this->target_type_id)->type==mtype);
+	}
+};
+
+
+struct isaligned : public condition_predicate {
+
+	isaligned(e_mob_skill_target target_type_id) : condition_predicate(target_type_id){}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		block_list* target = targets.at(this->target_type_id);
+		return checkTarget(targets) && ((target->x%2 == targets.at(MST_SELF)->x%2)||(target->y%2 == targets.at(MST_SELF)->y%2));
+	}
+};
+
+
+
 } //namespace predicates
 
 namespace logic_gates {
 
 //XOR logic gate
-template <class _InIt, class _Pr>
-inline bool one_only(_InIt _First, _InIt _Last, _Pr _Pred) {
+template<class InputIterator, class UnaryPredicate>
+inline bool one_only(InputIterator _First,InputIterator _Last, UnaryPredicate _Pred){
 	// test if all elements satisfy _Pred
-	std::_Adl_verify_range(_First, _Last);
-	auto _UFirst = std::_Get_unwrapped(_First);
-	const auto _ULast = std::_Get_unwrapped(_Last);
 	bool isOneTrue = (false);
-	for (; _UFirst != _ULast; ++_UFirst) {
-		if (_Pred(*_UFirst)) {
+	for (; _First != _Last; ++_First) {
+		if (_Pred(*_First)) {
 			if (!isOneTrue)
 				isOneTrue = (true);
 			else
@@ -234,31 +272,23 @@ inline bool one_only(_InIt _First, _InIt _Last, _Pr _Pred) {
 }
 
 //NAND logic gate
-template<class _InIt, class _Pr>
-_NODISCARD inline bool any_false_of(const _InIt _First, const _InIt _Last, _Pr _Pred)
-{	// test if any element satisfies _Pred
-	_Adl_verify_range(_First, _Last);
-	auto _UFirst = _Get_unwrapped(_First);
-	const auto _ULast = _Get_unwrapped(_Last);
-	for (; _UFirst != _ULast; ++_UFirst)
-	{
-		if (!_Pred(*_UFirst))
+template<class InputIterator, class UnaryPredicate>
+inline bool any_false_of(InputIterator _First, InputIterator _Last, UnaryPredicate _Pred){
+	// test if any element satisfies _Pred
+	for (; _First != _Last; ++_First){
+		if (!_Pred(*_First))
 			return (true);
 	}
 	return (false);
 }
 
 //NXOR logic gate
-template <class _InIt, class _Pr>
-inline bool all_or_none(_InIt _First, _InIt _Last, _Pr _Pred) {
-	// test if all elements satisfy _Pred
-	std::_Adl_verify_range(_First, _Last);
-	auto _UFirst = std::_Get_unwrapped(_First);
-	const auto _ULast = std::_Get_unwrapped(_Last);
-	bool first = _Pred(*_UFirst);
-	++_UFirst;
-	for (; _UFirst != _ULast; ++_UFirst) {
-		if (_Pred(*_UFirst) != (first))
+template<class InputIterator, class UnaryPredicate>
+inline bool all_or_none(InputIterator _First, InputIterator _Last, UnaryPredicate _Pred) {
+	bool first = _Pred(*_First);
+	++_First;
+	for (; _First != _Last; ++_First) {
+		if (_Pred(*_First) != (first))
 			return (false);
 	}
 	return (true);
@@ -311,4 +341,4 @@ public:
 };
 }//logic_gates
 }//expanded_ai
-#endif MOB_INLINE_HPP
+#endif

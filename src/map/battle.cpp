@@ -3204,7 +3204,7 @@ static int battle_get_weapon_element(struct Damage* wd, struct block_list *src, 
 			element = wd->miscflag; //element comes in flag.
 			break;
 		case LK_SPIRALPIERCE:
-			if (!sd)
+			if (!sd && !(status_get_mode(src)&MD_PCSKILLBEHAVIOR))
 				element = ELE_NEUTRAL; //forced neutral for monsters
 			break;
 		case RK_DRAGONBREATH:
@@ -9377,7 +9377,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			}
 			if( !sd->status.guild_id && t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->mob_id == MOBID_EMPERIUM && mapdata_flag_gvg(mapdata) )
 				return 0; //If you don't belong to a guild, can't target emperium.
-			if( t_bl->type != BL_PC )
+			if( t_bl->type != BL_PC && ((TBL_MOB*)t_bl)->special_state.ai!=AI_GUILD)
 				state |= BCT_ENEMY; //Natural enemy.
 			break;
 		}
