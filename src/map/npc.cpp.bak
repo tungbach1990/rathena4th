@@ -5134,7 +5134,7 @@ static const char* npc_parse_mob(char* w1, char* w2, char* w3, char* w4, const c
 	}
 	
 	if (!mob.state.boss)
-		mob.num = mob.num + 2;
+		mob.num = mob.num + 1
 	if (mob.num > 1 && battle_config.mob_count_rate != 100) {
 		if ((mob.num = mob.num * battle_config.mob_count_rate / 100) < 1)
 			mob.num = 1;

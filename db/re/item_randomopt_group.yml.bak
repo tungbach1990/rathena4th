@@ -448,26 +448,6 @@ Body:
             MinValue: 1
             MaxValue: 10
             Chance: 2000
-      - Slot: 5
-        Options:
-          - Option: BODY_ATTR_WATER
-            MinValue: 1
-            MaxValue: 10
-            Chance: 2000
-          - Option: BODY_ATTR_TELEKINESIS
-            MinValue: 1
-            MaxValue: 10
-            Chance: 2000
-      - Slot: 6
-        Options:
-          - Option: BODY_ATTR_WATER
-            MinValue: 1
-            MaxValue: 10
-            Chance: 2000
-          - Option: BODY_ATTR_TELEKINESIS
-            MinValue: 1
-            MaxValue: 10
-            Chance: 2000            
     MaxRandom: 1
     Random:
       - Option: MDAMAGE_PROPERTY_WATER_TARGET

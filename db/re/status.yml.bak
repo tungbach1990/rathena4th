@@ -1875,10 +1875,10 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     End:
-      #Dontforgetme: true
+      Dontforgetme: true
       Humming: true
-      #Fortune: true
-      #Service4u: true
+      Fortune: true
+      Service4u: true
   - Status: Dontforgetme
     Icon: EFST_DONTFORGETME
     DurationLookup: DC_DONTFORGETME
@@ -1893,18 +1893,18 @@ Body:
     Fail:
       Speedup1: true
     End:
-      #Increaseagi: true
-      #Adrenaline: true
-      #Adrenaline2: true
-      #Spearquicken: true
-      #Twohandquicken: true
-      #Onehand: true
-      #Merc_Quicken: true
-      #Acceleration: true
+      Increaseagi: true
+      Adrenaline: true
+      Adrenaline2: true
+      Spearquicken: true
+      Twohandquicken: true
+      Onehand: true
+      Merc_Quicken: true
+      Acceleration: true
       Dontforgetme: true
-      #Humming: true
-      #Fortune: true
-      #Service4u: true
+      Humming: true
+      Fortune: true
+      Service4u: true
   - Status: Fortune
     Icon: EFST_FORTUNEKISS
     DurationLookup: DC_FORTUNEKISS
@@ -1916,10 +1916,10 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     End:
-      #Dontforgetme: true
-      #Humming: true
+      Dontforgetme: true
+      Humming: true
       Fortune: true
-      #Service4u: true
+      Service4u: true
   - Status: Service4u
     Icon: EFST_SERVICEFORYOU
     DurationLookup: DC_SERVICEFORYOU
@@ -1931,9 +1931,9 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
     End:
-      #Dontforgetme: true
-      #Humming: true
-      #Fortune: true
+      Dontforgetme: true
+      Humming: true
+      Fortune: true
       Service4u: true
   - Status: Stop
     Icon: EFST_STOP

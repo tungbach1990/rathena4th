@@ -23841,7 +23841,7 @@ Body:
     Flags:
       TargetTrap: true
     Hit: Single
-    HitCount: 2
+    HitCount: 1
     Element: Weapon
     Knockback:
       - Level: 1

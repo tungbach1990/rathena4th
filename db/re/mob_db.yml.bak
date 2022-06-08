@@ -131,7 +131,7 @@ Body:
         StealProtected: true
       - Item: Guitar
         Rate: 5000
-        RandomOptionGroup: Group_6
+        RandomOptionGroup: Group_1
   - Id: 1002
     AegisName: PORING
     Name: Poring
