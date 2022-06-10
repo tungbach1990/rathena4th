@@ -162,7 +162,7 @@ struct s_enchantgradeoption{
 };
 
 struct s_enchantgradelevel{
-	uint16 grade;
+	e_enchantgrade grade;
 	uint16 refine;
 	uint16 chance;
 	uint16 bonus;
@@ -172,13 +172,13 @@ struct s_enchantgradelevel{
 		uint16 amountPerStep;
 		uint16 maximumSteps;
 		uint16 chanceIncrease;
-	}catalysator;
+	}catalyst;
 	std::map<uint16,std::shared_ptr<s_enchantgradeoption>> options;
 };
 
 struct s_enchantgrade{
 	uint16 itemtype;
-	std::map<uint16,std::map<uint16,std::shared_ptr<s_enchantgradelevel>>> levels;
+	std::map<uint16,std::map<e_enchantgrade,std::shared_ptr<s_enchantgradelevel>>> levels;
 };
 
 class EnchantgradeDatabase : public TypesafeYamlDatabase<uint16, s_enchantgrade>{
@@ -187,8 +187,9 @@ public:
 
 	}
 
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode( const ryml::NodeRef& node );
+	const std::string getDefaultLocation() override;
+	uint64 parseBodyNode( const ryml::NodeRef& node ) override;
+	void loadingFinished() override;
 
 	// Additional
 	std::shared_ptr<s_enchantgradelevel> findCurrentLevelInfo( const struct item_data& data, struct item& item );
