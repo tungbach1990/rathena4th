@@ -8284,6 +8284,32 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 				break;
 			}
 		}
+// bachnt magic crit
+#ifdef RENEWAL
+	if (is_attack_critical(&ad, src, target, skill_id, skill_lv, false)) {
+		if (sd) { //Check for player so we don't crash out, monsters don't have bonus crit rates [helvetica]
+			if (skill_id > 0) {
+				ad.damage = (int64)floor((float)((ad.damage * (140 + sstatus->crate)) / 100 * (100 + (sd->bonus.crit_atk_rate / 2))) / 100);
+			}
+			else
+				ad.damage = (int64)floor((float)((ad.damage * (140 + sstatus->crate)) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
+		} else
+			ad.damage = (int64)floor((float)(ad.damage * 140) / 100);
+
+		if (tsd && tsd->bonus.crit_def_rate != 0) {
+			MATK_ADDRATE(-tsd->bonus.crit_def_rate);
+		}
+	#if PACKETVER >= 20161207
+			if (ad.type&DMG_MULTI_HIT)
+				ad.type = DMG_MULTI_HIT_CRITICAL;
+			else
+				ad.type = DMG_CRITICAL;
+	#else
+			ad.type = DMG_CRITICAL;
+	#endif
+	}
+#endif		
+
 #ifdef RENEWAL
 		ad.damage += battle_calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
 #endif
