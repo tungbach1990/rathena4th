@@ -565,7 +565,11 @@ uint64 BarterDatabase::parseBodyNode( const ryml::NodeRef& node ){
 				}
 
 				std::shared_ptr<item_data> id = item_db.search_aegisname( aegis_name.c_str() );
-
+				
+				if ( id == nullptr ){
+					id = item_db.find( strtoul( aegis_name.c_str(), nullptr, 10 ) );
+				}
+				
 				if( id == nullptr ){
 					this->invalidWarning( itemNode["Item"], "barter_parseBodyNode: Unknown item %s.\n", aegis_name.c_str() );
 					return 0;
@@ -642,7 +646,11 @@ uint64 BarterDatabase::parseBodyNode( const ryml::NodeRef& node ){
 						}
 
 						std::shared_ptr<item_data> data = item_db.search_aegisname( aegis_name.c_str() );
-
+						
+						if ( data == nullptr ){
+							data = item_db.find( strtoul( aegis_name.c_str(), nullptr, 10 ) );
+						}
+				
 						if( data == nullptr ){
 							this->invalidWarning( requiredItemNode["Item"], "barter_parseBodyNode: Unknown required item %s.\n", aegis_name.c_str() );
 							return 0;

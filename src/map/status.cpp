@@ -699,7 +699,10 @@ uint64 EnchantgradeDatabase::parseBodyNode( const ryml::NodeRef& node ){
 					}
 
 					std::shared_ptr<item_data> id = item_db.search_aegisname( itemName.c_str() );
-
+					
+					if (id == nullptr){
+						id = item_db.find( strtoul( itemName.c_str(), nullptr, 10 ) );
+					}
 					if( id == nullptr ){
 						this->invalidWarning( catalystNode["Item"], "Unknown item \"%s\".\n", itemName.c_str() );
 						return 0;
@@ -814,7 +817,11 @@ uint64 EnchantgradeDatabase::parseBodyNode( const ryml::NodeRef& node ){
 						}
 
 						std::shared_ptr<item_data> id = item_db.search_aegisname( itemName.c_str() );
-
+						
+						if (id == nullptr){
+							id = item_db.find( strtoul( itemName.c_str(), nullptr, 10 ) );
+						}
+						
 						if( id == nullptr ){
 							this->invalidWarning( optionNode["Item"], "Unknown item \"%s\".\n", itemName.c_str() );
 							return 0;

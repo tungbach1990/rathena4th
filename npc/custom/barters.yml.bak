@@ -60,3 +60,15 @@ Body:
           - Index: 0
             Item: Etel_Dust
             Amount: 5
+          - Index: 1
+            Item: Etel_Dust
+            Amount: 5
+          - Index: 2
+            Item: Etel_Dust
+            Amount: 5
+          - Index: 3
+            Item: Etel_Dust
+            Amount: 5
+          - Index: 4
+            Item: Etel_Dust
+            Amount: 5
