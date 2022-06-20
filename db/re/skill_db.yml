@@ -29707,6 +29707,7 @@ Body:
     TargetType: Self
     DamageFlags:
       Splash: true
+      Critical: true
     Hit: Single
     HitCount: 1
     Element: Weapon

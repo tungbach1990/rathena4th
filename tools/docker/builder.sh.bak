@@ -20,5 +20,5 @@ if [ "${runBuild}" -eq "1" ]; then
     make common
 	make tools
   fi
-  make server;
+  make clean server;
 fi

@@ -23,9 +23,8 @@ services:
         container_name: "rathena-builder"
         command: "/docker/builder.sh"
         volumes:
-            - "../rathena/:/rathena" # mount git repo directory inside container
+            - "../docker/:/docker" # mount git repo directory inside container
             - "./asset/:/rathena/conf/import/" # load db connection
-            - "../docker/:/docker" # mount script to outsite
         init: true # helps with signal forwarding and process reaping
         tty: true
         stdin_open: true

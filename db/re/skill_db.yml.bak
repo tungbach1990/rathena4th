@@ -42354,7 +42354,7 @@ Body:
       Interval: 300
       Target: Enemy
       Flag:
-        #NoOverlap: true
+        NoOverlap: true
         PathCheck: true
   - Id: 5446
     Name: SH_HYUN_ROK_CANNON
