@@ -122,13 +122,17 @@ uint64 QuestDatabase::parseBodyNode(const ryml::NodeRef& node) {
 					return 0;
 
 				std::shared_ptr<s_mob_db> mob = mobdb_search_aegisname(mob_name.c_str());
-
+				
 				if (!mob) {
+					mob_id = mobdb_checkid(atoi(mob_name.c_str()));
+				} else {
+					mob_id = mob->id;
+				}
+				if (mob_id == 0 && !mob) {
 					this->invalidWarning(targetNode["Mob"], "Mob %s does not exist, skipping.\n", mob_name.c_str());
 					return 0;
 				}
-
-				mob_id = mob->id;
+				
 
 				it = std::find_if(quest->objectives.begin(), quest->objectives.end(), [&](std::shared_ptr<s_quest_objective> const &v) {
 					return (*v).mob_id == mob_id;

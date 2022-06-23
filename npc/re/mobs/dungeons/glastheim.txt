@@ -182,6 +182,19 @@ gl_step,0,0	monster	Raydric Archer	1276,13,5000
 gl_step,0,0	monster	Mimic	1191,6,5000
 
 //==================================================
+// gl_cas01_ - Nightmare Mode 1f
+//==================================================
+gl_cas01_,0,0	monster	Contaminated Raydric	20367,20,5000
+gl_cas01_,0,0	monster	Contaminated Raydric Archer	20368,20,5000
+gl_cas01_,0,0	monster	Frozen Gargoyle	20369,20,5000
+gl_cas01_,0,0	monster	Contaminated Sting	20370,20,5000
+gl_cas01_,0,0	monster	Prison Breaker	20371,20,5000
+gl_cas01_,0,0	monster	Ice Ghost	20379,20,5000
+gl_cas01_,0,0	monster	Flame Ghost	20380,20,5000
+gl_cas01_,0,0	monster	Contaminated Wanderer	20420,15,5000
+gl_cas01_,0,0	monster	Contaminated Spider Queen	20421,1,3600000,3000000
+gl_cas01_,0,0	monster	Contaminated Dark Lord	20422,1,3600000,3000000
+//==================================================
 // gl_cas02_ - Nightmare Mode 2f
 //==================================================
 gl_cas02_,0,0	monster	Evil Druid (Nightmare)	2480,4,0,0,0

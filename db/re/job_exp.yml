@@ -2870,7 +2870,7 @@ Body:
   - Jobs:
       Super_Novice_E: true
       Super_Baby_E: true
-    MaxJobLevel: 50
+    MaxJobLevel: 70
     JobExp:
       - Level: 1
         Exp: 112000
@@ -2970,7 +2970,45 @@ Body:
         Exp: 107630000
       - Level: 49
         Exp: 119077000
-      - Level: 50
+      - Level: 51
+        Exp: 127335500	
+      - Level: 52
+        Exp: 136632900	
+      - Level: 53
+        Exp: 145930300	
+      - Level: 54
+        Exp: 155227700	
+      - Level: 55
+        Exp: 164525100	
+      - Level: 56
+        Exp: 173822500	
+      - Level: 57
+        Exp: 183119900	
+      - Level: 58
+        Exp: 192417300	
+      - Level: 59
+        Exp: 201714700	
+      - Level: 60
+        Exp: 211012100	
+      - Level: 61
+        Exp: 220309500	
+      - Level: 62
+        Exp: 229606900	
+      - Level: 63
+        Exp: 238904300	
+      - Level: 64
+        Exp: 248201700	
+      - Level: 65
+        Exp: 257499100	
+      - Level: 66
+        Exp: 266796500	
+      - Level: 67
+        Exp: 276093900	
+      - Level: 68
+        Exp: 285391300	
+      - Level: 69
+        Exp: 294688700	
+      - Level: 70
         Exp: 999999999
   - Jobs:
       Super_Novice: true

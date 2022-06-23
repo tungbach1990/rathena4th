@@ -4245,7 +4245,9 @@ bool MobDatabase::parseDropNode(std::string nodeName, const ryml::NodeRef& node,
 			return false;
 
 		std::shared_ptr<item_data> item = item_db.search_aegisname( item_name.c_str() );
-
+		if (item == nullptr){
+						item = item_db.find( strtoul( item_name.c_str(), nullptr, 10 ) );
+		}
 		if (item == nullptr) {
 			this->invalidWarning(dropit["Item"], "Monster %s item %s does not exist, skipping.\n", nodeName.c_str(), item_name.c_str());
 			continue;

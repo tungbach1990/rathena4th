@@ -1,0 +1,4 @@
+prontera,154,177,5	script	Tool Merchant#doram05t	4_DR_M_01,{
+callshop "testitemid";
+setquest 30001;
+}

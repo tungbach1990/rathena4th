@@ -22,6 +22,7 @@ aldebaran
 anthell01
 anthell02
 arena_room
+clock_01
 c_tower1
 c_tower2
 c_tower3
