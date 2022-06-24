@@ -54108,7 +54108,7 @@ Body:
     AegisName: DUMMY_10
     Name: Dummy 10
     Level: 10
-    Hp: 99999999
+    Hp: 1999999999
     Size: Medium
     Race: Formless
     Element: Neutral
@@ -54122,7 +54122,7 @@ Body:
     AegisName: DUMMY_50
     Name: Dummy 50
     Level: 50
-    Hp: 99999999
+    Hp: 1999999999
     Defense: 50
     MagicDefense: 50
     Size: Medium
@@ -54138,7 +54138,7 @@ Body:
     AegisName: DUMMY_100
     Name: Dummy 100
     Level: 100
-    Hp: 99999999
+    Hp: 1999999999
     Defense: 90
     MagicDefense: 90
     Size: Medium
@@ -54154,7 +54154,7 @@ Body:
     AegisName: DUMMY_150
     Name: Dummy 150
     Level: 150
-    Hp: 99999999
+    Hp: 1999999999
     Defense: 120
     MagicDefense: 120
     Size: Medium
@@ -54172,7 +54172,7 @@ Body:
     AegisName: DUMMY_10_FIRE
     Name: Dummy 10
     Level: 10
-    Hp: 99999999
+    Hp: 1999999999
     Size: Medium
     Race: Formless
     Element: Fire
