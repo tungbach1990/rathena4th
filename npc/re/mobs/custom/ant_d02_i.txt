@@ -1,0 +1,10 @@
+ant_d02_i,0,0	monster	Diligent Andre Larva	21388,20,5000
+ant_d02_i,0,0	monster	Mushy Ant Egg	21391,20,5000
+ant_d02_i,0,0	monster	Gutsy Familiar	21393,25,5000
+ant_d02_i,0,0	monster	Diligent Andre	21386,30,5000
+ant_d02_i,0,0	monster	Diligent Deniro	21389,30,5000
+ant_d02_i,0,0	monster	Diligent Piere	21390,30,5000
+ant_d02_i,0,0	monster	Gutsy Giearth	21392,15,5000
+ant_d02_i,0,0	monster	Diligent Soldier Andre	21387,15,5000
+ant_d02_i,0,0	monster	Diligent Vitata	21394,15,5000
+ant_d02_i,0,0,0,0	boss_monster	Silent Maya	21395,1,10800000,600000,0

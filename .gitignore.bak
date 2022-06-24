@@ -57,7 +57,7 @@ Thumbs.db
 /3rdparty/yaml-cpp/Makefile
 
 # /db/
-#/db/import
+/db/import
 
 # /conf/
 /conf/import

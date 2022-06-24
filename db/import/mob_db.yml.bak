@@ -1,0 +1,6879 @@
+# This file is a part of rAthena.
+#   Copyright(C) 2021 rAthena Development Team
+#   https://rathena.org - https://github.com/rathena
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+###########################################################################
+# Monster Database
+###########################################################################
+#
+# Monster Settings
+#
+###########################################################################
+# - Id                      Monster ID.
+#   AegisName               Server name to reference the monster in scripts and lookups, should use no spaces.
+#   Name                    Name in English.
+#   JapaneseName            Name in Japanese. (Default: 'Name' value)
+#   Level                   Level. (Default: 1)
+#   Hp                      Total HP. (Default: 1)
+#   Sp                      Total SP. (Default: 1)
+#   BaseExp                 Base experience gained. (Default: 0)
+#   JobExp                  Job experience gained. (Default: 0)
+#   MvpExp                  MVP experience gained. (Default: 0)
+#   Attack                  Minimum attack in pre-renewal and base attack in renewal. (Default: 0)
+#   Attack2                 Maximum attack in pre-renewal and base magic attack in renewal. (Default: 0)
+#   Defense                 Physical defense of the monster, reduces melee and ranged physical attack/skill damage. (Default: 0)
+#   MagicDefense            Magic defense of the monster, reduces magical skill damage. (Default: 0)
+#   Resistance              Physical resistance of the monster, reduces melee and ranged physical attack/skill damage. (Default: 0)
+#   MagicResistance         Magic resistance of the monster, reduces magical skill damage. (Default: 0)
+#   Str                     Strength which affects attack. (Default: 1)
+#   Agi                     Agility which affects flee. (Default: 1)
+#   Vit                     Vitality which affects defense. (Default: 1)
+#   Int                     Intelligence which affects magic attack. (Default: 1)
+#   Dex                     Dexterity which affects hit rate. (Default: 1)
+#   Luk                     Luck which affects perfect dodge/lucky flee/perfect flee/lucky dodge rate. (Default: 1)
+#   AttackRange             Attack range. (Default: 0)
+#   SkillRange              Skill cast range. (Default: 0)
+#   ChaseRange              Chase range. (Default: 0)
+#   Size                    Size. (Default: Small)
+#   Race                    Race. (Default: Formless)
+#   RaceGroups:             List of secondary groups the monster may be part of. (Optional)
+#     <group>: <value>      Group to toggle.
+#   Element                 Element. (Default: Neutral)
+#   ElementLevel            Level of element. (Default: 1)
+#   WalkSpeed               Walk speed. (Default: DEFAULT_WALK_SPEED)
+#   AttackDelay             Attack speed. (Default: 0)
+#   AttackMotion            Attack animation speed. (Default: 0)
+#   DamageMotion            Damage animation speed. (Default: 0)
+#   DamageTaken             Rate at which the monster will receive incoming damage. (Default: 100)
+#   Ai                      Aegis monster type AI behavior. (Default: 06)
+#   Class                   Aegis monster class. (Default: Normal)
+#   Modes:                  List of unique behavior not defined by AI, Class, or Attribute. (Optional)
+#     <mode>: <value>       Mode to toggle.
+#   MvpDrops:               List of possible MVP prize items. Max of MAX_MVP_DROP. (Optional)
+#     - Item                Item name.
+#       Rate                Drop rate of item. (Default: 1)
+#       RandomOptionGroup   Random Option Group applied to item on drop. (Default: None)
+#       Index               Index used for overwriting item. (Optional)
+#   Drops:                  List of possible normal item drops. Max of MAX_MOB_DROP. (Optional)
+#     - Item                Item name.
+#       Rate                Drop rate of item. (Default: 1)
+#       StealProtected      If the item is shielded from TF_STEAL. (Default: false)
+#       RandomOptionGroup   Random Option Group applied to item on drop. (Default: None)
+#       Index               Index used for overwriting item. (Optional)
+###########################################################################
+Header:
+  Type: MOB_DB
+  Version: 3
+Body:
+- Id: 3139
+  AegisName: MG_ZOMBIE_H
+  Name: Corrupted steward
+  Level: 160
+  Hp: 271200
+  BaseExp: 13332
+  JobExp: 17596
+  Attack: 4728
+  Attack2: 888
+  Defense: 15
+  MagicDefense: 15
+  Str: 44
+  Agi: 22
+  Vit: 77
+  Int: 25
+  Dex: 88
+  Luk: 22
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Undead
+  ElementLevel: 1
+  WalkSpeed: 400
+  AttackDelay: 2612
+  AttackMotion: 912
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 938
+    Rate: 2000
+  - Item: 727
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 22612
+    Rate: 1
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3140
+  AegisName: MG_WRAITH_H
+  Name: Corrupted monk
+  Level: 163
+  Hp: 200336
+  BaseExp: 13998
+  JobExp: 18474
+  Attack: 1998
+  Attack2: 5574
+  Defense: 80
+  MagicDefense: 200
+  Str: 16
+  Agi: 26
+  Vit: 30
+  Int: 115
+  Dex: 79
+  Luk: 5
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Undead
+  ElementLevel: 4
+  WalkSpeed: 350
+  AttackDelay: 1816
+  AttackMotion: 576
+  DamageMotion: 240
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 2206
+    Rate: 200
+  - Item: 731
+    Rate: 200
+  - Item: 747
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3141
+  AegisName: MG_GHOUL_H
+  Name: Grand Chamberlain in pa
+  Level: 162
+  Hp: 416200
+  BaseExp: 14222
+  JobExp: 18772
+  Attack: 5930
+  Attack2: 1332
+  Defense: 30
+  MagicDefense: 30
+  Str: 88
+  Agi: 44
+  Vit: 88
+  Int: 21
+  Dex: 95
+  Luk: 44
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Undead
+  ElementLevel: 2
+  WalkSpeed: 300
+  AttackDelay: 2456
+  AttackMotion: 912
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 756
+    Rate: 200
+  - Item: 2609
+    Rate: 200
+  - Item: 7751
+    Rate: 2000
+  - Item: 22613
+    Rate: 1
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3142
+  AegisName: MG_ARCLOUSE_H
+  Name: Maggot
+  Level: 163
+  Hp: 161622
+  BaseExp: 22
+  JobExp: 28
+  Attack: 2492
+  Attack2: 2514
+  Defense: 121
+  MagicDefense: 36
+  Str: 60
+  Agi: 103
+  Vit: 45
+  Int: 35
+  Dex: 172
+  Luk: 15
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 100
+  AttackDelay: 960
+  AttackMotion: 500
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 1096
+    Rate: 5000
+  - Item: 997
+    Rate: 200
+  - Item: 512
+    Rate: 50
+  - Item: 6755
+    Rate: 500
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3143
+  AegisName: MG_RAYDRIC_H
+  Name: Corrupted palace guard
+  Level: 165
+  Hp: 368160
+  BaseExp: 16306
+  JobExp: 7638
+  Attack: 6334
+  Attack2: 276
+  Defense: 89
+  MagicDefense: 15
+  Str: 159
+  Agi: 87
+  Vit: 66
+  Int: 33
+  Dex: 106
+  Luk: 27
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 824
+  AttackMotion: 780
+  DamageMotion: 420
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 7054
+    Rate: 5000
+  - Item: 985
+    Rate: 100
+  - Item: 2316
+    Rate: 5
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3144
+  AegisName: MG_RAYDRIC_ARCHER_H
+  Name: Wandering Archer
+  Level: 166
+  Hp: 288740
+  BaseExp: 14248
+  JobExp: 10314
+  Attack: 7782
+  Attack2: 334
+  Defense: 63
+  MagicDefense: 40
+  Str: 53
+  Agi: 24
+  Vit: 40
+  Int: 15
+  Dex: 156
+  Luk: 30
+  AttackRange: 14
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1152
+  AttackMotion: 1152
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 200
+  - Item: 6610
+    Rate: 200
+  - Item: 6608
+    Rate: 20
+  - Item: 7054
+    Rate: 5000
+  - Item: 985
+    Rate: 100
+  - Item: 2330
+    Rate: 5
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3145
+  AegisName: MG_KNIGHT_OF_ABYSS_H
+  Name: Abysmal Knight#3
+  Level: 172
+  Hp: 451578
+  BaseExp: 18584
+  JobExp: 18232
+  Attack: 6400
+  Attack2: 244
+  Defense: 102
+  MagicDefense: 50
+  Str: 121
+  Agi: 55
+  Vit: 99
+  Int: 70
+  Dex: 126
+  Luk: 37
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Dark
+  ElementLevel: 4
+  WalkSpeed: 300
+  AttackDelay: 1000
+  AttackMotion: 500
+  DamageMotion: 1000
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 6609
+    Rate: 500
+  - Item: 6610
+    Rate: 400
+  - Item: 6608
+    Rate: 100
+  - Item: 1064
+    Rate: 5000
+  - Item: 1004
+    Rate: 20
+  - Item: 2341
+    Rate: 5
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3147
+  AegisName: MG_BLOODY_KNIGHT_H
+  Name: Bloody Knight
+  Level: 173
+  Hp: 493502
+  BaseExp: 20448
+  JobExp: 24070
+  Attack: 3762
+  Attack2: 6400
+  Defense: 122
+  MagicDefense: 300
+  Str: 132
+  Agi: 55
+  Vit: 89
+  Int: 151
+  Dex: 137
+  Luk: 45
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Dark
+  ElementLevel: 4
+  WalkSpeed: 250
+  AttackDelay: 828
+  AttackMotion: 528
+  DamageMotion: 192
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 6609
+    Rate: 500
+  - Item: 6610
+    Rate: 400
+  - Item: 6608
+    Rate: 100
+  - Item: 7054
+    Rate: 5000
+  - Item: 1160
+    Rate: 200
+  - Item: 1157
+    Rate: 200
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 3151
+  AegisName: MG_CORRUPTION_ROOT_H
+  Name: Corrupted Soul#1
+  Level: 180
+  Hp: 18200000
+  BaseExp: 2199906
+  JobExp: 2209324
+  Attack: 7774
+  Attack2: 7774
+  Defense: 333
+  MagicDefense: 333
+  Str: 201
+  Agi: 20
+  Vit: 90
+  Int: 201
+  Dex: 201
+  Luk: 20
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 2000
+  AttackDelay: 576
+  AttackMotion: 672
+  DamageMotion: 480
+  DamageTaken: 10
+  Ai: 10
+  Class: Boss
+  MvpDrops:
+  - Item: 12246
+    Rate: 5000
+  - Item: 617
+    Rate: 5000
+  - Item: 617
+    Rate: 5000
+  Drops:
+  - Item: 616
+    Rate: 5000
+  - Item: 617
+    Rate: 10000
+  - Item: 6607
+    Rate: 5000
+  - Item: 607
+    Rate: 10000
+  - Item: 2854
+    Rate: 1000
+  - Item: 7566
+    Rate: 10000
+  - Item: 512
+    Rate: 50
+  - Item: 4604
+    Rate: 1
+    StealProtected: true
+- Id: 3150
+  AegisName: MG_AMDARAIS_H
+  Name: Amdarais#1
+  Level: 180
+  Hp: 42900000
+  BaseExp: 2291324
+  JobExp: 2416726
+  Attack: 10580
+  Attack2: 7800
+  Defense: 30
+  MagicDefense: 40
+  Str: 255
+  Agi: 39
+  Vit: 90
+  Int: 169
+  Dex: 166
+  Luk: 20
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Undead
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 312
+  AttackMotion: 1200
+  DamageMotion: 432
+  DamageTaken: 10
+  Ai: 26
+  Class: Boss
+  MvpDrops:
+  - Item: 12246
+    Rate: 5000
+  - Item: 617
+    Rate: 5000
+  - Item: 617
+    Rate: 5000
+  Drops:
+  - Item: 616
+    Rate: 5000
+  - Item: 617
+    Rate: 10000
+  - Item: 6607
+    Rate: 5000
+  - Item: 607
+    Rate: 10000
+  - Item: 1186
+    Rate: 1000
+  - Item: 1004
+    Rate: 10000
+  - Item: 512
+    Rate: 50
+  - Item: 4602
+    Rate: 1
+    StealProtected: true
+- Id: 3792
+  AegisName: ILL_GAZETI
+  Name: Angry Gazeti
+  Level: 126
+  Hp: 117139
+  Sp: 0
+  BaseExp: 6755
+  JobExp: 6454
+  Attack: 2290
+  Attack2: 366
+  Defense: 141
+  MagicDefense: 42
+  Str: 125
+  Agi: 54
+  Vit: 64
+  Int: 56
+  Dex: 144
+  Luk: 62
+  AttackRange: 10
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Water
+  ElementLevel: 1
+  WalkSpeed: 190
+  AttackDelay: 576
+  AttackMotion: 370
+  DamageMotion: 270
+  Ai: 20
+  Drops:
+  - Item: 25297
+    Rate: 1000
+  - Item: 6224
+    Rate: 200
+  - Item: 6253
+    Rate: 100
+  - Item: 2227
+    Rate: 50
+  - Item: 22746
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27110
+    Rate: 1
+    StealProtected: true
+- Id: 3793
+  AegisName: ILL_SNOWIER
+  Name: Angry Snowier
+  Level: 129
+  Hp: 105290
+  BaseExp: 7106
+  JobExp: 6711
+  Attack: 1750
+  Attack2: 330
+  Defense: 195
+  MagicDefense: 78
+  Str: 136
+  Agi: 88
+  Vit: 97
+  Int: 78
+  Dex: 103
+  Luk: 71
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 220
+  AttackDelay: 936
+  AttackMotion: 1020
+  DamageMotion: 420
+  Ai: 04
+  Drops:
+  - Item: 25299
+    Rate: 1000
+  - Item: 7561
+    Rate: 700
+  - Item: 995
+    Rate: 100
+  - Item: 1822
+    Rate: 50
+  - Item: 7938
+    Rate: 300
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27111
+    Rate: 1
+    StealProtected: true
+- Id: 3794
+  AegisName: ILL_ICE_TITAN
+  Name: Angry Ice Titan
+  Level: 133
+  Hp: 137656
+  BaseExp: 7519
+  JobExp: 7132
+  Attack: 1988
+  Attack2: 298
+  Defense: 644
+  MagicDefense: 44
+  Str: 181
+  Agi: 70
+  Vit: 119
+  Int: 61
+  Dex: 124
+  Luk: 56
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 861
+  AttackMotion: 660
+  DamageMotion: 144
+  Ai: 04
+  Drops:
+  - Item: 25298
+    Rate: 1000
+  - Item: 7066
+    Rate: 700
+  - Item: 749
+    Rate: 200
+  - Item: 13314
+    Rate: 50
+  - Item: 7939
+    Rate: 300
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27112
+    Rate: 1
+    StealProtected: true
+- Id: 3795
+  AegisName: ILL_ICEICLE
+  Name: Solid Icicle
+  Level: 135
+  Hp: 1012
+  BaseExp: 200
+  JobExp: 200
+  Attack: 1553
+  Attack2: 1
+  Defense: 50
+  MagicDefense: 35
+  Str: 199
+  Agi: 1
+  Vit: 1
+  Int: 1
+  Dex: 244
+  Luk: 1
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 2000
+  AttackDelay: 1344
+  AttackMotion: 0
+  DamageMotion: 0
+  Ai: 10
+  Drops:
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+  - Item: 25297
+    Rate: 200
+    StealProtected: true
+- Id: 3796
+  AegisName: ILL_KTULLANUX
+  Name: Awakened Ktullanux
+  Level: 135
+  Hp: 13521442
+  BaseExp: 2777284
+  JobExp: 1937023
+  Attack: 5754
+  Attack2: 2680
+  Defense: 129
+  MagicDefense: 78
+  Str: 125
+  Agi: 156
+  Vit: 70
+  Int: 165
+  Dex: 262
+  Luk: 142
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Brute
+  Element: Water
+  ElementLevel: 4
+  WalkSpeed: 400
+  AttackDelay: 432
+  AttackMotion: 840
+  DamageMotion: 216
+  DamageTaken: 10
+  Ai: 21
+  Class: Boss
+  MvpDrops:
+  - Item: 25271
+    Rate: 1
+  - Item: 607
+    Rate: 1
+  - Item: 607
+    Rate: 1
+  Drops:
+  - Item: 25300
+    Rate: 4000
+  - Item: 2509
+    Rate: 1000
+  - Item: 2111
+    Rate: 1000
+  - Item: 13314
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27113
+    Rate: 1
+    StealProtected: true
+- Id: 3799
+  AegisName: ILL_ASSULTER
+  Name: Ominous Assulter
+  Level: 160
+  Hp: 592508
+  Sp: 0
+  BaseExp: 54213
+  JobExp: 48375
+  Attack: 3049
+  Attack2: 408
+  Defense: 369
+  MagicDefense: 82
+  Str: 180
+  Agi: 161
+  Vit: 60
+  Int: 44
+  Dex: 214
+  Luk: 30
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Demon
+  Element: Wind
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 21
+  Drops:
+  - Item: 25313
+    Rate: 1000
+  - Item: 25311
+    Rate: 600
+  - Item: 25312
+    Rate: 300
+  - Item: 996
+    Rate: 50
+  - Item: 20789
+    Rate: 20
+  - Item: 13300
+    Rate: 50
+  - Item: 603
+    Rate: 50
+  - Item: 27117
+    Rate: 1
+    StealProtected: true
+- Id: 3800
+  AegisName: ILL_PERMETER
+  Name: Ominous Permeter
+  Level: 157
+  Hp: 508355
+  Sp: 0
+  BaseExp: 50806
+  JobExp: 41661
+  Attack: 2845
+  Attack2: 415
+  Defense: 288
+  MagicDefense: 100
+  Str: 159
+  Agi: 60
+  Vit: 135
+  Int: 90
+  Dex: 120
+  Luk: 60
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 250
+  AttackDelay: 1100
+  AttackMotion: 483
+  DamageMotion: 528
+  Ai: 21
+  Drops:
+  - Item: 25313
+    Rate: 1000
+  - Item: 25311
+    Rate: 600
+  - Item: 25312
+    Rate: 300
+  - Item: 12736
+    Rate: 100
+  - Item: 7564
+    Rate: 2800
+  - Item: 576
+    Rate: 200
+  - Item: 7939
+    Rate: 100
+  - Item: 27115
+    Rate: 1
+    StealProtected: true
+- Id: 3801
+  AegisName: ILL_FREEZER
+  Name: Ominous Freezer
+  Level: 159
+  Hp: 549071
+  Sp: 0
+  BaseExp: 54892
+  JobExp: 43913
+  Attack: 2925
+  Attack2: 383
+  Defense: 146
+  MagicDefense: 80
+  Str: 154
+  Agi: 111
+  Vit: 120
+  Int: 100
+  Dex: 142
+  Luk: 60
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 170
+  AttackDelay: 1260
+  AttackMotion: 960
+  DamageMotion: 672
+  Ai: 21
+  Drops:
+  - Item: 25313
+    Rate: 1000
+  - Item: 25311
+    Rate: 600
+  - Item: 25312
+    Rate: 300
+  - Item: 7564
+    Rate: 2800
+  - Item: 22084
+    Rate: 20
+  - Item: 6253
+    Rate: 200
+  - Item: 25272
+    Rate: 100
+  - Item: 27118
+    Rate: 1
+    StealProtected: true
+- Id: 3802
+  AegisName: ILL_SOLIDER
+  Name: Ominous Solider
+  Level: 161
+  Hp: 592310
+  Sp: 0
+  BaseExp: 59190
+  JobExp: 49128
+  Attack: 3129
+  Attack2: 428
+  Defense: 406
+  MagicDefense: 116
+  Str: 155
+  Agi: 100
+  Vit: 170
+  Int: 42
+  Dex: 133
+  Luk: 50
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 250
+  AttackDelay: 1452
+  AttackMotion: 483
+  DamageMotion: 528
+  Ai: 21
+  Drops:
+  - Item: 25313
+    Rate: 1000
+  - Item: 25311
+    Rate: 600
+  - Item: 25312
+    Rate: 300
+  - Item: 997
+    Rate: 50
+  - Item: 15129
+    Rate: 20
+  - Item: 7564
+    Rate: 2800
+  - Item: 518
+    Rate: 400
+  - Item: 27114
+    Rate: 1
+    StealProtected: true
+- Id: 3803
+  AegisName: ILL_HEATER
+  Name: Ominous Heater
+  Level: 162
+  Hp: 527390
+  Sp: 0
+  BaseExp: 52699
+  JobExp: 44794
+  Attack: 3249
+  Attack2: 582
+  Defense: 400
+  MagicDefense: 100
+  Str: 177
+  Agi: 95
+  Vit: 120
+  Int: 100
+  Dex: 212
+  Luk: 89
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 250
+  AttackDelay: 1452
+  AttackMotion: 483
+  DamageMotion: 528
+  Ai: 21
+  Drops:
+  - Item: 25313
+    Rate: 1000
+  - Item: 25311
+    Rate: 600
+  - Item: 25312
+    Rate: 300
+  - Item: 994
+    Rate: 50
+  - Item: 7564
+    Rate: 2800
+  - Item: 526
+    Rate: 50
+  - Item: 1003
+    Rate: 500
+  - Item: 27116
+    Rate: 1
+    StealProtected: true
+- Id: 3804
+  AegisName: ILL_TURTLE_GENERAL
+  Name: Ominous Turtle General
+  Level: 165
+  Hp: 11628549
+  Sp: 0
+  BaseExp: 3431854
+  JobExp: 2146800
+  Attack: 6394
+  Attack2: 2808
+  Defense: 796
+  MagicDefense: 246
+  Str: 232
+  Agi: 246
+  Vit: 302
+  Int: 189
+  Dex: 424
+  Luk: 180
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Brute
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 900
+  AttackMotion: 1000
+  DamageMotion: 500
+  DamageTaken: 10
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 25314
+    Rate: 4000
+  - Item: 1529
+    Rate: 300
+  - Item: 1306
+    Rate: 300
+  - Item: 1417
+    Rate: 300
+  - Item: 1141
+    Rate: 300
+  - Item: 658
+    Rate: 500
+  - Item: 607
+    Rate: 1000
+  - Item: 27119
+    Rate: 1
+    StealProtected: true
+- Id: 20367
+  AegisName: RAYDRIC_H
+  Name: Contaminated Raydric
+  Level: 185
+  Hp: 2372683
+  BaseExp: 169477
+  JobExp: 118634
+  Attack: 3330
+  Attack2: 826
+  Defense: 494
+  MagicDefense: 101
+  Str: 144
+  Agi: 134
+  Vit: 103
+  Int: 67
+  Dex: 148
+  Luk: 41
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 120
+  AttackDelay: 824
+  AttackMotion: 780
+  DamageMotion: 420
+  Ai: 21
+  Drops:
+  - Item: 7054
+    Rate: 3774
+  - Item: 757
+    Rate: 35
+  - Item: 25730
+    Rate: 120
+  - Item: 26016
+    Rate: 50
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27354
+    Rate: 1
+    StealProtected: true
+- Id: 20368
+  AegisName: RAYDRIC_ARCHER_H
+  Name: Contaminated Raydric Archer
+  Level: 184
+  Hp: 2355718
+  BaseExp: 168266
+  JobExp: 117786
+  Attack: 3174
+  Attack2: 883
+  Defense: 412
+  MagicDefense: 101
+  Str: 138
+  Agi: 113
+  Vit: 76
+  Int: 72
+  Dex: 187
+  Luk: 77
+  AttackRange: 9
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 1152
+  AttackMotion: 1152
+  DamageMotion: 480
+  Ai: 05
+  Drops:
+  - Item: 1764
+    Rate: 350
+  - Item: 7054
+    Rate: 3774
+  - Item: 25730
+    Rate: 120
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27355
+    Rate: 1
+    StealProtected: true
+- Id: 20369
+  AegisName: GARGOYLE_H
+  Name: "\tFrozen Gargoyle"
+  Level: 186
+  Hp: 2377139
+  BaseExp: 169796
+  JobExp: 118857
+  Attack: 2999
+  Attack2: 1203
+  Defense: 333
+  MagicDefense: 105
+  Str: 129
+  Agi: 109
+  Vit: 49
+  Int: 97
+  Dex: 178
+  Luk: 63
+  AttackRange: 9
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 1020
+  AttackMotion: 720
+  DamageMotion: 384
+  Ai: 05
+  Drops:
+  - Item: 912
+    Rate: 970
+  - Item: 1039
+    Rate: 75
+  - Item: 985
+    Rate: 6
+  - Item: 12012
+    Rate: 6
+  - Item: 991
+    Rate: 2
+  - Item: 25730
+    Rate: 120
+  - Item: 25728
+    Rate: 120
+  - Item: 27356
+    Rate: 1
+    StealProtected: true
+- Id: 20370
+  AegisName: STING_H
+  Name: "\uC624\uC5FC\uB41C \uC2A4\uD305"
+  Level: 180
+  Hp: 2297907
+  BaseExp: 164136
+  JobExp: 114895
+  Attack: 3893
+  Attack2: 912
+  Defense: 276
+  MagicDefense: 100
+  Str: 173
+  Agi: 98
+  Vit: 32
+  Int: 76
+  Dex: 170
+  Luk: 68
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 200
+  AttackDelay: 528
+  AttackMotion: 500
+  DamageMotion: 240
+  Ai: 21
+  Drops:
+  - Item: 7004
+    Rate: 1000
+  - Item: 1003
+    Rate: 160
+  - Item: 997
+    Rate: 30
+  - Item: 10007
+    Rate: 13
+  - Item: 25730
+    Rate: 120
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 27357
+    Rate: 1
+    StealProtected: true
+- Id: 20371
+  AegisName: RAGGED_ZOMBIE_H
+  Name: Prison Breaker
+  Level: 186
+  Hp: 2375279
+  BaseExp: 169663
+  JobExp: 118764
+  Attack: 3185
+  Attack2: 1228
+  Defense: 297
+  MagicDefense: 105
+  Str: 137
+  Agi: 71
+  Vit: 37
+  Int: 99
+  Dex: 156
+  Luk: 61
+  AttackRange: 5
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Undead
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 1960
+  AttackMotion: 576
+  DamageMotion: 420
+  Ai: 05
+  Drops:
+  - Item: 1098
+    Rate: 1750
+  - Item: 7016
+    Rate: 50
+  - Item: 985
+    Rate: 10
+  - Item: 25730
+    Rate: 120
+  - Item: 28619
+    Rate: 50
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 27358
+    Rate: 1
+    StealProtected: true
+- Id: 20420
+  AegisName: WANDER_MAN_H
+  Name: Corrupted Wanderer
+  Level: 187
+  Hp: 2387582
+  BaseExp: 170542
+  JobExp: 119379
+  Attack: 4114
+  Attack2: 835
+  Defense: 289
+  MagicDefense: 102
+  Str: 176
+  Agi: 121
+  Vit: 34
+  Int: 67
+  Dex: 139
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Wind
+  ElementLevel: 2
+  WalkSpeed: 100
+  AttackDelay: 672
+  AttackMotion: 500
+  DamageMotion: 192
+  Ai: 21
+  Drops:
+  - Item: 7005
+    Rate: 2425
+  - Item: 2270
+    Rate: 3
+  - Item: 984
+    Rate: 57
+  - Item: 25730
+    Rate: 120
+  - Item: 21039
+    Rate: 50
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 27361
+    Rate: 1
+    StealProtected: true
+- Id: 20421
+  AegisName: BRINARANEA_H
+  Name: Corrupted Spider Queen
+  Level: 195
+  Hp: 74623473
+  BaseExp: 14924695
+  JobExp: 10447286
+  Attack: 6069
+  Attack2: 1469
+  Defense: 285
+  MagicDefense: 112
+  Str: 249
+  Agi: 176
+  Vit: 30
+  Int: 113
+  Dex: 191
+  Luk: 70
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 1020
+  AttackMotion: 500
+  DamageMotion: 768
+  DamageTaken: 10
+  Ai: 21
+  Class: Boss
+  MvpDrops:
+  - Item: 616
+    Rate: 1000
+  - Item: 995
+    Rate: 5000
+  - Item: 512
+    Rate: 50
+  Drops:
+  - Item: 25729
+    Rate: 50
+  - Item: 617
+    Rate: 3000
+  - Item: 607
+    Rate: 2500
+  - Item: 25731
+    Rate: 50
+  - Item: 1025
+    Rate: 5000
+  - Item: 2049
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 27362
+    Rate: 1
+    StealProtected: true
+- Id: 20422
+  AegisName: DARK_LORD_H
+  Name: Corrupted Dark Lord
+  Level: 194
+  Hp: 74476822
+  BaseExp: 14895364
+  JobExp: 10426755
+  Attack: 6693
+  Attack2: 3841
+  Defense: 503
+  MagicDefense: 134
+  Str: 276
+  Agi: 151
+  Vit: 103
+  Int: 297
+  Dex: 172
+  Luk: 66
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Undead
+  ElementLevel: 3
+  WalkSpeed: 100
+  AttackDelay: 868
+  AttackMotion: 768
+  DamageMotion: 480
+  DamageTaken: 10
+  Ai: 21
+  Class: Boss
+  MvpDrops:
+  - Item: 5093
+    Rate: 500
+  - Item: 7005
+    Rate: 6000
+  - Item: 512
+    Rate: 50
+  Drops:
+  - Item: 25729
+    Rate: 50
+  - Item: 7005
+    Rate: 5000
+  - Item: 25731
+    Rate: 50
+  - Item: 607
+    Rate: 2500
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27363
+    Rate: 1
+    StealProtected: true
+- Id: 20255
+  AegisName: ILL_TEDDY_BEAR_R
+  Name: Red Teddy Bear
+  Level: 155
+  Hp: 328072
+  BaseExp: 19972
+  JobExp: 22503
+  Attack: 2022
+  Attack2: 225
+  Defense: 212
+  MagicDefense: 88
+  Str: 132
+  Agi: 100
+  Vit: 155
+  Int: 132
+  Dex: 133
+  Luk: 132
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Fire
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 25615
+    Rate: 1000
+  - Item: 1002
+    Rate: 2000
+  - Item: 984
+    Rate: 500
+  - Item: 11620
+    Rate: 1500
+  - Item: 2406
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27286
+    Rate: 1
+    StealProtected: true
+- Id: 20256
+  AegisName: ILL_TEDDY_BEAR_Y
+  Name: Yellow Teddy Bear
+  Level: 155
+  Hp: 294044
+  BaseExp: 19384
+  JobExp: 23165
+  Attack: 1819
+  Attack2: 202
+  Defense: 200
+  MagicDefense: 112
+  Str: 102
+  Agi: 132
+  Vit: 102
+  Int: 182
+  Dex: 155
+  Luk: 102
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Wind
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 11620
+    Rate: 1500
+  - Item: 25615
+    Rate: 1000
+  - Item: 985
+    Rate: 500
+  - Item: 7317
+    Rate: 2500
+  - Item: 1618
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27286
+    Rate: 1
+    StealProtected: true
+- Id: 20257
+  AegisName: ILL_TEDDY_BEAR_G
+  Name: Green Teddy Bear
+  Level: 157
+  Hp: 331960
+  BaseExp: 21646
+  JobExp: 25117
+  Attack: 2113
+  Attack2: 235
+  Defense: 227
+  MagicDefense: 110
+  Str: 129
+  Agi: 128
+  Vit: 141
+  Int: 173
+  Dex: 158
+  Luk: 129
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Poison
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 512
+  AttackMotion: 708
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 11620
+    Rate: 1500
+  - Item: 25615
+    Rate: 1000
+  - Item: 25616
+    Rate: 500
+  - Item: 511
+    Rate: 2500
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27286
+    Rate: 1
+    StealProtected: true
+- Id: 20258
+  AegisName: ILL_TEDDY_BEAR_W
+  Name: White Teddy Bear
+  Level: 155
+  Hp: 311841
+  BaseExp: 20334
+  JobExp: 23595
+  Attack: 1985
+  Attack2: 221
+  Defense: 213
+  MagicDefense: 103
+  Str: 121
+  Agi: 120
+  Vit: 133
+  Int: 162
+  Dex: 149
+  Luk: 121
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 11620
+    Rate: 2500
+  - Item: 25615
+    Rate: 1500
+  - Item: 615
+    Rate: 500
+  - Item: 999
+    Rate: 250
+  - Item: 1620
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27286
+    Rate: 1
+    StealProtected: true
+- Id: 20259
+  AegisName: ILL_TEDDY_BEAR_B
+  Name: Blue Teddy Bear
+  Level: 152
+  Hp: 280657
+  BaseExp: 18300
+  JobExp: 21235
+  Attack: 1786
+  Attack2: 198
+  Defense: 192
+  MagicDefense: 93
+  Str: 109
+  Agi: 108
+  Vit: 120
+  Int: 146
+  Dex: 134
+  Luk: 109
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Water
+  ElementLevel: 1
+  WalkSpeed: 300
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 11620
+    Rate: 1500
+  - Item: 7317
+    Rate: 2500
+  - Item: 998
+    Rate: 1000
+  - Item: 510
+    Rate: 500
+  - Item: 25617
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27286
+    Rate: 1
+    StealProtected: true
+- Id: 20260
+  AegisName: ILL_TEDDY_BEAR_S
+  Name: Shining Teddy Bear
+  Level: 160
+  Hp: 10724874
+  BaseExp: 1793444
+  JobExp: 1618614
+  Attack: 4168
+  Attack2: 2895
+  Defense: 313
+  MagicDefense: 152
+  Str: 178
+  Agi: 176
+  Vit: 195
+  Int: 238
+  Dex: 219
+  Luk: 178
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Holy
+  ElementLevel: 4
+  WalkSpeed: 150
+  AttackDelay: 512
+  AttackMotion: 780
+  DamageMotion: 504
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 985
+    Rate: 2000
+  - Item: 984
+    Rate: 2000
+  - Item: 25619
+    Rate: 1500
+  - Item: 1242
+    Rate: 300
+  - Item: 7317
+    Rate: 4000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27287
+    Rate: 1
+    StealProtected: true
+- Id: 20261
+  AegisName: ILL_PITMAN
+  Name: Hardworking Pitman
+  Level: 154
+  Hp: 305605
+  BaseExp: 0
+  JobExp: 0
+  Attack: 1945
+  Attack2: 216
+  Defense: 209
+  MagicDefense: 101
+  Str: 118
+  Agi: 117
+  Vit: 130
+  Int: 159
+  Dex: 146
+  Luk: 118
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 180
+  AttackDelay: 960
+  AttackMotion: 336
+  DamageMotion: 300
+  Ai: 04
+  Drops:
+  - Item: 7318
+    Rate: 1500
+  - Item: 7319
+    Rate: 250
+  - Item: 1041
+    Rate: 2500
+  - Item: 6244
+    Rate: 1000
+  - Item: 13167
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27288
+    Rate: 1
+    StealProtected: true
+- Id: 20262
+  AegisName: ILL_MINERAL
+  Name: Soul Fragment
+  Level: 153
+  Hp: 290324
+  BaseExp: 18931
+  JobExp: 21967
+  Attack: 1847
+  Attack2: 205
+  Defense: 198
+  MagicDefense: 96
+  Str: 113
+  Agi: 112
+  Vit: 124
+  Int: 151
+  Dex: 139
+  Luk: 113
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 250
+  AttackDelay: 648
+  AttackMotion: 480
+  DamageMotion: 360
+  Ai: 04
+  Drops:
+  - Item: 7321
+    Rate: 2500
+  - Item: 728
+    Rate: 250
+  - Item: 25618
+    Rate: 1000
+  - Item: 715
+    Rate: 300
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27289
+    Rate: 1
+    StealProtected: true
+- Id: 20263
+  AegisName: ILL_OBSIDIAN
+  Name: Sinister Dwelling Obsidian
+  Level: 156
+  Hp: 318593
+  BaseExp: 0
+  JobExp: 0
+  Attack: 2027
+  Attack2: 225
+  Defense: 217
+  MagicDefense: 106
+  Str: 124
+  Agi: 122
+  Vit: 136
+  Int: 166
+  Dex: 152
+  Luk: 124
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 350
+  AttackDelay: 720
+  AttackMotion: 864
+  DamageMotion: 504
+  Ai: 04
+  Drops:
+  - Item: 7315
+    Rate: 1500
+  - Item: 730
+    Rate: 250
+  - Item: 1003
+    Rate: 250
+  - Item: 985
+    Rate: 40
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27290
+    Rate: 1
+    StealProtected: true
+- Id: 20270
+  AegisName: ILL_TRI_JOINT
+  Name: Ancient Tri Joint
+  Level: 164
+  Hp: 694500
+  BaseExp: 75839
+  JobExp: 56880
+  Attack: 2105
+  Attack2: 498
+  Defense: 144
+  MagicDefense: 5
+  Str: 77
+  Agi: 88
+  Vit: 70
+  Int: 55
+  Dex: 145
+  Luk: 20
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 1
+  WalkSpeed: 200
+  AttackDelay: 860
+  AttackMotion: 660
+  DamageMotion: 624
+  Ai: 07
+  Drops:
+  - Item: 7053
+    Rate: 1500
+  - Item: 943
+    Rate: 550
+  - Item: 606
+    Rate: 100
+  - Item: 993
+    Rate: 80
+  - Item: 1001
+    Rate: 70
+  - Item: 25638
+    Rate: 250
+  - Item: 25642
+    Rate: 1000
+  - Item: 27291
+    Rate: 1
+    StealProtected: true
+- Id: 20271
+  AegisName: ILL_STALACTIC_GOLEM
+  Name: Ancient Stalactic Golem
+  Level: 167
+  Hp: 725400
+  BaseExp: 79214
+  JobExp: 59410
+  Attack: 2923
+  Attack2: 521
+  Defense: 412
+  MagicDefense: 5
+  Str: 105
+  Agi: 98
+  Vit: 122
+  Int: 45
+  Dex: 158
+  Luk: 55
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 150
+  AttackDelay: 632
+  AttackMotion: 518
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 25641
+    Rate: 1000
+  - Item: 7054
+    Rate: 2425
+  - Item: 1000
+    Rate: 125
+  - Item: 997
+    Rate: 15
+  - Item: 757
+    Rate: 125
+  - Item: 1552
+    Rate: 10
+  - Item: 25638
+    Rate: 250
+  - Item: 27292
+    Rate: 1
+    StealProtected: true
+- Id: 20272
+  AegisName: ILL_MEGALITH
+  Name: Ancient Megalith
+  Level: 166
+  Hp: 708500
+  BaseExp: 77368
+  JobExp: 58026
+  Attack: 2877
+  Attack2: 511
+  Defense: 188
+  MagicDefense: 18
+  Str: 104
+  Agi: 111
+  Vit: 89
+  Int: 55
+  Dex: 214
+  Luk: 42
+  AttackRange: 9
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 200
+  AttackDelay: 1332
+  AttackMotion: 1332
+  DamageMotion: 672
+  Ai: 10
+  Drops:
+  - Item: 912
+    Rate: 1500
+  - Item: 7049
+    Rate: 700
+  - Item: 757
+    Rate: 104
+  - Item: 985
+    Rate: 31
+  - Item: 25638
+    Rate: 250
+  - Item: 25640
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 27293
+    Rate: 1
+    StealProtected: true
+- Id: 20273
+  AegisName: ILL_TAO_GUNKA
+  Name: Ancient Tao Gunka
+  Level: 169
+  Hp: 19280000
+  BaseExp: 4001752
+  JobExp: 3001314
+  Attack: 5070
+  Attack2: 3028
+  Defense: 905
+  MagicDefense: 143
+  Str: 180
+  Agi: 216
+  Vit: 100
+  Int: 111
+  Dex: 212
+  Luk: 42
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 1020
+  AttackMotion: 288
+  DamageMotion: 144
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7300
+    Rate: 2425
+  - Item: 25639
+    Rate: 2425
+  - Item: 728
+    Rate: 500
+  - Item: 12738
+    Rate: 100
+  - Item: 2354
+    Rate: 100
+  - Item: 2520
+    Rate: 100
+  - Item: 25638
+    Rate: 1250
+  - Item: 27294
+    Rate: 1
+    StealProtected: true
+- Id: 20274
+  AegisName: ILL_STONE_SHOOTER
+  Name: Ancient Stone Shooter
+  Level: 166
+  Hp: 692500
+  BaseExp: 75621
+  JobExp: 56716
+  Attack: 2711
+  Attack2: 510
+  Defense: 184
+  MagicDefense: 15
+  Str: 98
+  Agi: 86
+  Vit: 68
+  Int: 44
+  Dex: 215
+  Luk: 54
+  AttackRange: 10
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Plant
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 175
+  AttackDelay: 2413
+  AttackMotion: 1248
+  DamageMotion: 768
+  Ai: 04
+  Drops:
+  - Item: 7203
+    Rate: 2500
+  - Item: 7201
+    Rate: 2500
+  - Item: 7188
+    Rate: 500
+  - Item: 1019
+    Rate: 1000
+  - Item: 756
+    Rate: 50
+  - Item: 25637
+    Rate: 1000
+  - Item: 25633
+    Rate: 250
+  - Item: 27295
+    Rate: 1
+    StealProtected: true
+- Id: 20275
+  AegisName: ILL_WOOTAN_SHOOTER
+  Name: Ancient Wootan Shooter
+  Level: 164
+  Hp: 702100
+  BaseExp: 76669
+  JobExp: 57502
+  Attack: 2460
+  Attack2: 517
+  Defense: 142
+  MagicDefense: 21
+  Str: 90
+  Agi: 97
+  Vit: 74
+  Int: 53
+  Dex: 220
+  Luk: 45
+  AttackRange: 10
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 857
+  AttackMotion: 1056
+  DamageMotion: 576
+  Ai: 05
+  Drops:
+  - Item: 7195
+    Rate: 2250
+  - Item: 7200
+    Rate: 1750
+  - Item: 25636
+    Rate: 1000
+  - Item: 1718
+    Rate: 10
+  - Item: 7182
+    Rate: 750
+  - Item: 7939
+    Rate: 50
+  - Item: 25633
+    Rate: 250
+  - Item: 27296
+    Rate: 1
+    StealProtected: true
+- Id: 20276
+  AegisName: ILL_WOOTAN_FIGHTER
+  Name: Ancient Wootan Fighter
+  Level: 167
+  Hp: 725500
+  BaseExp: 79225
+  JobExp: 59418
+  Attack: 3062
+  Attack2: 538
+  Defense: 205
+  MagicDefense: 8
+  Str: 110
+  Agi: 115
+  Vit: 90
+  Int: 42
+  Dex: 158
+  Luk: 42
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 912
+  AttackMotion: 1344
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 25635
+    Rate: 1000
+  - Item: 7196
+    Rate: 2000
+  - Item: 7939
+    Rate: 50
+  - Item: 7198
+    Rate: 500
+  - Item: 513
+    Rate: 500
+  - Item: 25272
+    Rate: 10
+  - Item: 25633
+    Rate: 250
+  - Item: 27297
+    Rate: 1
+    StealProtected: true
+- Id: 20277
+  AegisName: ILL_WOOTAN_DEFENDER
+  Name: Ancient Wootan Defender
+  Level: 169
+  Hp: 20154000
+  BaseExp: 4001552
+  JobExp: 3001164
+  Attack: 2535
+  Attack2: 3101
+  Defense: 874
+  MagicDefense: 143
+  Str: 90
+  Agi: 198
+  Vit: 102
+  Int: 105
+  Dex: 215
+  Luk: 165
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 4
+  WalkSpeed: 150
+  AttackDelay: 1020
+  AttackMotion: 288
+  DamageMotion: 144
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 25634
+    Rate: 2250
+  - Item: 7196
+    Rate: 2250
+  - Item: 7939
+    Rate: 50
+  - Item: 7198
+    Rate: 500
+  - Item: 2419
+    Rate: 100
+  - Item: 5128
+    Rate: 100
+  - Item: 25633
+    Rate: 1250
+  - Item: 27298
+    Rate: 1
+    StealProtected: true
+- Id: 20386
+  AegisName: MD_GH_KING_SCHMIDT_N
+  Name: Curse-swallowed King
+  Level: 110
+  Hp: 9200000
+  BaseExp: 1100000
+  JobExp: 820000
+  Attack: 5100
+  Attack2: 3100
+  Defense: 340
+  MagicDefense: 82
+  Str: 180
+  Agi: 200
+  Vit: 77
+  Int: 200
+  Dex: 282
+  Luk: 154
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 170
+  AttackDelay: 76
+  AttackMotion: 384
+  DamageMotion: 288
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 607
+    Rate: 8000
+  - Item: 617
+    Rate: 10000
+  - Item: 616
+    Rate: 3000
+  - Item: 12246
+    Rate: 500
+  - Item: 6607
+    Rate: 4000
+  - Item: 25739
+    Rate: 5000
+  - Item: 25739
+    Rate: 1500
+  - Item: 27329
+    Rate: 1
+    StealProtected: true
+- Id: 20387
+  AegisName: MD_GH_KING_SCHMIDT_H
+  Name: Curse-swallowed King
+  Level: 175
+  Hp: 45000000
+  BaseExp: 3900000
+  JobExp: 2300000
+  Attack: 9564
+  Attack2: 4235
+  Defense: 680
+  MagicDefense: 90
+  Str: 360
+  Agi: 400
+  Vit: 90
+  Int: 400
+  Dex: 574
+  Luk: 154
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 170
+  AttackDelay: 76
+  AttackMotion: 384
+  DamageMotion: 288
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 607
+    Rate: 8000
+  - Item: 617
+    Rate: 10000
+  - Item: 616
+    Rate: 6000
+  - Item: 12246
+    Rate: 1000
+  - Item: 6607
+    Rate: 4000
+  - Item: 25740
+    Rate: 5000
+  - Item: 25740
+    Rate: 1500
+  - Item: 27329
+    Rate: 1
+    StealProtected: true
+- Id: 20388
+  AegisName: MD_GH_KHALITZBURG
+  Name: Unreasonable Person
+  Level: 110
+  Hp: 46350
+  BaseExp: 2600
+  JobExp: 2500
+  Attack: 1800
+  Attack2: 300
+  Defense: 204
+  MagicDefense: 50
+  Str: 120
+  Agi: 110
+  Vit: 68
+  Int: 80
+  Dex: 130
+  Luk: 45
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 200
+  AttackDelay: 478
+  AttackMotion: 1000
+  DamageMotion: 396
+  Ai: 04
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7315
+    Rate: 2000
+  - Item: 985
+    Rate: 100
+  - Item: 1004
+    Rate: 10
+  - Item: 25739
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 4609
+    Rate: 1
+    StealProtected: true
+- Id: 20389
+  AegisName: MD_GH_KHALITZBURG_H
+  Name: "\uC5EC\uAE30\uC0AC\uC758 \uC0AC\uB150#22"
+  Level: 175
+  Hp: 1140000
+  BaseExp: 30000
+  JobExp: 28000
+  Attack: 4130
+  Attack2: 544
+  Defense: 408
+  MagicDefense: 80
+  Str: 240
+  Agi: 220
+  Vit: 80
+  Int: 160
+  Dex: 260
+  Luk: 90
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 200
+  AttackDelay: 478
+  AttackMotion: 1000
+  DamageMotion: 396
+  Ai: 04
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7315
+    Rate: 2000
+  - Item: 985
+    Rate: 100
+  - Item: 1004
+    Rate: 10
+  - Item: 25739
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 4609
+    Rate: 1
+    StealProtected: true
+- Id: 20390
+  AegisName: MD_GH_WHITEKNIGHT
+  Name: "\uC800\uC8FC\uBC1B\uC740 \uAE30\uC0AC#6"
+  Level: 111
+  Hp: 58650
+  BaseExp: 3014
+  JobExp: 2870
+  Attack: 1200
+  Attack2: 402
+  Defense: 204
+  MagicDefense: 55
+  Str: 120
+  Agi: 100
+  Vit: 55
+  Int: 80
+  Dex: 140
+  Luk: 47
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Holy
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1250
+  AttackMotion: 500
+  DamageMotion: 1000
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 1004
+    Rate: 10
+  - Item: 984
+    Rate: 100
+  - Item: 1064
+    Rate: 5000
+  - Item: 727
+    Rate: 500
+  - Item: 25739
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 4608
+    Rate: 1
+    StealProtected: true
+- Id: 20391
+  AegisName: MD_GH_WHITEKNIGHT_H
+  Name: "\uAE30\uC0AC\uC758 \uC6D0\uD63C#1"
+  Level: 175
+  Hp: 1380000
+  BaseExp: 33100
+  JobExp: 31000
+  Attack: 5247
+  Attack2: 688
+  Defense: 408
+  MagicDefense: 80
+  Str: 280
+  Agi: 200
+  Vit: 70
+  Int: 160
+  Dex: 280
+  Luk: 94
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Holy
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1250
+  AttackMotion: 500
+  DamageMotion: 1000
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 1004
+    Rate: 10
+  - Item: 984
+    Rate: 100
+  - Item: 1064
+    Rate: 5000
+  - Item: 727
+    Rate: 500
+  - Item: 25739
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 4608
+    Rate: 1
+    StealProtected: true
+- Id: 20392
+  AegisName: MD_GH_ALICE_G
+  Name: "\uD0C0\uB77D\uD55C \uBA54\uC774\uB4DC#4"
+  Level: 110
+  Hp: 68145
+  BaseExp: 50
+  JobExp: 50
+  Attack: 800
+  Attack2: 1500
+  Defense: 103
+  MagicDefense: 70
+  Str: 95
+  Agi: 75
+  Vit: 70
+  Int: 100
+  Dex: 152
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 502
+  AttackMotion: 1999
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20394
+  AegisName: MD_GH_BLOODY_KNIGHT
+  Name: "\uC554\uD751\uC758 \uADFC\uC704\uB300\uC7A5#11"
+  Level: 175
+  Hp: 1152000
+  BaseExp: 21000
+  JobExp: 22000
+  Attack: 2625
+  Attack2: 690
+  Defense: 266
+  MagicDefense: 300
+  Str: 264
+  Agi: 255
+  Vit: 90
+  Int: 302
+  Dex: 274
+  Luk: 95
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Dark
+  ElementLevel: 4
+  WalkSpeed: 200
+  AttackDelay: 414
+  AttackMotion: 364
+  DamageMotion: 192
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 1160
+    Rate: 10
+  - Item: 1157
+    Rate: 10
+  - Item: 25739
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20520
+  AegisName: ILL_BAPHOMET
+  Name: Chaos Baphomet
+  Level: 178
+  Hp: 21278744
+  BaseExp: 4255749
+  JobExp: 2979024
+  Attack: 6141
+  Attack2: 3168
+  Defense: 343
+  MagicDefense: 122
+  Str: 276
+  Agi: 188
+  Vit: 55
+  Int: 267
+  Dex: 244
+  Luk: 99
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 100
+  AttackDelay: 768
+  AttackMotion: 576
+  DamageMotion: 768
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 6004
+    Rate: 1000
+  - Item: 1466
+    Rate: 150
+  - Item: 25780
+    Rate: 5000
+  - Item: 1181
+    Rate: 100
+  - Item: 923
+    Rate: 3500
+  - Item: 1231
+    Rate: 200
+  - Item: 512
+    Rate: 1
+  - Item: 27334
+    Rate: 1
+    StealProtected: true
+- Id: 20521
+  AegisName: ILL_ANDREA
+  Name: ILL_ANDREA
+  Level: 177
+  Hp: 1057547
+  BaseExp: 96141
+  JobExp: 67298
+  Attack: 4248
+  Attack2: 1337
+  Defense: 330
+  MagicDefense: 110
+  Str: 192
+  Agi: 122
+  Vit: 51
+  Int: 175
+  Dex: 188
+  Luk: 68
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 130
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7321
+    Rate: 2500
+  - Item: 2648
+    Rate: 100
+  - Item: 607
+    Rate: 50
+  - Item: 608
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27343
+    Rate: 1
+    StealProtected: true
+- Id: 20522
+  AegisName: ILL_ANES
+  Name: ILL_ANES
+  Level: 177
+  Hp: 1057444
+  BaseExp: 96131
+  JobExp: 67292
+  Attack: 4314
+  Attack2: 1369
+  Defense: 327
+  MagicDefense: 110
+  Str: 195
+  Agi: 122
+  Vit: 50
+  Int: 174
+  Dex: 178
+  Luk: 61
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 130
+  AttackDelay: 567
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7321
+    Rate: 3500
+  - Item: 5126
+    Rate: 100
+  - Item: 608
+    Rate: 50
+  - Item: 607
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27343
+    Rate: 1
+    StealProtected: true
+- Id: 20523
+  AegisName: ILL_SILVANO
+  Name: ILL_SILVANO
+  Level: 177
+  Hp: 1057650
+  BaseExp: 96150
+  JobExp: 67305
+  Attack: 4292
+  Attack2: 1385
+  Defense: 333
+  MagicDefense: 111
+  Str: 194
+  Agi: 122
+  Vit: 52
+  Int: 176
+  Dex: 184
+  Luk: 57
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 130
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7321
+    Rate: 3500
+  - Item: 607
+    Rate: 50
+  - Item: 608
+    Rate: 50
+  - Item: 2518
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27343
+    Rate: 1
+    StealProtected: true
+- Id: 20524
+  AegisName: ILL_CECILIA
+  Name: ILL_CECILIA
+  Level: 177
+  Hp: 1056411
+  BaseExp: 96037
+  JobExp: 67226
+  Attack: 4359
+  Attack2: 1392
+  Defense: 297
+  MagicDefense: 111
+  Str: 197
+  Agi: 122
+  Vit: 40
+  Int: 177
+  Dex: 186
+  Luk: 61
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 130
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 7321
+    Rate: 3500
+  - Item: 607
+    Rate: 50
+  - Item: 608
+    Rate: 50
+  - Item: 2649
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27343
+    Rate: 1
+    StealProtected: true
+- Id: 20525
+  AegisName: ILL_BAPHOMET_J
+  Name: Chaos Baphomet Jr.
+  Level: 177
+  Hp: 1057444
+  BaseExp: 96161
+  JobExp: 67292
+  Attack: 4093
+  Attack2: 847
+  Defense: 327
+  MagicDefense: 108
+  Str: 185
+  Agi: 101
+  Vit: 50
+  Int: 158
+  Dex: 178
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Dark
+  ElementLevel: 1
+  WalkSpeed: 100
+  AttackDelay: 868
+  AttackMotion: 480
+  DamageMotion: 120
+  Ai: 04
+  Drops:
+  - Item: 7054
+    Rate: 5000
+  - Item: 923
+    Rate: 3500
+  - Item: 508
+    Rate: 3000
+  - Item: 984
+    Rate: 100
+  - Item: 25779
+    Rate: 3000
+  - Item: 13106
+    Rate: 25
+  - Item: 512
+    Rate: 50
+  - Item: 27335
+    Rate: 1
+    StealProtected: true
+- Id: 20526
+  AegisName: ILL_SIDE_WINDER
+  Name: Chaos Side Winder
+  Level: 176
+  Hp: 1051983
+  BaseExp: 95635
+  JobExp: 66944
+  Attack: 4026
+  Attack2: 832
+  Defense: 341
+  MagicDefense: 108
+  Str: 183
+  Agi: 94
+  Vit: 55
+  Int: 156
+  Dex: 177
+  Luk: 70
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Poison
+  ElementLevel: 1
+  WalkSpeed: 200
+  AttackDelay: 1576
+  AttackMotion: 576
+  DamageMotion: 576
+  Ai: 04
+  Drops:
+  - Item: 926
+    Rate: 5000
+  - Item: 937
+    Rate: 3500
+  - Item: 972
+    Rate: 5
+  - Item: 1119
+    Rate: 25
+  - Item: 509
+    Rate: 700
+  - Item: 25773
+    Rate: 3000
+  - Item: 512
+    Rate: 50
+  - Item: 27336
+    Rate: 1
+    StealProtected: true
+- Id: 20527
+  AegisName: ILL_HUNTER_FLY
+  Name: Chaos Hunter Fly
+  Level: 175
+  Hp: 1045087
+  BaseExp: 95008
+  JobExp: 66506
+  Attack: 3916
+  Attack2: 817
+  Defense: 313
+  MagicDefense: 107
+  Str: 179
+  Agi: 115
+  Vit: 46
+  Int: 154
+  Dex: 189
+  Luk: 66
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Wind
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 676
+  AttackMotion: 576
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 943
+    Rate: 5000
+  - Item: 999
+    Rate: 50
+  - Item: 912
+    Rate: 3500
+  - Item: 756
+    Rate: 70
+  - Item: 25772
+    Rate: 3000
+  - Item: 996
+    Rate: 20
+  - Item: 512
+    Rate: 50
+  - Item: 27337
+    Rate: 1
+    StealProtected: true
+- Id: 20528
+  AegisName: ILL_MANTIS
+  Name: Chaos Mantis
+  Level: 174
+  Hp: 1039216
+  BaseExp: 94474
+  JobExp: 66132
+  Attack: 3937
+  Attack2: 817
+  Defense: 315
+  MagicDefense: 71
+  Str: 181
+  Agi: 96
+  Vit: 47
+  Int: 155
+  Dex: 184
+  Luk: 67
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Insect
+  Element: Earth
+  ElementLevel: 1
+  WalkSpeed: 200
+  AttackDelay: 1528
+  AttackMotion: 660
+  DamageMotion: 432
+  Ai: 04
+  Drops:
+  - Item: 1031
+    Rate: 4500
+  - Item: 993
+    Rate: 60
+  - Item: 943
+    Rate: 1000
+  - Item: 25774
+    Rate: 3000
+  - Item: 721
+    Rate: 10
+  - Item: 507
+    Rate: 500
+  - Item: 512
+    Rate: 50
+  - Item: 27338
+    Rate: 1
+    StealProtected: true
+- Id: 20529
+  AegisName: ILL_GHOSTRING
+  Name: Chaos Ghostring
+  Level: 173
+  Hp: 1033446
+  BaseExp: 93950
+  JobExp: 65765
+  Attack: 3979
+  Attack2: 834
+  Defense: 320
+  MagicDefense: 71
+  Str: 184
+  Agi: 87
+  Vit: 49
+  Int: 159
+  Dex: 182
+  Luk: 61
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Ghost
+  ElementLevel: 2
+  WalkSpeed: 300
+  AttackDelay: 1220
+  AttackMotion: 1080
+  DamageMotion: 648
+  Ai: 04
+  Drops:
+  - Item: 1059
+    Rate: 5000
+  - Item: 7166
+    Rate: 3500
+  - Item: 911
+    Rate: 1000
+  - Item: 7321
+    Rate: 3500
+  - Item: 25775
+    Rate: 3000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27339
+    Rate: 1
+    StealProtected: true
+- Id: 20530
+  AegisName: ILL_KILLER_MANTIS
+  Name: Chaos Killer Mantis
+  Level: 177
+  Hp: 1058167
+  BaseExp: 96197
+  JobExp: 67378
+  Attack: 4027
+  Attack2: 842
+  Defense: 348
+  MagicDefense: 72
+  Str: 182
+  Agi: 105
+  Vit: 57
+  Int: 157
+  Dex: 194
+  Luk: 47
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Insect
+  Element: Earth
+  ElementLevel: 1
+  WalkSpeed: 175
+  AttackDelay: 1528
+  AttackMotion: 660
+  DamageMotion: 432
+  Ai: 04
+  Drops:
+  - Item: 1031
+    Rate: 5000
+  - Item: 943
+    Rate: 2500
+  - Item: 607
+    Rate: 15
+  - Item: 993
+    Rate: 70
+  - Item: 13158
+    Rate: 25
+  - Item: 25776
+    Rate: 3000
+  - Item: 512
+    Rate: 50
+  - Item: 27340
+    Rate: 1
+    StealProtected: true
+- Id: 20531
+  AegisName: ILL_POPORING
+  Name: Chaos Poporing
+  Level: 173
+  Hp: 1032638
+  BaseExp: 93876
+  JobExp: 65713
+  Attack: 3828
+  Attack2: 797
+  Defense: 296
+  MagicDefense: 70
+  Str: 177
+  Agi: 85
+  Vit: 41
+  Int: 152
+  Dex: 172
+  Luk: 29
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Plant
+  Element: Poison
+  ElementLevel: 3
+  WalkSpeed: 300
+  AttackDelay: 1672
+  AttackMotion: 672
+  DamageMotion: 480
+  Ai: 02
+  Drops:
+  - Item: 938
+    Rate: 5000
+  - Item: 511
+    Rate: 1000
+  - Item: 608
+    Rate: 20
+  - Item: 7321
+    Rate: 3500
+  - Item: 25778
+    Rate: 3000
+  - Item: 985
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27341
+    Rate: 1
+    StealProtected: true
+- Id: 20532
+  AegisName: ILL_STEM_WORM
+  Name: Chaotic Stem Worm
+  Level: 172
+  Hp: 1027071
+  BaseExp: 93370
+  JobExp: 65359
+  Attack: 3917
+  Attack2: 804
+  Defense: 307
+  MagicDefense: 70
+  Str: 180
+  Agi: 95
+  Vit: 45
+  Int: 156
+  Dex: 187
+  Luk: 69
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Plant
+  Element: Wind
+  ElementLevel: 1
+  WalkSpeed: 300
+  AttackDelay: 1956
+  AttackMotion: 756
+  DamageMotion: 528
+  Ai: 04
+  Drops:
+  - Item: 7012
+    Rate: 5000
+  - Item: 509
+    Rate: 1000
+  - Item: 984
+    Rate: 100
+  - Item: 997
+    Rate: 20
+  - Item: 25777
+    Rate: 3000
+  - Item: 608
+    Rate: 20
+  - Item: 512
+    Rate: 50
+  - Item: 27342
+    Rate: 1
+    StealProtected: true
+- Id: 20801
+  AegisName: ILL_SROPHO
+  Name: Deep Sea Sropho
+  Level: 147
+  Hp: 336823
+  Sp: 0
+  BaseExp: 30314
+  JobExp: 21220
+  Attack: 2657
+  Attack2: 340
+  Defense: 224
+  MagicDefense: 81
+  Str: 145
+  Agi: 50
+  Vit: 95
+  Int: 80
+  Dex: 110
+  Luk: 50
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Fish
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 550
+  AttackMotion: 1056
+  DamageMotion: 576
+  Ai: 04
+  Drops:
+  - Item: 951
+    Rate: 2500
+  - Item: 510
+    Rate: 50
+  - Item: 12012
+    Rate: 50
+  - Item: 25899
+    Rate: 250
+  - Item: 1972
+    Rate: 25
+  - Item: 25893
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 300140
+    Rate: 1
+    StealProtected: true
+- Id: 20802
+  AegisName: ILL_OBEAUNE
+  Name: Deep Sea Obeaune
+  Level: 149
+  Hp: 340238
+  Sp: 0
+  BaseExp: 30621
+  JobExp: 21434
+  Attack: 2647
+  Attack2: 384
+  Defense: 255
+  MagicDefense: 90
+  Str: 134
+  Agi: 50
+  Vit: 114
+  Int: 77
+  Dex: 114
+  Luk: 50
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Fish
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 936
+  AttackMotion: 1155
+  DamageMotion: 672
+  Ai: 04
+  Drops:
+  - Item: 950
+    Rate: 2500
+  - Item: 951
+    Rate: 150
+  - Item: 720
+    Rate: 5
+  - Item: 2325
+    Rate: 10
+  - Item: 25899
+    Rate: 250
+  - Item: 25894
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 300141
+    Rate: 1
+    StealProtected: true
+- Id: 20803
+  AegisName: ILL_DEVIACE
+  Name: Deep Sea Deviace
+  Level: 150
+  Hp: 348355
+  Sp: 0
+  BaseExp: 31352
+  JobExp: 21946
+  Attack: 2714
+  Attack2: 401
+  Defense: 274
+  MagicDefense: 91
+  Str: 151
+  Agi: 58
+  Vit: 121
+  Int: 80
+  Dex: 120
+  Luk: 58
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Fish
+  Element: Water
+  ElementLevel: 4
+  WalkSpeed: 400
+  AttackDelay: 480
+  AttackMotion: 970
+  DamageMotion: 770
+  Ai: 04
+  Drops:
+  - Item: 995
+    Rate: 10
+  - Item: 1053
+    Rate: 2500
+  - Item: 1054
+    Rate: 300
+  - Item: 1256
+    Rate: 5
+  - Item: 25892
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+  - Item: 25899
+    Rate: 250
+  - Item: 300142
+    Rate: 1
+    StealProtected: true
+- Id: 20804
+  AegisName: ILL_MARSE
+  Name: Deep Sea Marse
+  Level: 149
+  Hp: 335141
+  Sp: 0
+  BaseExp: 30163
+  JobExp: 21114
+  Attack: 2851
+  Attack2: 417
+  Defense: 288
+  MagicDefense: 100
+  Str: 159
+  Agi: 60
+  Vit: 135
+  Int: 90
+  Dex: 120
+  Luk: 60
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Fish
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 270
+  AttackDelay: 1070
+  AttackMotion: 1512
+  DamageMotion: 485
+  Ai: 04
+  Drops:
+  - Item: 1024
+    Rate: 2500
+  - Item: 962
+    Rate: 1000
+  - Item: 2346
+    Rate: 10
+  - Item: 720
+    Rate: 5
+  - Item: 995
+    Rate: 6
+  - Item: 25895
+    Rate: 1000
+  - Item: 25899
+    Rate: 250
+  - Item: 300143
+    Rate: 1
+    StealProtected: true
+- Id: 20805
+  AegisName: ILL_MERMAN
+  Name: Deep Sea Merman
+  Level: 148
+  Hp: 337534
+  Sp: 0
+  BaseExp: 30378
+  JobExp: 21265
+  Attack: 2801
+  Attack2: 401
+  Defense: 268
+  MagicDefense: 75
+  Str: 159
+  Agi: 60
+  Vit: 134
+  Int: 74
+  Dex: 110
+  Luk: 48
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 220
+  AttackDelay: 708
+  AttackMotion: 1225
+  DamageMotion: 675
+  Ai: 04
+  Drops:
+  - Item: 1054
+    Rate: 1000
+  - Item: 995
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 607
+    Rate: 80
+  - Item: 25896
+    Rate: 1000
+  - Item: 1468
+    Rate: 5
+  - Item: 25899
+    Rate: 250
+  - Item: 300144
+    Rate: 1
+    StealProtected: true
+- Id: 20806
+  AegisName: ILL_SEDORA
+  Name: Deep Sea Sedora
+  Level: 199
+  Hp: 2875143
+  BaseExp: 191676
+  JobExp: 134173
+  Attack: 6574
+  Attack2: 796
+  Defense: 274
+  MagicDefense: 100
+  Str: 232
+  Agi: 147
+  Vit: 78
+  Int: 147
+  Dex: 140
+  Luk: 60
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Fish
+  Element: Wind
+  ElementLevel: 3
+  WalkSpeed: 220
+  AttackDelay: 168
+  AttackMotion: 965
+  DamageMotion: 578
+  Ai: 04
+  Drops:
+  - Item: 962
+    Rate: 2000
+  - Item: 1024
+    Rate: 1000
+  - Item: 603
+    Rate: 5
+  - Item: 991
+    Rate: 20
+  - Item: 25892
+    Rate: 2500
+  - Item: 1913
+    Rate: 5
+  - Item: 25899
+    Rate: 250
+  - Item: 300146
+    Rate: 1
+    StealProtected: true
+- Id: 20807
+  AegisName: ILL_SWORD_FISH
+  Name: Deep Sea Swordfish
+  Level: 199
+  Hp: 2997411
+  Sp: 0
+  BaseExp: 199827
+  JobExp: 139879
+  Attack: 6678
+  Attack2: 824
+  Defense: 288
+  MagicDefense: 71
+  Str: 248
+  Agi: 160
+  Vit: 99
+  Int: 120
+  Dex: 160
+  Luk: 60
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Fish
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 335
+  AttackMotion: 1250
+  DamageMotion: 384
+  Ai: 04
+  Drops:
+  - Item: 963
+    Rate: 2000
+  - Item: 956
+    Rate: 300
+  - Item: 25893
+    Rate: 2500
+  - Item: 995
+    Rate: 50
+  - Item: 2651
+    Rate: 10
+  - Item: 757
+    Rate: 25
+  - Item: 25899
+    Rate: 250
+  - Item: 300147
+    Rate: 1
+    StealProtected: true
+- Id: 20808
+  AegisName: ILL_STROUF
+  Name: Deep Sea Strouf
+  Level: 201
+  Hp: 2967419
+  Sp: 0
+  BaseExp: 197828
+  JobExp: 138480
+  Attack: 5947
+  Attack2: 811
+  Defense: 277
+  MagicDefense: 80
+  Str: 224
+  Agi: 160
+  Vit: 99
+  Int: 125
+  Dex: 161
+  Luk: 64
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Fish
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 180
+  AttackDelay: 276
+  AttackMotion: 672
+  DamageMotion: 384
+  Ai: 04
+  Drops:
+  - Item: 951
+    Rate: 2000
+  - Item: 720
+    Rate: 10
+  - Item: 756
+    Rate: 10
+  - Item: 995
+    Rate: 20
+  - Item: 25895
+    Rate: 2500
+  - Item: 1470
+    Rate: 50
+  - Item: 25899
+    Rate: 250
+  - Item: 300148
+    Rate: 1
+    StealProtected: true
+- Id: 20810
+  AegisName: ILL_KING_DRAMOH
+  Name: Deep Sea King Dramoh
+  Level: 205
+  Hp: 3115698
+  BaseExp: 207713
+  JobExp: 145399
+  Attack: 6081
+  Attack2: 849
+  Defense: 330
+  MagicDefense: 40
+  Str: 194
+  Agi: 151
+  Vit: 150
+  Int: 100
+  Dex: 142
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Fish
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 180
+  AttackDelay: 480
+  AttackMotion: 960
+  DamageMotion: 970
+  Ai: 04
+  Drops:
+  - Item: 960
+    Rate: 1500
+  - Item: 943
+    Rate: 1500
+  - Item: 25896
+    Rate: 2500
+  - Item: 512
+    Rate: 50
+  - Item: 2650
+    Rate: 50
+  - Item: 1186
+    Rate: 50
+  - Item: 25899
+    Rate: 250
+  - Item: 300150
+    Rate: 1
+    StealProtected: true
+- Id: 20811
+  AegisName: ILL_KRAKEN
+  Name: Deep Sea Kraken
+  Level: 204
+  Hp: 81289587
+  BaseExp: 5865974
+  JobExp: 4178562
+  Attack: 10874
+  Attack2: 1889
+  Defense: 335
+  MagicDefense: 271
+  Str: 325
+  Agi: 190
+  Vit: 169
+  Int: 277
+  Dex: 200
+  Luk: 55
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Fish
+  Element: Water
+  ElementLevel: 4
+  WalkSpeed: 180
+  AttackDelay: 422
+  AttackMotion: 870
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 962
+    Rate: 3000
+  - Item: 512
+    Rate: 50
+  - Item: 995
+    Rate: 500
+  - Item: 25729
+    Rate: 50
+  - Item: 7324
+    Rate: 3000
+  - Item: 2519
+    Rate: 300
+  - Item: 25899
+    Rate: 1000
+  - Item: 300151
+    Rate: 1
+    StealProtected: true
+- Id: 20577
+  AegisName: MD_C_RAYDRIC
+  Name: "\uB808\uC774\uB4DC\uB9AD#45"
+  Level: 182
+  Hp: 2362114
+  BaseExp: 168722
+  JobExp: 118106
+  Attack: 8552
+  Attack2: 3342
+  Defense: 665
+  MagicDefense: 77
+  Str: 288
+  Agi: 359
+  Vit: 287
+  Int: 193
+  Dex: 391
+  Luk: 132
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 1024
+  AttackMotion: 780
+  DamageMotion: 420
+  Ai: 04
+  Drops:
+  - Item: 6609
+    Rate: 2000
+  - Item: 6610
+    Rate: 2000
+  - Item: 25867
+    Rate: 500
+  - Item: 7054
+    Rate: 5000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27386
+    Rate: 1
+    StealProtected: true
+- Id: 20578
+  AegisName: MD_C_RAYDRIC_ARCHER
+  Name: MD_C_RAYDRIC_ARCHER
+  Level: 186
+  Hp: 2394654
+  BaseExp: 171047
+  JobExp: 119733
+  Attack: 7231
+  Attack2: 5559
+  Defense: 417
+  MagicDefense: 86
+  Str: 311
+  Agi: 481
+  Vit: 162
+  Int: 287
+  Dex: 576
+  Luk: 77
+  AttackRange: 9
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1736
+  AttackMotion: 1252
+  DamageMotion: 480
+  Ai: 05
+  Drops:
+  - Item: 6609
+    Rate: 2000
+  - Item: 6610
+    Rate: 2000
+  - Item: 25867
+    Rate: 500
+  - Item: 7054
+    Rate: 5000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27387
+    Rate: 1
+    StealProtected: true
+- Id: 3976
+  AegisName: EIRA_BRZ
+  Name: EIRA_BRZ
+  Level: 30
+  Hp: 10
+  BaseExp: 0
+  JobExp: 0
+  Attack: 31
+  Attack2: 20
+  Defense: 36
+  MagicDefense: 17
+  Str: 17
+  Agi: 26
+  Vit: 20
+  Int: 18
+  Dex: 36
+  Luk: 5
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Angel
+  Element: Wind
+  ElementLevel: 1
+  WalkSpeed: 300
+  AttackDelay: 1672
+  AttackMotion: 672
+  DamageMotion: 480
+  Ai: 01
+  Drops:
+  - Item: 12573
+    Rate: 3000
+  - Item: 12538
+    Rate: 3000
+  - Item: 12537
+    Rate: 3000
+  - Item: 25275
+    Rate: 1
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20576
+  AegisName: MD_C_KHALITZBURG
+  Name: "\uCE7C\uB9AC\uCE20\uBC84\uADF8#6"
+  Level: 185
+  Hp: 2401358
+  BaseExp: 171526
+  JobExp: 120068
+  Attack: 9990
+  Attack2: 5453
+  Defense: 671
+  MagicDefense: 85
+  Str: 432
+  Agi: 389
+  Vit: 289
+  Int: 280
+  Dex: 311
+  Luk: 97
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 200
+  AttackDelay: 2650
+  AttackMotion: 1550
+  DamageMotion: 584
+  Ai: 21
+  Drops:
+  - Item: 25867
+    Rate: 500
+  - Item: 6609
+    Rate: 3000
+  - Item: 6610
+    Rate: 1500
+  - Item: 1004
+    Rate: 30
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27385
+    Rate: 1
+    StealProtected: true
+- Id: 20574
+  AegisName: MD_C_WHITEKNIGHT
+  Name: "\uBC31\uC0C9\uC758 \uAE30\uC0AC#3"
+  Level: 188
+  Hp: 2450483
+  BaseExp: 175034
+  JobExp: 122524
+  Attack: 8578
+  Attack2: 2206
+  Defense: 802
+  MagicDefense: 77
+  Str: 365
+  Agi: 229
+  Vit: 354
+  Int: 176
+  Dex: 346
+  Luk: 109
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Undead
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 300
+  AttackDelay: 2800
+  AttackMotion: 1750
+  DamageMotion: 1500
+  Ai: 21
+  Drops:
+  - Item: 25867
+    Rate: 500
+  - Item: 1064
+    Rate: 5000
+  - Item: 6609
+    Rate: 3000
+  - Item: 6610
+    Rate: 1500
+  - Item: 1004
+    Rate: 30
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 27384
+    Rate: 1
+    StealProtected: true
+- Id: 20572
+  AegisName: MD_C_HEMEL
+  Name: "\uD788\uBA5C\uBA54\uC988\uC758 \uD658\uC601"
+  Level: 195
+  Hp: 2000000000
+  BaseExp: 5371570
+  JobExp: 3760099
+  Attack: 15503
+  Attack2: 4264
+  Defense: 514
+  MagicDefense: 92
+  Str: 636
+  Agi: 280
+  Vit: 208
+  Int: 328
+  Dex: 380
+  Luk: 66
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Angel
+  Element: Holy
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 2150
+  AttackMotion: 1350
+  DamageMotion: 750
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 25864
+    Rate: 10000
+  - Item: 25864
+    Rate: 5000
+  - Item: 25864
+    Rate: 1000
+  - Item: 25866
+    Rate: 1000
+  - Item: 616
+    Rate: 5000
+  - Item: 617
+    Rate: 5000
+  - Item: 7925
+    Rate: 5
+  - Item: 27381
+    Rate: 1
+    StealProtected: true
+- Id: 20536
+  AegisName: MD_ED_B_YGNIZEM
+  Name: Unknown Swordsman
+  Level: 180
+  Hp: 75500000
+  BaseExp: 5885540
+  JobExp: 4780000
+  Attack: 5585
+  Attack2: 2532
+  Defense: 585
+  MagicDefense: 235
+  Str: 188
+  Agi: 177
+  Vit: 165
+  Int: 142
+  Dex: 278
+  Luk: 105
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 100
+  AttackDelay: 76
+  AttackMotion: 384
+  DamageMotion: 288
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 25786
+    Rate: 3500
+  - Item: 25787
+    Rate: 3500
+  - Item: 23806
+    Rate: 100
+  - Item: 23994
+    Rate: 1000
+  - Item: 23993
+    Rate: 500
+  - Item: 23992
+    Rate: 100
+  - Item: 19439
+    Rate: 50
+  - Item: 300266
+    Rate: 1
+    StealProtected: true
+- Id: 20537
+  AegisName: MD_ED_YGNIZEM
+  Name: Unknown Swordsman
+  Level: 178
+  Hp: 1519762
+  BaseExp: 138160
+  JobExp: 96712
+  Attack: 4228
+  Attack2: 1283
+  Defense: 340
+  MagicDefense: 109
+  Str: 190
+  Agi: 140
+  Vit: 54
+  Int: 162
+  Dex: 183
+  Luk: 103
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 145
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 7347
+    Rate: 500
+  - Item: 25127
+    Rate: 1000
+  - Item: 25128
+    Rate: 250
+  - Item: 6471
+    Rate: 1
+  - Item: 25787
+    Rate: 10
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20538
+  AegisName: MD_ED_EREND
+  Name: "\uBB34\uBA85\uC758 \uBCF5\uC0AC"
+  Level: 176
+  Hp: 1500486
+  BaseExp: 136341
+  JobExp: 95439
+  Attack: 3168
+  Attack2: 1128
+  Defense: 278
+  MagicDefense: 113
+  Str: 144
+  Agi: 102
+  Vit: 34
+  Int: 201
+  Dex: 175
+  Luk: 98
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Holy
+  ElementLevel: 2
+  WalkSpeed: 130
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 7347
+    Rate: 500
+  - Item: 25127
+    Rate: 1000
+  - Item: 6820
+    Rate: 250
+  - Item: 6471
+    Rate: 1
+  - Item: 25787
+    Rate: 10
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20539
+  AegisName: MD_ED_ARMAIA
+  Name: "\uBB34\uBA85\uC758 \uC0C1\uC778"
+  Level: 175
+  Hp: 1507840
+  BaseExp: 136097
+  JobExp: 95268
+  Attack: 3828
+  Attack2: 1213
+  Defense: 397
+  MagicDefense: 103
+  Str: 175
+  Agi: 132
+  Vit: 74
+  Int: 122
+  Dex: 185
+  Luk: 122
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 120
+  AttackDelay: 576
+  AttackMotion: 432
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 25128
+    Rate: 250
+  - Item: 6471
+    Rate: 1
+  - Item: 25787
+    Rate: 10
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 7347
+    Rate: 500
+  - Item: 25127
+    Rate: 1000
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 20541
+  AegisName: MD_ED_LGTHIGHGUARD
+  Name: Rekenber Senior Guard
+  Level: 174
+  Hp: 1485755
+  BaseExp: 135069
+  JobExp: 94548
+  Attack: 3589
+  Attack2: 1021
+  Defense: 339
+  MagicDefense: 98
+  Str: 165
+  Agi: 112
+  Vit: 55
+  Int: 88
+  Dex: 220
+  Luk: 84
+  AttackRange: 9
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 175
+  AttackDelay: 864
+  AttackMotion: 1268
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7347
+    Rate: 500
+  - Item: 25786
+    Rate: 10
+  - Item: 607
+    Rate: 150
+  - Item: 608
+    Rate: 300
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300264
+    Rate: 1
+    StealProtected: true
+- Id: 20542
+  AegisName: MD_ED_LGTGUARD
+  Name: Rekenber Guard
+  Level: 173
+  Hp: 1475486
+  BaseExp: 134135
+  JobExp: 93895
+  Attack: 3395
+  Attack2: 895
+  Defense: 346
+  MagicDefense: 96
+  Str: 157
+  Agi: 108
+  Vit: 43
+  Int: 75
+  Dex: 164
+  Luk: 65
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 175
+  AttackDelay: 432
+  AttackMotion: 480
+  DamageMotion: 1268
+  Ai: 04
+  Drops:
+  - Item: 7347
+    Rate: 500
+  - Item: 25786
+    Rate: 10
+  - Item: 608
+    Rate: 100
+  - Item: 607
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300263
+    Rate: 1
+    StealProtected: true
+- Id: 20543
+  AegisName: MD_ED_M_SCIENCE
+  Name: Regenschirm Scientist
+  Level: 172
+  Hp: 1469107
+  BaseExp: 133555
+  JobExp: 93489
+  Attack: 2408
+  Attack2: 1103
+  Defense: 302
+  MagicDefense: 104
+  Str: 112
+  Agi: 88
+  Vit: 58
+  Int: 141
+  Dex: 140
+  Luk: 67
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 3
+  WalkSpeed: 200
+  AttackDelay: 864
+  AttackMotion: 1268
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7347
+    Rate: 500
+  - Item: 25787
+    Rate: 10
+  - Item: 25786
+    Rate: 10
+  - Item: 608
+    Rate: 200
+  - Item: 607
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300265
+    Rate: 1
+    StealProtected: true
+- Id: 20581
+  AegisName: MD_C_THORN
+  Name: '#grn_2'
+  Level: 185
+  Hp: 50
+  BaseExp: 0
+  JobExp: 0
+  Attack: 1
+  Attack2: 1
+  Defense: 71
+  MagicDefense: 66
+  Str: 1
+  Agi: 1
+  Vit: 1
+  Int: 1
+  Dex: 1
+  Luk: 1
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 0
+  AttackDelay: 2864
+  AttackMotion: 288
+  DamageMotion: 576
+  Ai: 30
+  Class: Boss
+  Drops:
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+    StealProtected: true
+- Id: 21302
+  AegisName: EP18_ASHHOPPER
+  Name: "\xBE\xD6\xBD\xAC\xC8\xA3\xC6\xDB"
+  Level: 185
+  Hp: 2361429
+  Sp: 0
+  BaseExp: 157531
+  JobExp: 110272
+  Attack: 4648
+  Attack2: 1727
+  Defense: 305
+  MagicDefense: 110
+  Str: 201
+  Agi: 208
+  Vit: 40
+  Int: 140
+  Dex: 280
+  Luk: 90
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Dark
+  ElementLevel: 4
+  WalkSpeed: 130
+  AttackDelay: 760
+  AttackMotion: 1080
+  DamageMotion: 360
+  Ai: 04
+  Drops:
+  - Item: 940
+    Rate: 5000
+  - Item: 752
+    Rate: 15
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300218
+    Rate: 1
+    StealProtected: true
+- Id: 21303
+  AegisName: EP18_ASHRING
+  Name: "\xBE\xD6\xBD\xAC\xB8\xB5"
+  Level: 185
+  Hp: 2364513
+  Sp: 0
+  BaseExp: 168894
+  JobExp: 118226
+  Attack: 4509
+  Attack2: 2220
+  Defense: 335
+  MagicDefense: 115
+  Str: 195
+  Agi: 189
+  Vit: 50
+  Int: 180
+  Dex: 220
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1152
+  AttackMotion: 1152
+  DamageMotion: 432
+  Ai: 02
+  Drops:
+  - Item: 938
+    Rate: 6000
+  - Item: 6213
+    Rate: 100
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300219
+    Rate: 1
+    StealProtected: true
+- Id: 21304
+  AegisName: EP18_GREY_WOLF
+  Name: Grey Wolf
+  Level: 187
+  Hp: 2399581
+  Sp: 0
+  BaseExp: 171399
+  JobExp: 119979
+  Attack: 5610
+  Attack2: 997
+  Defense: 520
+  MagicDefense: 104
+  Str: 240
+  Agi: 185
+  Vit: 111
+  Int: 80
+  Dex: 240
+  Luk: 76
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 648
+  Ai: 04
+  Drops:
+  - Item: 920
+    Rate: 4000
+  - Item: 6213
+    Rate: 100
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300220
+    Rate: 1
+    StealProtected: true
+- Id: 21305
+  AegisName: EP18_TUMBLE_RING
+  Name: Tumblering
+  Level: 185
+  Hp: 2361738
+  Sp: 0
+  BaseExp: 157449
+  JobExp: 110214
+  Attack: 4163
+  Attack2: 2467
+  Defense: 281
+  MagicDefense: 118
+  Str: 180
+  Agi: 266
+  Vit: 32
+  Int: 200
+  Dex: 213
+  Luk: 79
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Plant
+  Element: Poison
+  ElementLevel: 2
+  WalkSpeed: 100
+  AttackDelay: 506
+  AttackMotion: 1008
+  DamageMotion: 504
+  Ai: 07
+  Drops:
+  - Item: 1033
+    Rate: 5000
+  - Item: 576
+    Rate: 150
+  - Item: 711
+    Rate: 200
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300221
+    Rate: 1
+    StealProtected: true
+- Id: 21306
+  AegisName: EP18_FIREWIND_KITE
+  Name: Firewind Kite
+  Level: 188
+  Hp: 2407556
+  Sp: 0
+  BaseExp: 171968
+  JobExp: 120378
+  Attack: 5405
+  Attack2: 877
+  Defense: 428
+  MagicDefense: 103
+  Str: 230
+  Agi: 218
+  Vit: 80
+  Int: 70
+  Dex: 310
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 120
+  AttackDelay: 720
+  AttackMotion: 720
+  DamageMotion: 1512
+  Ai: 04
+  Drops:
+  - Item: 6691
+    Rate: 2500
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300222
+    Rate: 1
+    StealProtected: true
+- Id: 21307
+  AegisName: EP18_PHANTOM_WOLF
+  Name: Phantom Wolf
+  Level: 186
+  Hp: 2383494
+  Sp: 0
+  BaseExp: 170250
+  JobExp: 119175
+  Attack: 5185
+  Attack2: 1525
+  Defense: 456
+  MagicDefense: 108
+  Str: 223
+  Agi: 164
+  Vit: 90
+  Int: 123
+  Dex: 288
+  Luk: 67
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Ghost
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 792
+  AttackMotion: 792
+  DamageMotion: 360
+  Ai: 04
+  Drops:
+  - Item: 1059
+    Rate: 1250
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300223
+    Rate: 1
+    StealProtected: true
+- Id: 21296
+  AegisName: EP18_RAKEHAND
+  Name: Rakehand
+  Level: 177
+  Hp: 1514469
+  Sp: 0
+  BaseExp: 108187
+  JobExp: 75731
+  Attack: 3938
+  Attack2: 1888
+  Defense: 408
+  MagicDefense: 109
+  Str: 180
+  Agi: 122
+  Vit: 77
+  Int: 160
+  Dex: 170
+  Luk: 97
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Plant
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 2000
+  AttackDelay: 432
+  AttackMotion: 864
+  DamageMotion: 1512
+  Ai: 10
+  Drops:
+  - Item: 938
+    Rate: 2000
+  - Item: 6245
+    Rate: 150
+  - Item: 25730
+    Rate: 100
+  - Item: 25728
+    Rate: 100
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300212
+    Rate: 1
+    StealProtected: true
+- Id: 21295
+  AegisName: EP18_ASH_TOAD
+  Name: Ash Toad
+  Level: 179
+  Hp: 1530687
+  Sp: 0
+  BaseExp: 109122
+  JobExp: 76385
+  Attack: 4139
+  Attack2: 1885
+  Defense: 329
+  MagicDefense: 109
+  Str: 185
+  Agi: 101
+  Vit: 50
+  Int: 158
+  Dex: 178
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 1008
+  AttackMotion: 1008
+  DamageMotion: 936
+  Ai: 04
+  Drops:
+  - Item: 908
+    Rate: 1000
+  - Item: 7096
+    Rate: 250
+  - Item: 918
+    Rate: 500
+  - Item: 25730
+    Rate: 120
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300211
+    Rate: 1
+    StealProtected: true
+- Id: 21297
+  AegisName: EP18_SPARK
+  Name: Spark
+  Level: 181
+  Hp: 2313388
+  Sp: 0
+  BaseExp: 154226
+  JobExp: 107958
+  Attack: 4005
+  Attack2: 1569
+  Defense: 331
+  MagicDefense: 107
+  Str: 177
+  Agi: 130
+  Vit: 50
+  Int: 130
+  Dex: 170
+  Luk: 109
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Fire
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 936
+  AttackMotion: 1872
+  DamageMotion: 432
+  Ai: 04
+  Drops:
+  - Item: 7097
+    Rate: 1500
+  - Item: 7098
+    Rate: 900
+  - Item: 25730
+    Rate: 120
+  - Item: 25728
+    Rate: 120
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300213
+    Rate: 1
+    StealProtected: true
+- Id: 21298
+  AegisName: EP18_HOT_MOLAR
+  Name: Hot Molar
+  Level: 212
+  Hp: 4925041
+  Sp: 0
+  BaseExp: 289708
+  JobExp: 202796
+  Attack: 8242
+  Attack2: 1682
+  Defense: 605
+  MagicDefense: 121
+  Str: 311
+  Agi: 177
+  Vit: 131
+  Int: 119
+  Dex: 122
+  Luk: 115
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 130
+  AttackDelay: 571
+  AttackMotion: 1152
+  DamageMotion: 288
+  Ai: 04
+  Drops:
+  - Item: 920
+    Rate: 5000
+  - Item: 7096
+    Rate: 500
+  - Item: 25730
+    Rate: 150
+  - Item: 25728
+    Rate: 150
+  - Item: 25731
+    Rate: 12
+  - Item: 25729
+    Rate: 12
+  - Item: 512
+    Rate: 50
+  - Item: 300214
+    Rate: 1
+    StealProtected: true
+- Id: 21299
+  AegisName: EP18_VOLCARING
+  Name: Volcaring
+  Level: 185
+  Hp: 2361429
+  Sp: 0
+  BaseExp: 157429
+  JobExp: 110200
+  Attack: 6406
+  Attack2: 1653
+  Defense: 275
+  MagicDefense: 109
+  Str: 277
+  Agi: 174
+  Vit: 175
+  Int: 134
+  Dex: 131
+  Luk: 130
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 792
+  AttackMotion: 1584
+  DamageMotion: 504
+  Ai: 02
+  Drops:
+  - Item: 7097
+    Rate: 2500
+  - Item: 7098
+    Rate: 500
+  - Item: 25730
+    Rate: 130
+  - Item: 25728
+    Rate: 130
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300215
+    Rate: 1
+    StealProtected: true
+- Id: 21300
+  AegisName: EP18_LAVA_TOAD
+  Name: Lava Toad
+  Level: 211
+  Hp: 4902338
+  Sp: 0
+  BaseExp: 288373
+  JobExp: 201861
+  Attack: 7385
+  Attack2: 2630
+  Defense: 301
+  MagicDefense: 129
+  Str: 280
+  Agi: 99
+  Vit: 134
+  Int: 187
+  Dex: 149
+  Luk: 61
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Fire
+  ElementLevel: 3
+  WalkSpeed: 170
+  AttackDelay: 504
+  AttackMotion: 1008
+  DamageMotion: 360
+  Ai: 04
+  Drops:
+  - Item: 908
+    Rate: 1500
+  - Item: 7096
+    Rate: 300
+  - Item: 7097
+    Rate: 300
+  - Item: 25730
+    Rate: 150
+  - Item: 25728
+    Rate: 150
+  - Item: 25731
+    Rate: 12
+  - Item: 25729
+    Rate: 12
+  - Item: 300216
+    Rate: 1
+    StealProtected: true
+- Id: 21301
+  AegisName: EP18_BURNING_FANG
+  Name: Burning Fang
+  Level: 212
+  Hp: 98158095
+  Sp: 0
+  BaseExp: 6581326
+  JobExp: 4606928
+  Attack: 9143
+  Attack2: 4904
+  Defense: 791
+  MagicDefense: 149
+  Str: 345
+  Agi: 214
+  Vit: 193
+  Int: 347
+  Dex: 221
+  Luk: 80
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Brute
+  Element: Fire
+  ElementLevel: 4
+  WalkSpeed: 200
+  AttackDelay: 420
+  AttackMotion: 840
+  DamageMotion: 432
+  DamageTaken: 10
+  Ai: 21
+  Class: Boss
+  MvpDrops:
+  - Item: 616
+    Rate: 2000
+  - Item: 607
+    Rate: 2500
+  - Item: 512
+    Rate: 50
+  Drops:
+  - Item: 617
+    Rate: 1500
+  - Item: 616
+    Rate: 500
+  - Item: 7097
+    Rate: 5000
+  - Item: 25730
+    Rate: 10000
+  - Item: 25728
+    Rate: 10000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300217
+    Rate: 1
+    StealProtected: true
+- Id: 21324
+  AegisName: EP18_GREY_WOLF_BABY
+  Name: Baby Gray Wolf
+  Level: 165
+  Hp: 944679
+  BaseExp: 62979
+  JobExp: 44085
+  Attack: 1444
+  Attack2: 1650
+  Defense: 393
+  MagicDefense: 101
+  Str: 70
+  Agi: 177
+  Vit: 76
+  Int: 150
+  Dex: 167
+  Luk: 67
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 1600
+  AttackMotion: 900
+  DamageMotion: 240
+  Ai: 04
+  Drops:
+  - Item: 919
+    Rate: 1000
+  - Item: 582
+    Rate: 500
+  - Item: 25730
+    Rate: 90
+  - Item: 25728
+    Rate: 90
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 4023
+    Rate: 1
+    StealProtected: true
+- Id: 21323
+  AegisName: EP18_GREY_GOAT
+  Name: Ashen Goat
+  Level: 168
+  Hp: 962975
+  BaseExp: 64198
+  JobExp: 44939
+  Attack: 3570
+  Attack2: 1792
+  Defense: 420
+  MagicDefense: 104
+  Str: 170
+  Agi: 141
+  Vit: 84
+  Int: 160
+  Dex: 170
+  Luk: 70
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 165
+  AttackDelay: 540
+  AttackMotion: 1080
+  DamageMotion: 336
+  Ai: 04
+  Drops:
+  - Item: 7106
+    Rate: 2280
+  - Item: 7107
+    Rate: 1250
+  - Item: 507
+    Rate: 250
+  - Item: 510
+    Rate: 500
+  - Item: 25730
+    Rate: 80
+  - Item: 25728
+    Rate: 80
+  - Item: 512
+    Rate: 50
+  - Item: 4150
+    Rate: 1
+    StealProtected: true
+- Id: 20782
+  AegisName: CROW_DUKE
+  Name: Crow Duke
+  Level: 205
+  Hp: 3894053
+  BaseExp: 259604
+  JobExp: 181722
+  Attack: 7073
+  Attack2: 2884
+  Defense: 514
+  MagicDefense: 129
+  Str: 249
+  Agi: 176
+  Vit: 30
+  Int: 201
+  Dex: 191
+  Luk: 70
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Wind
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 480
+  AttackMotion: 2496
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7071
+    Rate: 2500
+  - Item: 7063
+    Rate: 500
+  - Item: 747
+    Rate: 1
+  - Item: 5045
+    Rate: 1
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 300268
+    Rate: 1
+    StealProtected: true
+- Id: 20783
+  AegisName: CROW_BARON
+  Name: Crow Baron
+  Level: 205
+  Hp: 3893746
+  BaseExp: 259583
+  JobExp: 181708
+  Attack: 7380
+  Attack2: 2843
+  Defense: 508
+  MagicDefense: 129
+  Str: 288
+  Agi: 187
+  Vit: 101
+  Int: 208
+  Dex: 180
+  Luk: 66
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demon
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 480
+  AttackMotion: 1920
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7071
+    Rate: 2500
+  - Item: 7063
+    Rate: 500
+  - Item: 747
+    Rate: 1
+  - Item: 5045
+    Rate: 1
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25731
+    Rate: 6
+  - Item: 300267
+    Rate: 1
+    StealProtected: true
+- Id: 20779
+  AegisName: VOID_MIMIC
+  Name: Void Mimic
+  Level: 203
+  Hp: 3842817
+  BaseExp: 256188
+  JobExp: 179331
+  Attack: 3020
+  Attack2: 2531
+  Defense: 251
+  MagicDefense: 125
+  Str: 119
+  Agi: 99
+  Vit: 16
+  Int: 187
+  Dex: 149
+  Luk: 61
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 110
+  AttackDelay: 168
+  AttackMotion: 1440
+  DamageMotion: 720
+  Ai: 04
+  Drops:
+  - Item: 7938
+    Rate: 1500
+  - Item: 617
+    Rate: 1
+  - Item: 644
+    Rate: 25
+  - Item: 7444
+    Rate: 1
+  - Item: 7940
+    Rate: 500
+  - Item: 603
+    Rate: 10
+  - Item: 25731
+    Rate: 6
+  - Item: 300278
+    Rate: 1
+    StealProtected: true
+- Id: 20780
+  AegisName: BOOK_OF_DEATH
+  Name: Book of Death
+  Level: 204
+  Hp: 3864501
+  BaseExp: 257633
+  JobExp: 180343
+  Attack: 4488
+  Attack2: 911
+  Defense: 306
+  MagicDefense: 110
+  Str: 176
+  Agi: 121
+  Vit: 34
+  Int: 67
+  Dex: 139
+  Luk: 77
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Undead
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 176
+  AttackMotion: 1824
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 1097
+    Rate: 2000
+  - Item: 7015
+    Rate: 300
+  - Item: 7449
+    Rate: 750
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300279
+    Rate: 1
+    StealProtected: true
+- Id: 20781
+  AegisName: ELDEST
+  Name: Eldest
+  Level: 205
+  Hp: 3882829
+  BaseExp: 258855
+  JobExp: 181199
+  Attack: 6381
+  Attack2: 2747
+  Defense: 295
+  MagicDefense: 128
+  Str: 249
+  Agi: 176
+  Vit: 30
+  Int: 201
+  Dex: 191
+  Luk: 70
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 320
+  AttackMotion: 2304
+  DamageMotion: 672
+  Ai: 04
+  Drops:
+  - Item: 7099
+    Rate: 2000
+  - Item: 7117
+    Rate: 750
+  - Item: 7939
+    Rate: 500
+  - Item: 1006
+    Rate: 50
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 300269
+    Rate: 1
+    StealProtected: true
+- Id: 20773
+  AegisName: EMPATHIZER
+  Name: Empathizer
+  Level: 200
+  Hp: 3788426
+  BaseExp: 252562
+  JobExp: 176793
+  Attack: 5800
+  Attack2: 1907
+  Defense: 296
+  MagicDefense: 118
+  Str: 232
+  Agi: 134
+  Vit: 32
+  Int: 143
+  Dex: 148
+  Luk: 41
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Angel
+  Element: Ghost
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 432
+  AttackMotion: 1152
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7440
+    Rate: 100
+  - Item: 7442
+    Rate: 50
+  - Item: 12040
+    Rate: 5
+  - Item: 722
+    Rate: 100
+  - Item: 7005
+    Rate: 500
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300270
+    Rate: 1
+    StealProtected: true
+- Id: 20774
+  AegisName: HAPPY_GIVER
+  Name: Happiness Giver
+  Level: 202
+  Hp: 3827826
+  BaseExp: 255188
+  JobExp: 178632
+  Attack: 5353
+  Attack2: 2114
+  Defense: 328
+  MagicDefense: 121
+  Str: 212
+  Agi: 141
+  Vit: 42
+  Int: 157
+  Dex: 187
+  Luk: 77
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Angel
+  Element: Wind
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 432
+  AttackMotion: 1152
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7441
+    Rate: 250
+  - Item: 7442
+    Rate: 50
+  - Item: 728
+    Rate: 500
+  - Item: 12040
+    Rate: 5
+  - Item: 7435
+    Rate: 50
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300271
+    Rate: 1
+    StealProtected: true
+- Id: 20844
+  AegisName: PRAY_GIVER
+  Name: Pray Giver
+  Level: 203
+  Hp: 3845709
+  BaseExp: 256381
+  JobExp: 179466
+  Attack: 5659
+  Attack2: 1827
+  Defense: 308
+  MagicDefense: 118
+  Str: 223
+  Agi: 155
+  Vit: 35
+  Int: 135
+  Dex: 130
+  Luk: 61
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Angel
+  Element: Ghost
+  ElementLevel: 3
+  WalkSpeed: 120
+  AttackDelay: 360
+  AttackMotion: 768
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7441
+    Rate: 100
+  - Item: 7442
+    Rate: 50
+  - Item: 7938
+    Rate: 250
+  - Item: 7063
+    Rate: 300
+  - Item: 12040
+    Rate: 5
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300272
+    Rate: 1
+    StealProtected: true
+- Id: 20845
+  AegisName: SMILE_GIVER
+  Name: "\uC6C3\uC74C\uC744 \uC8FC\uB294 \uC790"
+  Level: 201
+  Hp: 3808424
+  BaseExp: 253895
+  JobExp: 177726
+  Attack: 5301
+  Attack2: 1889
+  Defense: 318
+  MagicDefense: 118
+  Str: 211
+  Agi: 167
+  Vit: 39
+  Int: 141
+  Dex: 199
+  Luk: 35
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Angel
+  Element: Holy
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 1188
+  DamageMotion: 720
+  Ai: 04
+  Drops:
+  - Item: 7441
+    Rate: 250
+  - Item: 7442
+    Rate: 50
+  - Item: 12040
+    Rate: 5
+  - Item: 7938
+    Rate: 250
+  - Item: 7063
+    Rate: 300
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300273
+    Rate: 1
+    StealProtected: true
+- Id: 20775
+  AegisName: THA_ANGER
+  Name: Anger of Thanatos
+  Level: 203
+  Hp: 3845405
+  BaseExp: 256360
+  JobExp: 179452
+  Attack: 6420
+  Attack2: 1313
+  Defense: 302
+  MagicDefense: 114
+  Str: 253
+  Agi: 111
+  Vit: 33
+  Int: 97
+  Dex: 178
+  Luk: 63
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Fire
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 432
+  AttackMotion: 1920
+  DamageMotion: 960
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 500
+  - Item: 731
+    Rate: 250
+  - Item: 732
+    Rate: 50
+  - Item: 7438
+    Rate: 3000
+  - Item: 25728
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300274
+    Rate: 1
+    StealProtected: true
+- Id: 20776
+  AegisName: THA_HORROR
+  Name: Horror of Thanatos
+  Level: 201
+  Hp: 3807368
+  BaseExp: 253825
+  JobExp: 177677
+  Attack: 5904
+  Attack2: 1300
+  Defense: 297
+  MagicDefense: 113
+  Str: 235
+  Agi: 176
+  Vit: 32
+  Int: 97
+  Dex: 170
+  Luk: 68
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Demon
+  Element: Poison
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 160
+  AttackMotion: 480
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 500
+  - Item: 731
+    Rate: 50
+  - Item: 732
+    Rate: 10
+  - Item: 7436
+    Rate: 2000
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300275
+    Rate: 1
+    StealProtected: true
+- Id: 20777
+  AegisName: THA_RESENT
+  Name: Resentment of Thanatos
+  Level: 205
+  Hp: 3883906
+  BaseExp: 258927
+  JobExp: 181249
+  Attack: 3511
+  Attack2: 1353
+  Defense: 316
+  MagicDefense: 115
+  Str: 137
+  Agi: 71
+  Vit: 37
+  Int: 99
+  Dex: 156
+  Luk: 61
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Undead
+  Element: Ghost
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 160
+  AttackMotion: 1872
+  DamageMotion: 720
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 500
+  - Item: 731
+    Rate: 250
+  - Item: 732
+    Rate: 50
+  - Item: 7437
+    Rate: 2000
+  - Item: 25728
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300277
+    Rate: 1
+    StealProtected: true
+- Id: 20778
+  AegisName: THA_REGRET
+  Name: Regret of Thanatos
+  Level: 202
+  Hp: 3831613
+  BaseExp: 255441
+  JobExp: 178809
+  Attack: 2853
+  Attack2: 2249
+  Defense: 403
+  MagicDefense: 122
+  Str: 113
+  Agi: 103
+  Vit: 67
+  Int: 167
+  Dex: 146
+  Luk: 57
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demon
+  Element: Ghost
+  ElementLevel: 4
+  WalkSpeed: 120
+  AttackDelay: 160
+  AttackMotion: 1872
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 7054
+    Rate: 500
+  - Item: 731
+    Rate: 250
+  - Item: 732
+    Rate: 50
+  - Item: 7439
+    Rate: 2000
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 6
+  - Item: 25731
+    Rate: 6
+  - Item: 300276
+    Rate: 1
+    StealProtected: true
+- Id: 20930
+  AegisName: DOLORIAN
+  Name: Dolorian
+  Level: 214
+  Hp: 4660787
+  BaseExp: 267459
+  JobExp: 187221
+  Attack: 7230
+  Attack2: 904
+  Defense: 420
+  MagicDefense: 85
+  Str: 256
+  Agi: 158
+  Vit: 108
+  Int: 107
+  Dex: 173
+  Luk: 170
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Poison
+  ElementLevel: 3
+  WalkSpeed: 125
+  AttackDelay: 674
+  AttackMotion: 1248
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7012
+    Rate: 2500
+  - Item: 7565
+    Rate: 2000
+  - Item: 1050
+    Rate: 2000
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25731
+    Rate: 12
+  - Item: 25729
+    Rate: 12
+  - Item: 300250
+    Rate: 1
+    StealProtected: true
+- Id: 20931
+  AegisName: PLAGARION
+  Name: Plagarion
+  Level: 215
+  Hp: 4881632
+  BaseExp: 264854
+  JobExp: 185398
+  Attack: 7800
+  Attack2: 940
+  Defense: 440
+  MagicDefense: 110
+  Str: 278
+  Agi: 177
+  Vit: 110
+  Int: 110
+  Dex: 191
+  Luk: 177
+  AttackRange: 2
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Dragon
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 1332
+  AttackMotion: 2664
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 7123
+    Rate: 2000
+  - Item: 1035
+    Rate: 2000
+  - Item: 1037
+    Rate: 2000
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25731
+    Rate: 12
+  - Item: 25729
+    Rate: 12
+  - Item: 300251
+    Rate: 1
+    StealProtected: true
+- Id: 20932
+  AegisName: DEADRE
+  Name: Deadre
+  Level: 214
+  Hp: 4460787
+  BaseExp: 263484
+  JobExp: 184439
+  Attack: 7415
+  Attack2: 921
+  Defense: 501
+  MagicDefense: 110
+  Str: 277
+  Agi: 175
+  Vit: 110
+  Int: 90
+  Dex: 170
+  Luk: 177
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 1152
+  DamageMotion: 720
+  Ai: 04
+  Drops:
+  - Item: 25159
+    Rate: 1500
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 1020
+    Rate: 1500
+  - Item: 25731
+    Rate: 12
+  - Item: 25729
+    Rate: 12
+  - Item: 512
+    Rate: 50
+  - Item: 300252
+    Rate: 1
+    StealProtected: true
+- Id: 20929
+  AegisName: GIANT_CAPUT
+  Name: Giant Caput
+  Level: 213
+  Hp: 4439942
+  BaseExp: 262421
+  JobExp: 183695
+  Attack: 7135
+  Attack2: 894
+  Defense: 298
+  MagicDefense: 85
+  Str: 257
+  Agi: 159
+  Vit: 106
+  Int: 106
+  Dex: 170
+  Luk: 170
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 924
+  AttackMotion: 1848
+  DamageMotion: 480
+  Ai: 04
+  Drops:
+  - Item: 1044
+    Rate: 1600
+  - Item: 1050
+    Rate: 2000
+  - Item: 7511
+    Rate: 2000
+  - Item: 6089
+    Rate: 2000
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 12
+  - Item: 300249
+    Rate: 1
+    StealProtected: true
+- Id: 20933
+  AegisName: VENEDI
+  Name: Venedi
+  Level: 213
+  Hp: 4439942
+  BaseExp: 261478
+  JobExp: 183035
+  Attack: 7122
+  Attack2: 911
+  Defense: 321
+  MagicDefense: 99
+  Str: 256
+  Agi: 167
+  Vit: 115
+  Int: 101
+  Dex: 165
+  Luk: 117
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Brute
+  Element: Poison
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 768
+  AttackMotion: 1536
+  DamageMotion: 960
+  Ai: 04
+  Drops:
+  - Item: 7565
+    Rate: 2400
+  - Item: 938
+    Rate: 2400
+  - Item: 25728
+    Rate: 150
+  - Item: 25730
+    Rate: 150
+  - Item: 25729
+    Rate: 12
+  - Item: 25731
+    Rate: 12
+  - Item: 512
+    Rate: 50
+  - Item: 300253
+    Rate: 1
+    StealProtected: true
+- Id: 21525
+  AegisName: EP19_ICE_GANGU
+  Name: Ice Gangu
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 300359
+    Rate: 1
+    StealProtected: true
+- Id: 21524
+  AegisName: EP19_SHINING_SEAWEED
+  Name: Shining Seaweed
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Plant
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000322
+    Rate: 50
+  - Item: 1000831
+    Rate: 50
+  - Item: 7067
+    Rate: 50
+  - Item: 7013
+    Rate: 50
+  - Item: 300360
+    Rate: 1
+    StealProtected: true
+- Id: 21523
+  AegisName: EP19_ICE_STRAW
+  Name: Ice Straw
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Fish
+  Element: Water
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 7561
+    Rate: 50
+  - Item: 7066
+    Rate: 50
+  - Item: 25730
+    Rate: 50
+  - Item: 25731
+    Rate: 50
+  - Item: 1000707
+    Rate: 50
+  - Item: 1000830
+    Rate: 50
+  - Item: 300361
+    Rate: 1
+    StealProtected: true
+- Id: 21521
+  AegisName: EP19_UNFROST_FLOWER
+  Name: Unfrost Flower
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Fish
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000829
+    Rate: 50
+  - Item: 936
+    Rate: 50
+  - Item: 300362
+    Rate: 1
+    StealProtected: true
+- Id: 21520
+  AegisName: EP19_LIMACINA
+  Name: Limacina
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Water
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 648
+  Ai: 04
+  Drops:
+  - Item: 7326
+    Rate: 50
+  - Item: 7066
+    Rate: 50
+  - Item: 1000828
+    Rate: 50
+  - Item: 300363
+    Rate: 1
+    StealProtected: true
+- Id: 21540
+  AegisName: EP19_CAVE_CALMARING
+  Name: Cave Calmaring
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000825
+    Rate: 50
+  - Item: 7565
+    Rate: 50
+  - Item: 7326
+    Rate: 50
+  - Item: 1000322
+    Rate: 50
+  - Item: 300371
+    Rate: 1
+    StealProtected: true
+- Id: 21526
+  AegisName: EP19_RGAN_A
+  Name: Primitive Rgan
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000822
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000707
+    Rate: 50
+  - Item: 300365
+    Rate: 1
+    StealProtected: true
+- Id: 21527
+  AegisName: EP19_RGAN_B
+  Name: Lowest Rgan
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 300366
+    Rate: 1
+    StealProtected: true
+- Id: 21537
+  AegisName: EP19_LIMACINA_BOSS
+  Name: Ultra Limacina
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  DamageTaken: 10
+  Ai: 04
+  Class: Boss
+  Drops:
+  - Item: 300377
+    Rate: 1
+    StealProtected: true
+- Id: 21541
+  AegisName: EP19_CAVE_FLOWER
+  Name: Cave Flower
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000322
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000829
+    Rate: 50
+  - Item: 943
+    Rate: 50
+  - Item: 1000812
+    Rate: 50
+  - Item: 300372
+    Rate: 1
+    StealProtected: true
+- Id: 21538
+  AegisName: EP19_WASTED_RGAN_A
+  Name: Wasted Primitive Rgan
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000822
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000707
+    Rate: 50
+  - Item: 930
+    Rate: 50
+  - Item: 25728
+    Rate: 50
+  - Item: 300369
+    Rate: 1
+    StealProtected: true
+- Id: 21543
+  AegisName: EP19_HALLUCIGENIA_BABY
+  Name: Hallucigenia Baby
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 7565
+    Rate: 50
+  - Item: 1000826
+    Rate: 50
+  - Item: 587
+    Rate: 50
+  - Item: 300373
+    Rate: 1
+    StealProtected: true
+- Id: 21600
+  AegisName: EP19_RE_RGAN_E
+  Name: Modified Senior Rgan
+  Level: 234
+  Hp: 7266315
+  BaseExp: 0
+  JobExp: 0
+  Attack: 0
+  Attack2: 0
+  Defense: 0
+  MagicDefense: 0
+  Str: 0
+  Agi: 0
+  Vit: 0
+  Int: 0
+  Dex: 0
+  Luk: 0
+  AttackRange: 0
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 150
+  AttackDelay: 881
+  AttackMotion: 1008
+  DamageMotion: 0
+  Ai: 04
+  Drops:
+  - Item: 1000822
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 300379
+    Rate: 1
+    StealProtected: true
+- Id: 21544
+  AegisName: EP19_ONE_EYE_DOLLOCARIS
+  Name: One Eye Dollocaris
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 7125
+    Rate: 50
+  - Item: 960
+    Rate: 50
+  - Item: 1000827
+    Rate: 50
+  - Item: 943
+    Rate: 50
+  - Item: 300375
+    Rate: 1
+    StealProtected: true
+- Id: 21542
+  AegisName: EP19_HALLUCIGENIA
+  Name: Hallucigenia
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 943
+    Rate: 50
+  - Item: 587
+    Rate: 50
+  - Item: 1000811
+    Rate: 50
+  - Item: 1000826
+    Rate: 50
+  - Item: 7565
+    Rate: 50
+  - Item: 25730
+    Rate: 50
+  - Item: 300374
+    Rate: 1
+    StealProtected: true
+- Id: 21601
+  AegisName: EP19_ET_RGAN_D
+  Name: Entangled Intermediate Rgan
+  Level: 252
+  Hp: 8621258
+  BaseExp: 0
+  JobExp: 0
+  Attack: 0
+  Attack2: 0
+  Defense: 0
+  MagicDefense: 0
+  Str: 0
+  Agi: 0
+  Vit: 0
+  Int: 0
+  Dex: 0
+  Luk: 0
+  AttackRange: 0
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Formless
+  Element: Poison
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 481
+  AttackMotion: 792
+  DamageMotion: 0
+  Ai: 04
+  Drops:
+  - Item: 1000822
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 300380
+    Rate: 1
+    StealProtected: true
+- Id: 21539
+  AegisName: EP19_WASTED_RGAN_C
+  Name: Wasted Intermediate Rgan
+  Level: 200
+  Hp: 0
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 930
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000322
+    Rate: 50
+  - Item: 1000822
+    Rate: 50
+  - Item: 300370
+    Rate: 1
+    StealProtected: true
+- Id: 21545
+  AegisName: EP19_DOLLOCARIS
+  Name: Two Eyes Dollocaris
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 600
+  MagicDefense: 100
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 960
+    Rate: 50
+  - Item: 943
+    Rate: 50
+  - Item: 7125
+    Rate: 50
+  - Item: 1000827
+    Rate: 50
+  - Item: 25730
+    Rate: 50
+  - Item: 300376
+    Rate: 1
+    StealProtected: true
+- Id: 21599
+  AegisName: EP19_HEARTHUNTER_AT
+  Name: Heart Hunter AT
+  Level: 210
+  Hp: 4807050
+  BaseExp: 0
+  JobExp: 0
+  Attack: 0
+  Attack2: 0
+  Defense: 0
+  MagicDefense: 0
+  Str: 0
+  Agi: 0
+  Vit: 0
+  Int: 0
+  Dex: 0
+  Luk: 0
+  AttackRange: 0
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 334
+  AttackMotion: 1080
+  DamageMotion: 0
+  Ai: 04
+  Drops:
+  - Item: 7110
+    Rate: 50
+  - Item: 25159
+    Rate: 50
+  - Item: 1000322
+    Rate: 50
+  - Item: 300381
+    Rate: 1
+    StealProtected: true
+- Id: 21528
+  AegisName: EP19_RGAN_C
+  Name: Lesser Rgan
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000822
+    Rate: 50
+  - Item: 25728
+    Rate: 50
+  - Item: 1000322
+    Rate: 50
+  - Item: 1000608
+    Rate: 50
+  - Item: 1000811
+    Rate: 50
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000707
+    Rate: 50
+  - Item: 300367
+    Rate: 1
+    StealProtected: true
+- Id: 21529
+  AegisName: EP19_RGAN_D
+  Name: Intermediate Rgan
+  Level: 200
+  Hp: 3000000
+  Sp: 0
+  BaseExp: 0
+  JobExp: 0
+  Attack: 6000
+  Attack2: 1000
+  Defense: 0
+  MagicDefense: 0
+  Str: 80
+  Agi: 80
+  Vit: 80
+  Int: 80
+  Dex: 80
+  Luk: 80
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 150
+  AttackDelay: 576
+  AttackMotion: 576
+  DamageMotion: 478
+  Ai: 04
+  Drops:
+  - Item: 1000823
+    Rate: 50
+  - Item: 1000811
+    Rate: 50
+  - Item: 1000608
+    Rate: 50
+  - Item: 1000322
+    Rate: 50
+  - Item: 25729
+    Rate: 50
+  - Item: 1000822
+    Rate: 50
+  - Item: 1000707
+    Rate: 50
+  - Item: 300368
+    Rate: 1
+    StealProtected: true

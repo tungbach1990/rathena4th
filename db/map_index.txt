@@ -1167,3 +1167,16 @@ air_if
 //======================================================================================
 // - Other/Extra maps -
 //======================================================================================
+jor_back1
+jor_back2
+jor_back3
+icecastle
+icas_in
+jor_dun01
+jor_dun02
+jor_dun03
+jor_ab01
+jor_ab02
+jor_que
+jor_nest
+jor_tail
