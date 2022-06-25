@@ -940,6 +940,8 @@ void EnchantgradeDatabase::loadingFinished(){
 			}
 		}
 	}
+
+	TypesafeYamlDatabase::loadingFinished();
 }
 
 EnchantgradeDatabase enchantgrade_db;
@@ -15806,6 +15808,8 @@ void StatusDatabase::loadingFinished(){
 			this->StatusRelevantBLTypes[status->icon] = BL_PC;
 		}
 	}
+
+	TypesafeYamlDatabase::loadingFinished();
 }
 
 StatusDatabase status_db;
