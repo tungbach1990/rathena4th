@@ -1,0 +1,83 @@
+#Format : - [not] enemy|self|friend|master status [[[><]=]valeur]]
+#For fields see doc/expanded_conditions.txt
+
+Header:
+  Type: MOB_EXPANDED_AI_CONDITIONS_DB
+  Version: 1
+
+Body:
+
+ - friendrecoverable:
+   - or:
+     - friend sleep    
+     - friend stone
+     - friend stun
+     - friend freeze
+
+ - friendcurable:
+   - or:
+     - friend silence
+     - friend confusion
+     - friend blind
+
+ - friend_need_aspersio:
+   - not friend aspersio
+   - or:
+     - enemy undead >0
+     - enemy dark >0
+     - enemy ghost >0
+
+ - selfcellempty:
+   - not self safetywall
+   - not self pneuma
+   - not self landprotector
+   - not self icewall
+
+ - friendcellempty:
+   - not friend safetywall
+   - not friend pneuma
+   - not friend landprotector
+   - not friend icewall
+
+ - ignore_neutral:
+    - or:
+      - enemy ghostarmor >1
+      - enemy neutralresist >=100%
+
+ - asura:
+#   - self spiritball >=5 # to be implemented
+   - self explosionspirits
+   - not enemy safetywall
+   - not ignore_neutral
+   - nand:
+     - enemy neutralresist >=50%
+     - enemy ghostarmor >0
+   - nand:
+     - enemy reflectphy >=10%
+     - nxor :
+       - enemy neutralresist >=50%
+       - enemy ghostarmor >0
+
+ - explosion:
+     - not self explosionspirits
+     # - self spiritball <5 #same
+
+ - selfcloserangecellempty:
+   - or:
+     - enemy distance_from_self <=5 # range is 3 but to have time to cast it
+   - not enemy range >3
+   - selfcellempty
+
+ - friendcloserangecellempty:
+   - enemy distance_from_friend <=5
+   - not enemy range >3
+   - friendcellempty
+
+ - offensive_pneuma:
+   - enemy job 4010 #offensive pneuma against wiz
+   - not enemy safetywall
+   - not enemy pneuma
+
+ - safety_wall_pushable:
+   - enemy safetywall
+   - not enemy knockbackimmune

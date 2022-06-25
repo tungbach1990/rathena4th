@@ -2572,18 +2572,19 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 	}
 
 	//Skill Range Criteria
-	if (battle_config.skillrange_by_distance &&
+	if (!(status_get_mode(src) & MD_PCSKILLBEHAVIOR) && battle_config.skillrange_by_distance &&
 		(src->type&battle_config.skillrange_by_distance)
 	) { //based on distance between src/target [Skotlex]
 		if (check_distance_bl(src, target, 3))
 			return BF_SHORT;
 		return BF_LONG;
 	}
+	
+	   //based on used skill's range
+       if (skill_get_range2(src, skill_id, skill_lv, true) < 4)
+               return BF_SHORT;
+       return BF_LONG;
 
-	//based on used skill's range
-	if (skill_get_range2(src, skill_id, skill_lv, true) < 4)
-		return BF_SHORT;
-	return BF_LONG;
 }
 
 static int battle_blewcount_bonus(struct map_session_data *sd, uint16 skill_id)
@@ -3350,7 +3351,7 @@ static int battle_get_weapon_element(struct Damage* wd, struct block_list *src, 
 			element = wd->miscflag; //element comes in flag.
 			break;
 		case LK_SPIRALPIERCE:
-			if (!sd)
+			if (!sd && !(status_get_mode(src)&MD_PCSKILLBEHAVIOR))
 				element = ELE_NEUTRAL; //forced neutral for monsters
 			break;
 		case RK_DRAGONBREATH:
@@ -10120,7 +10121,7 @@ int battle_check_target( struct block_list *src, struct block_list *target,int f
 			}
 			if( !sd->status.guild_id && t_bl->type == BL_MOB && ((TBL_MOB*)t_bl)->mob_id == MOBID_EMPERIUM && mapdata_flag_gvg(mapdata) )
 				return 0; //If you don't belong to a guild, can't target emperium.
-			if( t_bl->type != BL_PC )
+			if( t_bl->type != BL_PC && ((TBL_MOB*)t_bl)->special_state.ai!=AI_GUILD)
 				state |= BCT_ENEMY; //Natural enemy.
 			break;
 		}

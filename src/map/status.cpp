@@ -1997,7 +1997,7 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 		}
 
 		if (sc->option) {
-			if ((sc->option&OPTION_HIDE) && src->type == BL_PC && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
+			if ((sc->option&OPTION_HIDE) && (src->type == BL_PC || status_get_mode(src)& MD_PCSKILLBEHAVIOR) && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
 				// Non players can use all skills while hidden.
 				return false;
 			}
@@ -2516,7 +2516,7 @@ void status_calc_misc(struct block_list *bl, struct status_data *status, int lev
 #endif
 
 	//Critical
-	if( bl->type&battle_config.enable_critical ) {
+	if( bl->type&battle_config.enable_critical || status_get_mode(bl) & MD_PCSKILLBEHAVIOR) {
 		stat = status->cri;
 		stat += 10 + (status->luk*10/3); // (every 1 luk = +0.3 critical)
 		status->cri = cap_value(stat, 1, SHRT_MAX);
@@ -8257,6 +8257,7 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
  */
 static unsigned short status_calc_dmotion(struct block_list *bl, struct status_change *sc, int dmotion)
 {
+
 	/// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
 	if( bl->type == BL_MOB && status_get_class_(bl) == CLASS_BOSS )
 		return 0;
@@ -9616,6 +9617,240 @@ t_tick status_get_sc_def(struct block_list *src, struct block_list *bl, enum sc_
 
 	return i64max(tick, scdb->min_duration);
 }
+
+
+int  status_get_sc_total_resist(struct block_list* src, struct block_list* bl, enum sc_type type)
+{
+	int sc_def = 0; 	
+	int sc_def2 = 0;
+	int rate = 10000;
+	t_tick tick= 5000;
+	int flag = 0;
+	struct status_data* status, * status_src;
+	struct status_change* sc;
+	struct map_session_data* sd;
+	status = status_get_status_data(bl);
+	if (status_has_mode(status, MD_MVP) || status_has_mode(status, MD_STATUSIMMUNE))
+		return rate;
+	nullpo_ret(bl);
+	// Skills (magic type) that are blocked by Golden Thief Bug card or Wand of Hermod
+	if (status_isimmune(bl)) {
+		std::shared_ptr<s_skill_db> skill = skill_db.find(battle_getcurrentskill(src));
+
+		if (skill != nullptr && skill->nameid != AG_DEADLY_PROJECTION && skill->skill_type == BF_MAGIC)
+			return 0;
+	}
+	
+
+	rate = cap_value(rate, 0, 10000);
+	sd = BL_CAST(BL_PC, bl);
+	status = status_get_status_data(bl);
+	status_src = status_get_status_data(src);
+	sc = status_get_sc(bl);
+	if (sc && !sc->count)
+		sc = NULL;
+
+	switch (type) {
+	case SC_POISON:
+	case SC_DPOISON:
+		sc_def = status->vit * 100;
+#ifndef RENEWAL
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;	
+#endif
+		break;
+	case SC_STUN:
+		sc_def = status->vit * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+
+		break;
+	case SC_SILENCE:
+#ifndef RENEWAL
+		sc_def = status->vit * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#else
+		sc_def = status->int_ * 100;
+		sc_def2 = (status->vit + status->luk) * 5 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#endif
+
+		break;
+	case SC_BLEEDING:
+#ifndef RENEWAL
+		sc_def = status->vit * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#else
+		sc_def = status->agi * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#endif
+
+		break;
+	case SC_SLEEP:
+#ifndef RENEWAL
+		sc_def = status->int_ * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#else
+		sc_def = status->agi * 100;
+		sc_def2 = (status->int_ + status->luk) * 5 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+#endif
+
+		break;
+	case SC_STONE:
+		if (battle_check_undead(status->race, status->def_ele))return 10000;
+		sc_def = status->mdef * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+
+		break;
+	case SC_FREEZE:
+		if (battle_check_undead(status->race, status->def_ele))return 10000;
+		sc_def = status->mdef * 100;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+
+		break;
+	case SC_CURSE:
+		// Special property: immunity when luk is zero
+		if (status->luk == 0)
+			return 0;
+		sc_def = status->luk * 100;
+		sc_def2 = status->luk * 10 - status_get_lv(src) * 10; // Curse only has a level penalty and no resistance
+
+		break;
+	case SC_BLIND:
+		sc_def = (status->vit + status->int_) * 50;
+		sc_def2 = status->luk * 10 + status_get_lv(bl) * 10 - status_get_lv(src) * 10;
+
+		break;
+	case SC_CONFUSION:
+		sc_def = (status->str + status->int_) * 50;
+		sc_def2 = status_get_lv(src) * 10 - status_get_lv(bl) * 10 - status->luk * 10; // Reversed sc_def2
+	
+		break;
+	case SC_DECREASEAGI:
+
+		sc_def2 = status->mdef * 100;
+		break;
+	case SC_ANKLE:
+
+		sc_def = status->agi * 50;
+		break;
+	case SC_JOINTBEAT:
+		sc_def2 = 270 * status->str / 100; // 270 * STR / 100
+		break;
+	case SC_DEEPSLEEP:
+	case SC_NETHERWORLD:
+	case SC_MARSHOFABYSS:
+	case SC_STASIS:
+	case SC_WHITEIMPRISON:
+	case SC_BURNING:
+	case SC_FREEZING:
+		break;
+	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
+		sc_def = status->int_ * 80;
+		sc_def = max(sc_def, 500); // minimum of 5% resist
+		break;
+	case SC_TOXIN:
+	case SC_PARALYSE:
+	case SC_VENOMBLEED:
+	case SC_MAGICMUSHROOM:
+	case SC_DEATHHURT:
+	case SC_PYREXIA:
+	case SC_LEECHESEND:
+		break;
+	case SC_BITE: // {(Base Success chance) - (Target's AGI / 4)}
+		sc_def2 = status->agi * 25;
+		break;
+	case SC_ELECTRICSHOCKER:
+	case SC_CRYSTALIZE:
+	case SC_VACUUM_EXTREME:
+	case SC_KYOUGAKU:
+	case SC_PARALYSIS:
+	case SC_VOICEOFSIREN:
+	case SC_B_TRAP:
+	case SC_NORECOVER_STATE:
+		break;
+	default:
+		return 0;
+	}
+
+	if (sd) {
+		if (battle_config.pc_sc_def_rate != 100) {
+			sc_def = sc_def * battle_config.pc_sc_def_rate / 100;
+			sc_def2 = sc_def2 * battle_config.pc_sc_def_rate / 100;
+		}
+
+		sc_def = min(sc_def, battle_config.pc_max_sc_def * 100);
+		sc_def2 = min(sc_def2, battle_config.pc_max_sc_def * 100);
+
+		if (battle_config.pc_sc_def_rate != 100) {
+		}
+	} else {
+		if (battle_config.mob_sc_def_rate != 100) {
+			sc_def = sc_def * battle_config.mob_sc_def_rate / 100;
+			sc_def2 = sc_def2 * battle_config.mob_sc_def_rate / 100;
+		}
+
+		sc_def = min(sc_def, battle_config.mob_max_sc_def * 100);
+		sc_def2 = min(sc_def2, battle_config.mob_max_sc_def * 100);
+
+		if (battle_config.mob_sc_def_rate != 100) {
+
+		}
+	}
+
+	if (sc) {
+		if (sc->data[SC_SCRESIST])
+			sc_def += sc->data[SC_SCRESIST]->val1 * 100; // Status resist
+#ifdef RENEWAL
+		else if (sc->data[SC_SIEGFRIED] && (type == SC_BLIND || type == SC_STONE || type == SC_FREEZE || type == SC_STUN || type == SC_CURSE || type == SC_SLEEP || type == SC_SILENCE))
+			sc_def += sc->data[SC_SIEGFRIED]->val3 * 100; // Status resistance.
+#else
+		else if (sc->data[SC_SIEGFRIED])
+			sc_def += sc->data[SC_SIEGFRIED]->val3 * 100; // Status resistance.
+#endif
+		else if (sc->data[SC_LEECHESEND] && sc->data[SC_LEECHESEND]->val3 == 0) {
+			switch (type) {
+			case SC_BLIND:
+			case SC_STUN:
+				return  0; // Immune
+			}
+		} else if (sc->data[SC_OBLIVIONCURSE] && sc->data[SC_OBLIVIONCURSE]->val3 == 0) {
+			switch (type) {
+			case SC_SILENCE:
+			case SC_CURSE:
+				return 0; // Immune
+			}
+		}
+	}
+
+	// Natural resistance
+	if (!(flag & SCSTART_NORATEDEF)) {
+		rate -= rate * sc_def / 10000;
+		rate -= sc_def2;
+
+		// Minimum chances
+		switch (type) {
+		case SC_BITE:
+			rate = max(rate, 5000); // Minimum of 50%
+			break;
+		}
+
+		// Item resistance (only applies to rate%)
+		if (sd) {
+			for (const auto& it : sd->reseff) {
+				if (it.id == type)
+					rate -= rate * it.val / 10000;
+			}
+			if (sd->sc.data[SC_COMMONSC_RESIST] && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
+				rate -= rate * sd->sc.data[SC_COMMONSC_RESIST]->val1 / 100;
+		}
+
+		// Aegis accuracy
+		if (rate > 0 && rate % 10 != 0) rate += (10 - rate % 10);
+	}
+
+	rate = rate >= 0 ? rate : 0;
+	return 10000 - rate;
+
+}
+
 
 /**
  * Applies SC effect

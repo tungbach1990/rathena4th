@@ -9,9 +9,11 @@
 #include "../common/database.hpp"
 #include "../common/mmo.hpp" // struct item
 #include "../common/timer.hpp"
+#include <algorithm>
 
 #include "status.hpp" // struct status data, struct status_change
 #include "unit.hpp" // unit_stop_walking(), unit_stop_attack()
+#include <functional>
 
 struct guardian_data;
 
@@ -187,17 +189,169 @@ enum e_aegis_monsterclass : int8 {
 	CLASS_MAX,
 };
 
+enum e_mob_skill_target {
+	MST_TARGET = 0,
+	MST_RANDOM,	//Random Target!
+	MST_SELF,
+	MST_FRIEND,
+	MST_MASTER,
+	MST_AROUND5,
+	MST_AROUND6,
+	MST_AROUND7,
+	MST_AROUND8,
+	MST_AROUND1,
+	MST_AROUND2,
+	MST_AROUND3,
+	MST_AROUND4,
+	MST_AROUND = MST_AROUND4,
+};
+enum e_mob_skill_condition {
+	MSC_ALWAYS = 0x0000,
+	MSC_MYHPLTMAXRATE,
+	MSC_MYHPINRATE,
+	MSC_FRIENDHPLTMAXRATE,
+	MSC_FRIENDHPINRATE,
+	MSC_MYSTATUSON,
+	MSC_MYSTATUSOFF,
+	MSC_FRIENDSTATUSON,
+	MSC_FRIENDSTATUSOFF,
+	MSC_ENEMYSTATUSON,
+	MSC_ENEMYSTATUSOFF,
+	MSC_ATTACKPCGT,
+	MSC_ATTACKPCGE,
+	MSC_SLAVELT,
+	MSC_SLAVELE,
+	MSC_CLOSEDATTACKED,
+	MSC_LONGRANGEATTACKED,
+	MSC_AFTERSKILL,
+	MSC_SKILLUSED,
+	MSC_CASTTARGETED,
+	MSC_RUDEATTACKED,
+	MSC_MASTERHPLTMAXRATE,
+	MSC_MASTERSTATUSON,
+	MSC_MASTERSTATUSOFF,
+	MSC_MASTERATTACKED,
+	MSC_ALCHEMIST,
+	MSC_SPAWN,
+	MSC_EXPANDED
+};
+
+
 struct s_mob_skill {
 	enum MobSkillState state;
 	uint16 skill_id,skill_lv;
 	short permillage;
 	int casttime,delay;
 	short cancel;
-	short cond1,cond2;
-	short target;
+	e_mob_skill_condition cond1;
+	short cond2;
+	std::string expanded_cond; // For expanded conditions
+	e_mob_skill_target target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
+};
+
+
+namespace expanded_ai {
+/// This represent the type of either an active or disabled inverter.
+using inverter_t=std::function<bool(bool)>;
+class ExpandedCondition;
+
+
+/**
+ * @brief : logic gate function wrapper for increased readability
+*/
+class LogicGate {
+public:
+	LogicGate() {}
+	/**
+	 * @brief Maps a name to a logic gate.
+	*/
+	static std::shared_ptr<LogicGate> getLogicGate(const std::string& name);
+	/**
+	 * @brief Applies the logical tests on the condition group
+	 * @param conditions The conditions to put through the gate
+	 * @param targets : targets of the condition tests
+	 * @return result of the test
+	*/
+	virtual bool operator()(std::vector<std::shared_ptr<ExpandedCondition>> conditions, const std::map<e_mob_skill_target, block_list*>& targets) const = 0;
+};
+
+class ExpandedCondition{
+public:
+	const std::string name;
+	ExpandedCondition(std::string name) :name{ name }{}
+
+    /**
+     * @brief The main function that will try to parse the yaml line.
+     * @param node : the yaml line to parse into a condition
+     * @return Either a simple condition, a stored or newly made container
+    */
+	static std::shared_ptr<ExpandedCondition> createExpandedCondition(const ryml::NodeRef& node);
+	/**
+	 * @brief Calls the predicate(s) on the targets matching its/their stored targets ids
+	 * @param targets map filled with surrounding potential targets for the predicate(s)
+	 * @return the predicate test
+	*/
+	virtual bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) const = 0;
+
+
+
+};
+template <class TPredicate>
+class SingleCondition: public ExpandedCondition {
+private:
+	/**
+	 * @brief A test function object that is either a simple parsed line or a wrapper for a stored condition container which can be inverted
+	*/
+	std::shared_ptr<TPredicate> predicate;
+	inverter_t inverter;
+
+public:
+	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate) :ExpandedCondition(name), inverter{ inverter }, predicate{ predicate }{}
+	bool operator()(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+
+};
+
+///Condition Container.
+class ConditionContainer : public ExpandedCondition {
+private:
+	std::vector<std::shared_ptr<ExpandedCondition>> nodes;
+	std::shared_ptr<LogicGate> logicGate;
+
+public:
+	ConditionContainer(std::string name, std::shared_ptr<LogicGate> logicGate) :ExpandedCondition(name), logicGate{ logicGate }{}
+	/**
+	 * @brief  Loops through the conditions. Some of them can be wrappers of already stored containers with an inverter set.
+	*/
+	bool operator()(const std::map<e_mob_skill_target, block_list*>& targets)const override;
+
+	/**
+	 * @brief Convert each element of the yaml sequence to a ExpandedCondition element
+	 * @param node Sequence's element that will be parsed
+	 * @param conditionContainer Container element. Currently used to hold only SingleConditions
+	 * @param entry_name
+	*/
+	void parseAndPushBackExpandedConditions(const ryml::NodeRef& node);
+};
+/**
+ * @brief Parses a string that will be used to create the conditions. Depends on string to ids maps
+ * @param line : Node's fields to be parsed
+ * @return : uMap with parsed fields
+*/
+std::unordered_map<std::string, std::string> parseFields(const std::string& line);
+
+}//namespace ai_expanded
+
+
+class MobExpandedAiConditionsDatabase: public TypesafeYamlDatabase<std::string,expanded_ai::ExpandedCondition> {
+public:
+	MobExpandedAiConditionsDatabase(): TypesafeYamlDatabase("MOB_EXPANDED_AI_CONDITIONS_DB",1) {
+		
+	}
+	const std::string getDefaultLocation();
+	uint64 parseBodyNode(const ryml::NodeRef& node);
 };
 
 struct s_mob_chat {
@@ -208,6 +362,7 @@ struct s_mob_chat {
 
 class MobChatDatabase : public TypesafeYamlDatabase<uint16, s_mob_chat> {
 public:
+
 	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {
 
 	}
@@ -275,9 +430,7 @@ private:
 	bool parseDropNode(std::string nodeName, const ryml::NodeRef& node, uint8 max, s_mob_drop *drops);
 
 public:
-	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {
-
-	}
+	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
 
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
@@ -389,48 +542,6 @@ public:
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
 };
 
-enum e_mob_skill_target {
-	MST_TARGET	=	0,
-	MST_RANDOM,	//Random Target!
-	MST_SELF,
-	MST_FRIEND,
-	MST_MASTER,
-	MST_AROUND5,
-	MST_AROUND6,
-	MST_AROUND7,
-	MST_AROUND8,
-	MST_AROUND1,
-	MST_AROUND2,
-	MST_AROUND3,
-	MST_AROUND4,
-	MST_AROUND	=	MST_AROUND4,
-};
-
-enum e_mob_skill_condition {
-	MSC_ALWAYS	=	0x0000,
-	MSC_MYHPLTMAXRATE,
-	MSC_MYHPINRATE,
-	MSC_FRIENDHPLTMAXRATE,
-	MSC_FRIENDHPINRATE,
-	MSC_MYSTATUSON,
-	MSC_MYSTATUSOFF,
-	MSC_FRIENDSTATUSON,
-	MSC_FRIENDSTATUSOFF,
-	MSC_ATTACKPCGT,
-	MSC_ATTACKPCGE,
-	MSC_SLAVELT,
-	MSC_SLAVELE,
-	MSC_CLOSEDATTACKED,
-	MSC_LONGRANGEATTACKED,
-	MSC_AFTERSKILL,
-	MSC_SKILLUSED,
-	MSC_CASTTARGETED,
-	MSC_RUDEATTACKED,
-	MSC_MASTERHPLTMAXRATE,
-	MSC_MASTERATTACKED,
-	MSC_ALCHEMIST,
-	MSC_SPAWN,
-};
 
 // The data structures for storing delayed item drops
 struct item_drop {

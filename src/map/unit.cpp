@@ -2758,6 +2758,13 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, t_tick tick)
 			unit_stop_walking(src,1);
 
 		if(md) {
+
+			e_mode mode = static_cast<e_mode>(status_get_mode(&md->bl));
+			if (mode & MD_SKILLONLY) {
+				md->state.skillstate = md->state.aggressive ? MSS_ANGRY : MSS_BERSERK; // on met ça car sinon il reste iddle après le skill
+				mobskill_use(md, tick, -1); // si on enlève pas le if ca fait une auto au lieu de skill car pour si le retour vaut 0 c'est que le mob a échoué le skill et ca continue le code qui conduit à l'autoattaque
+				return 1;
+			}
 			//First attack is always a normal attack
 			if(md->state.skillstate == MSS_ANGRY || md->state.skillstate == MSS_BERSERK) {
 				if (mobskill_use(md,tick,-1))

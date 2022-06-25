@@ -1,0 +1,149 @@
+Advanced conditions list
+
+--Status ailment--
+anybad				
+stone				
+freeze				
+stun					
+sleep				
+poison				
+curse				
+silence				
+confusion			
+blind				
+decreaseagi			
+hiding				
+cloaking				
+edp					
+ruwach				
+sight				
+blessing				
+increaseagi			
+assumptio			
+kyrie				
+magnificat			
+safetywall			
+pneuma				
+explosionspirits		
+doublecasting		
+volcano				
+amplify				
+quagmire				
+spiderweb			
+walloffog			
+energycoat			
+aspersio				
+suffragium			
+autoguard			
+reflectshield		
+endure				
+defender				
+kaizel				
+kaahi				
+kaupe				
+eswoo				
+eska					
+parry				
+concentration		
+aurablade			
+berserk				
+eske					
+soul					
+cicada				
+bragi				
+lexaeterna			
+union				
+breakfall			
+
+--Cell conditions--
+casewater
+basilica
+landprotector
+maelstrom
+icewall
+
+--Elemental conditions--
+neutralattack,neutralarmor,neutralresist
+waterattack,waterarmor, etc...
+earth
+fire
+wind
+poison
+holy
+dark
+ghost
+undead
+
+
+--Special Condition--
+exists
+percenthealth
+health
+job
+range
+distance_from_self
+distance_from_friend
+distance_from_master
+reflectphy
+attack
+mode
+
+--Logic Gates--
+and	 all must be true
+or 	 any is enough
+nand	 any false is enough
+nor	 none must be true
+xor	 exactly one condition
+nxor	 either none or all
+
+
+------------------------------------------------------------------------------------------------------------------
+Hi. This is an expanded ai mod. It allows to define complex conditions for skill decision with a yml config file.
+It was designed to be accessible to everyone, designers, scripters, developpers, even players.
+I hope you will have a great deal of fun giving ai a new life.
+
+Installation : copy mob_expanded_ai_conditions_db.yml from import-tmpl onto import folder
+There are already some pre-defined entries.
+
+example : inside mob_expanded_ai_conditions_db.yml
+
+ - friendrecoverable:
+   - or:
+     - friend sleep    
+     - friend stone
+     - friend stun
+     - friend freeze
+
+ - selfcellempty:
+   - not self safetywall
+   - not self pneuma
+   - not self landprotector
+   - not self icewall
+  
+ - friendcellempty:
+   - not friend safetywall
+   - not friend pneuma
+   - not friend landprotector
+   - not friend icewall
+
+Then you have to add skill condition in the usual mob_skill_db.yml, with the label "expanded"
+
+1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,self,expanded,selfcellempty,,,,,,,
+1639,Kathryne Keyron@MG_SAFETYWALL,anytarget,12,10,3000,0,10000,yes,friend,expanded,friendcellempty,,,,,,,
+1637,Margaretha Sorin@PR_STRECOVERY,any,72,1,10000,1000,10000,no,friend,expanded,friendrecoverable,,,,,,,
+
+Bonus : a crazy asura condition complex, try to figure out what it does ;-)
+
+ - asura:
+#   - self spiritball >=5 # to be implemented
+   - self explosionspirits
+   - not enemy safetywall
+   - not ignore_neutral
+   - nand:
+     - enemy neutralresist >=50%
+     - enemy ghostarmor >0
+   - nand:
+     - enemy reflectphy >=10%
+     - nxor :
+       - enemy neutralresist >=50%
+       - enemy ghostarmor >0

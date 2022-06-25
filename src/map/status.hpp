@@ -3339,7 +3339,8 @@ struct view_data *status_get_viewdata(struct block_list *bl);
 void status_set_viewdata(struct block_list *bl, int class_);
 void status_change_init(struct block_list *bl);
 struct status_change *status_get_sc(struct block_list *bl);
-
+t_tick status_get_sc_tick(block_list*, block_list*, enum sc_type type);
+int status_get_sc_total_resist(block_list*, block_list*, enum sc_type type);
 int status_isdead(struct block_list *bl);
 int status_isimmune(struct block_list *bl);
 

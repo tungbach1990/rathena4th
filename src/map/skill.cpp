@@ -3815,6 +3815,10 @@ int64 skill_attack (int attack_type, struct block_list* src, struct block_list *
 		case NPC_EARTHQUAKE:
 			dmg.dmotion = clif_skill_damage(src, bl, tick, dmg.amotion, dmg.dmotion, damage, dmg.div_, skill_id, -1, DMG_ENDURE);
 			break;
+		case EXPANDED_DUMMY1:
+		case EXPANDED_DUMMY2:
+		case EXPANDED_DUMMY3:
+			break;
 		case NPC_DARKPIERCING:
 		case EL_FIRE_BOMB:
 		case EL_FIRE_BOMB_ATK:
@@ -5050,6 +5054,7 @@ static int skill_tarotcard(struct block_list* src, struct block_list *target, ui
 int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint16 skill_id, uint16 skill_lv, t_tick tick, int flag)
 {
 	struct map_session_data *sd = NULL;
+	mob_data* md = nullptr;
 	struct status_data *tstatus;
 	struct status_change *sc, *tsc;
 
@@ -5065,7 +5070,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		return 1;
 
 	sd = BL_CAST(BL_PC, src);
-
+	md = BL_CAST(BL_MOB, src);
 	if (status_isdead(bl))
 		return 1;
 
@@ -5267,6 +5272,10 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		break;
 
+	case EXPANDED_DUMMY1:
+	case EXPANDED_DUMMY2:
+	case EXPANDED_DUMMY3:
+		break;
 	case IG_SHIELD_SHOOTING:
 		clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
 		skill_attack(BF_WEAPON, src, src, bl, skill_id, skill_lv, tick, flag);
@@ -7879,7 +7888,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case PR_ASPERSIO:
-		if (sd && dstmd) {
+		if (sd && dstmd && !bl->type&MD_PCSKILLBEHAVIOR) {
 			clif_skill_nodamage(src,bl,skill_id,skill_lv,0);
 			break;
 		}
@@ -8266,7 +8275,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			sc_start2(src,src,type,100,skill_lv,bl->id,skill_get_time(skill_id,skill_lv));
 		break;
 	case HP_ASSUMPTIO:
-		if( sd && dstmd )
+		if( sd && dstmd && !(status_get_mode(bl)&MD_PCSKILLBEHAVIOR))
 			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 		else
 			clif_skill_nodamage(src,bl,skill_id,skill_lv,
@@ -9282,7 +9291,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if(battle_check_undead(tstatus->race,tstatus->def_ele))
 			skill_addtimerskill(src, tick+1000, bl->id, 0, 0, skill_id, skill_lv, 100, flag);
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
-		if(dstmd)
+		if(dstmd && !(status_get_mode(bl) & MD_PCSKILLBEHAVIOR))
 			mob_unlocktarget(dstmd,tick);
 		break;
 
@@ -9691,7 +9700,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 	case SA_DISPELL:
 		if (flag&1 || (i = skill_get_splash(skill_id, skill_lv)) < 1) {
-			if (sd && dstsd && !map_flag_vs(sd->bl.m) && (!sd->duel_group || sd->duel_group != dstsd->duel_group) && (!sd->status.party_id || sd->status.party_id != dstsd->status.party_id))
+			if (sd && dstsd && !map_flag_vs(sd->bl.m) && (!sd->duel_group || sd->duel_group != dstsd->duel_group) && !(status_get_mode(src)&MD_PCSKILLBEHAVIOR) && (!sd->status.party_id || sd->status.party_id != dstsd->status.party_id))
 				break; // Outside PvP it should only affect party members and no skill fail message
 			clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
 			if((dstsd && (dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER)
@@ -9730,7 +9739,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 							continue; //If in song area don't end it, even if config enabled
 						break;
 					case SC_ASSUMPTIO:
-						if( bl->type == BL_MOB )
+						if( bl->type == BL_MOB && !(status_get_mode(bl) & MD_PCSKILLBEHAVIOR))
 							continue;
 						break;
 				}
@@ -13360,7 +13369,7 @@ static int8 skill_castend_id_check(struct block_list *src, struct block_list *ta
 	else
 		inf = 0;
 
-	if ((skill->inf2[INF2_PARTYONLY] || skill->inf2[INF2_GUILDONLY]) && src != target) {
+	if ((skill->inf2[INF2_PARTYONLY] || skill->inf2[INF2_GUILDONLY]) && src != target && !(status_get_mode(src)&MD_PCSKILLBEHAVIOR || status_get_mode(target)&MD_PCSKILLBEHAVIOR)) {
 		inf |=
 			(skill->inf2[INF2_PARTYONLY]?BCT_PARTY:0)|
 			(skill->inf2[INF2_GUILDONLY]?BCT_GUILD:0);
@@ -13382,6 +13391,9 @@ static int8 skill_castend_id_check(struct block_list *src, struct block_list *ta
 
 	if (inf && battle_check_target(src, target, inf) <= 0) {
 		switch(skill_id) {
+			case SA_DISPELL:
+				if(status_get_mode(src)&MD_PCSKILLBEHAVIOR || status_get_mode(target)&MD_PCSKILLBEHAVIOR)
+					return -1;
 			case RK_PHANTOMTHRUST:
 			case NPC_PHANTOMTHRUST:
 			case AB_CLEARANCE:
@@ -17125,7 +17137,7 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, t_tick tick)
 	switch (skill_id)
 	{
 		case WZ_QUAGMIRE:
-			if (bl->type==BL_MOB)
+			if (bl->type==BL_MOB && !(status_get_mode(bl) & MD_PCSKILLBEHAVIOR))
 				break;
 			if (sce)
 				status_change_end(bl, type, INVALID_TIMER);

@@ -1,0 +1,7 @@
+Header:
+  Type: MOB_EXPANDED_AI_CONDITIONS_DB
+  Version: 1
+
+Footer:
+  Imports:
+  - Path: db/import/mob_expanded_ai_conditions_db.yml
