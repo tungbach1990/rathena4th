@@ -40846,7 +40846,6 @@ Body:
     TargetType: Self
     DamageFlags:
       Splash: true
-    Range: -9
     Hit: Multi_Hit
     HitCount: 4
     Element: Weapon
@@ -43987,6 +43986,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 2
     AfterCastActDelay: 500
     Duration1: 5000
@@ -44036,6 +44036,8 @@ Body:
     Hit: Multi_Hit
     HitCount: -3
     Element: Weapon
+    DamageFlags:
+      IgnoreFlee: true
     ActiveInstance: 2
     AfterCastActDelay: 500
     Duration1: 2000
@@ -44086,6 +44088,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 7
     CastTime: 1500
     AfterCastActDelay: 500
@@ -44427,6 +44430,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 6
     CastTime: 2000
     AfterCastActDelay: 500
