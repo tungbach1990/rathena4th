@@ -6877,3 +6877,592 @@ Body:
   - Item: 300368
     Rate: 1
     StealProtected: true
+- Id: 21388
+  AegisName: ILL_ANDRE_LARVA
+  Name: Diligent Andre Larva
+  Level: 164
+  Hp: 819978
+  BaseExp: 64798
+  JobExp: 46871
+  Attack: 3984
+  Attack2: 308
+  Defense: 121
+  MagicDefense: 10
+  Str: 82
+  Agi: 66
+  Vit: 59
+  Int: 54
+  Dex: 75
+  Luk: 108
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 2
+  WalkSpeed: 200
+  AttackDelay: 1000
+  AttackMotion: 792
+  DamageMotion: 336
+  Ai: 21
+  Drops:
+  - Item: 2935
+    Rate: 5
+  - Item: 2101
+    Rate: 7
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 512
+    Rate: 50
+  - Item: 512
+    Rate: 50
+  - Item: 300232
+    Rate: 1
+    StealProtected: true
+- Id: 21391
+  AegisName: ILL_ANT_EGG
+  Name: Mushy Ant Egg
+  Level: 164
+  Hp: 659810
+  BaseExp: 34992
+  JobExp: 23555
+  Attack: 0
+  Attack2: 0
+  Defense: 100
+  MagicDefense: 9
+  Str: 1
+  Agi: 1
+  Vit: 65
+  Int: 1
+  Dex: 1
+  Luk: 200
+  AttackRange: 0
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Formless
+  Element: Neutral
+  ElementLevel: 2
+  WalkSpeed: 1000
+  AttackDelay: 0
+  AttackMotion: 0
+  DamageMotion: 0
+  Ai: 06
+  Drops:
+  - Item: 2440
+    Rate: 5
+  - Item: 2146
+    Rate: 5
+  - Item: 935
+    Rate: 2000
+  - Item: 938
+    Rate: 1000
+  - Item: 1010
+    Rate: 500
+  - Item: 909
+    Rate: 2500
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300235
+    Rate: 1
+    StealProtected: true
+- Id: 21393
+  AegisName: ILL_FARMILIAR
+  Name: Gutsy Familiar
+  Level: 166
+  Hp: 761002
+  BaseExp: 79844
+  JobExp: 60180
+  Attack: 4472
+  Attack2: 542
+  Defense: 144
+  MagicDefense: 10
+  Str: 90
+  Agi: 162
+  Vit: 70
+  Int: 115
+  Dex: 188
+  Luk: 55
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Brute
+  Element: Dark
+  ElementLevel: 2
+  WalkSpeed: 150
+  AttackDelay: 1276
+  AttackMotion: 576
+  DamageMotion: 384
+  Ai: 21
+  Drops:
+  - Item: 13062
+    Rate: 5
+  - Item: 1000516
+    Rate: 75
+  - Item: 1000517
+    Rate: 150
+  - Item: 913
+    Rate: 5500
+  - Item: 507
+    Rate: 700
+  - Item: 1000506
+    Rate: 2000
+  - Item: 512
+    Rate: 50
+  - Item: 300237
+    Rate: 1
+    StealProtected: true
+- Id: 21386
+  AegisName: ILL_ANDRE
+  Name: Diligent Andre
+  Level: 167
+  Hp: 839882
+  BaseExp: 80476
+  JobExp: 61811
+  Attack: 4653
+  Attack2: 569
+  Defense: 168
+  MagicDefense: 22
+  Str: 111
+  Agi: 158
+  Vit: 91
+  Int: 70
+  Dex: 194
+  Luk: 70
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 300
+  AttackDelay: 1288
+  AttackMotion: 288
+  DamageMotion: 384
+  Ai: 21
+  Drops:
+  - Item: 1137
+    Rate: 5
+  - Item: 1000510
+    Rate: 150
+  - Item: 1000511
+    Rate: 150
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 1000505
+    Rate: 2000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300230
+    Rate: 1
+    StealProtected: true
+- Id: 21389
+  AegisName: ILL_DENIRO
+  Name: Diligent Deniro
+  Level: 167
+  Hp: 819978
+  BaseExp: 81114
+  JobExp: 61044
+  Attack: 4855
+  Attack2: 544
+  Defense: 170
+  MagicDefense: 19
+  Str: 136
+  Agi: 149
+  Vit: 92
+  Int: 89
+  Dex: 185
+  Luk: 88
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 1288
+  AttackMotion: 288
+  DamageMotion: 576
+  Ai: 21
+  Drops:
+  - Item: 2387
+    Rate: 5
+  - Item: 1000510
+    Rate: 150
+  - Item: 1000512
+    Rate: 50
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 1000505
+    Rate: 2000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300233
+    Rate: 1
+    StealProtected: true
+- Id: 21390
+  AegisName: ILL_PIERE
+  Name: Diligent Piere
+  Level: 167
+  Hp: 825541
+  BaseExp: 82688
+  JobExp: 60487
+  Attack: 5042
+  Attack2: 557
+  Defense: 178
+  MagicDefense: 18
+  Str: 190
+  Agi: 144
+  Vit: 86
+  Int: 63
+  Dex: 175
+  Luk: 90
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Earth
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 1288
+  AttackMotion: 288
+  DamageMotion: 576
+  Ai: 21
+  Drops:
+  - Item: 1414
+    Rate: 5
+  - Item: 1000512
+    Rate: 50
+  - Item: 1000511
+    Rate: 150
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 512
+    Rate: 50
+  - Item: 300234
+    Rate: 1
+    StealProtected: true
+- Id: 21392
+  AegisName: ILL_GIEARTH
+  Name: Gutsy Giearth
+  Level: 168
+  Hp: 864988
+  BaseExp: 81566
+  JobExp: 61655
+  Attack: 4955
+  Attack2: 560
+  Defense: 223
+  MagicDefense: 21
+  Str: 160
+  Agi: 97
+  Vit: 155
+  Int: 104
+  Dex: 94
+  Luk: 151
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Demon
+  Element: Dark
+  ElementLevel: 3
+  WalkSpeed: 250
+  AttackDelay: 1848
+  AttackMotion: 1296
+  DamageMotion: 432
+  Ai: 21
+  Drops:
+  - Item: 1636
+    Rate: 5
+  - Item: 1000514
+    Rate: 50
+  - Item: 1000515
+    Rate: 50
+  - Item: 1003
+    Rate: 200
+  - Item: 1040
+    Rate: 4000
+  - Item: 1000504
+    Rate: 2000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300236
+    Rate: 1
+    StealProtected: true
+- Id: 21387
+  AegisName: ILL_SOLDIER_ANDR
+  Name: Diligent Soldier Andre
+  Level: 169
+  Hp: 943547
+  BaseExp: 83348
+  JobExp: 62487
+  Attack: 5569
+  Attack2: 545
+  Defense: 201
+  MagicDefense: 30
+  Str: 198
+  Agi: 176
+  Vit: 98
+  Int: 88
+  Dex: 201
+  Luk: 101
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Insect
+  Element: Earth
+  ElementLevel: 4
+  WalkSpeed: 350
+  AttackDelay: 1288
+  AttackMotion: 648
+  DamageMotion: 384
+  Ai: 21
+  Drops:
+  - Item: 1370
+    Rate: 5
+  - Item: 1000512
+    Rate: 100
+  - Item: 1000511
+    Rate: 200
+  - Item: 1000510
+    Rate: 200
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300231
+    Rate: 1
+    StealProtected: true
+- Id: 21394
+  AegisName: ILL_VITATA
+  Name: Diligent Vitata
+  Level: 169
+  Hp: 879511
+  BaseExp: 83348
+  JobExp: 62487
+  Attack: 4566
+  Attack2: 2984
+  Defense: 168
+  MagicDefense: 166
+  Str: 177
+  Agi: 199
+  Vit: 144
+  Int: 142
+  Dex: 223
+  Luk: 56
+  AttackRange: 3
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Small
+  Race: Insect
+  Element: Poison
+  ElementLevel: 4
+  WalkSpeed: 300
+  AttackDelay: 1768
+  AttackMotion: 768
+  DamageMotion: 384
+  Ai: 21
+  Drops:
+  - Item: 2744
+    Rate: 5
+  - Item: 1000513
+    Rate: 75
+  - Item: 1000512
+    Rate: 75
+  - Item: 955
+    Rate: 4500
+  - Item: 938
+    Rate: 1000
+  - Item: 911
+    Rate: 300
+  - Item: 1000506
+    Rate: 2000
+  - Item: 300238
+    Rate: 1
+    StealProtected: true
+- Id: 21395
+  AegisName: ILL_MAYA
+  Name: Silent Maya
+  Level: 175
+  Hp: 24512365
+  BaseExp: 4401752
+  JobExp: 3601314
+  Attack: 7844
+  Attack2: 3827
+  Defense: 998
+  MagicDefense: 99
+  Str: 251
+  Agi: 206
+  Vit: 238
+  Int: 322
+  Dex: 244
+  Luk: 248
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Insect
+  Element: Neutral
+  ElementLevel: 4
+  WalkSpeed: 100
+  AttackDelay: 864
+  AttackMotion: 1000
+  DamageMotion: 480
+  Ai: 21
+  Class: Boss
+  Drops:
+  - Item: 2005
+    Rate: 300
+  - Item: 1000513
+    Rate: 10000
+  - Item: 1000518
+    Rate: 3000
+  - Item: 1000511
+    Rate: 10000
+  - Item: 25729
+    Rate: 100
+  - Item: 1000506
+    Rate: 2000
+  - Item: 7020
+    Rate: 10
+  - Item: 300239
+    Rate: 1
+    StealProtected: true
+- Id: 31181
+  AegisName: CuocDoiBuon2
+  Name: CuocDoiBuon2
+  Level: 100
+  Hp: 24512365
+  BaseExp: 4401752
+  JobExp: 3601314
+  Attack: 7844
+  Attack2: 3827
+  Defense: 998
+  MagicDefense: 50
+  Str: 99
+  Agi: 99
+  Vit: 99
+  Int: 99
+  Dex: 99
+  Luk: 99
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Insect
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 100
+  AttackDelay: 864
+  AttackMotion: 1000
+  DamageMotion: 480
+  Ai: 21
+- Id: 31180
+  AegisName: CuocDoiBuon
+  Name: CuocDoiBuon
+  Level: 100
+  Hp: 24512365
+  BaseExp: 4401752
+  JobExp: 3601314
+  Attack: 7844
+  Attack2: 3827
+  Defense: 998
+  MagicDefense: 50
+  Str: 99
+  Agi: 99
+  Vit: 99
+  Int: 99
+  Dex: 99
+  Luk: 99
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Insect
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 100
+  AttackDelay: 864
+  AttackMotion: 1000
+  DamageMotion: 480
+  Ai: 21
+- Id: 30000
+  AegisName: copylk
+  Name: Copy of Knight
+  Level: 200
+  Hp: 110000
+  BaseExp: 4401752
+  JobExp: 3601314
+  Attack: 7844
+  Attack2: 3827
+  Defense: 998
+  MagicDefense: 50
+  Str: 200
+  Agi: 150
+  Vit: 200
+  Int: 150
+  Dex: 200
+  Luk: 150
+  AttackRange: 1
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Large
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 100
+  AttackDelay: 864
+  AttackMotion: 1000
+  DamageMotion: 480
+  DamageTaken: 99
+  Ai: 21
+- Id: 30001
+  AegisName: copyranger
+  Name: Copy of Ranger
+  Level: 200
+  Hp: 110000
+  BaseExp: 4401752
+  JobExp: 3601314
+  Attack: 7844
+  Attack2: 3827
+  Defense: 998
+  MagicDefense: 50
+  Str: 150
+  Agi: 200
+  Vit: 150
+  Int: 150
+  Dex: 200
+  Luk: 200
+  AttackRange: 11
+  SkillRange: 10
+  ChaseRange: 12
+  Size: Medium
+  Race: Demihuman
+  Element: Neutral
+  ElementLevel: 1
+  WalkSpeed: 100
+  AttackDelay: 100
+  AttackMotion: 300
+  DamageMotion: 100
+  DamageTaken: 99
+  Ai: 21

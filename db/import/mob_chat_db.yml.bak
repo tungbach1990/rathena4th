@@ -30,6 +30,5 @@
 Header:
   Type: MOB_CHAT_DB
   Version: 1
-Body:  
   - Id: 100 # !todo Unknown dialogue
     Dialog: Chay di dau!

@@ -13711,4 +13711,4 @@
 20179,Sieglouse@NPC_EMOTION,chase,197,1,200,0,5000,yes,self,always,0,19,0x81,,,,,
 20179,Sieglouse@NPC_EMOTION,idle,197,1,2000,0,5000,yes,self,always,0,7,0x3095,,,,,
 20179,Sieglouse@NPC_GROUNDATTACK,attack,185,1,2000,0,5000,yes,target,always,0,,,,,,,
-20179,Sieglouse@AL_TELEPORT,idle,26,1,10000,0,0,yes,self,rudeattacked,,,,,,,,
+20179,Sieglouse@AL_TELEPORT,idle,26,1,10000,0,0,yes,self,rudeattacked,,,,,,,,,

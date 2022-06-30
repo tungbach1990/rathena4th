@@ -71,7 +71,7 @@ Body:
     Options:
       Riding: true
   - Mob: copyranger
-    Sprite: JOB_RANGER
+    Sprite: JOB_RANGER_T
     HairStyle: 1
     HairColor: 0
     ClothColor: 1

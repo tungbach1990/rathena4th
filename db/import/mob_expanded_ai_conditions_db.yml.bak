@@ -136,8 +136,8 @@ Body:
  - check_armor_notfireorwater_toofar:
     - and:
         - not enemy firearmor >0
-        - not enemy fireresist >=50%
+        - not enemy fireresist >=30%
         - not enemy waterarmor >0
-        - not enemy waterresist >=50%    
+        - not enemy waterresist >=30%    
     - enemy distance_from_self >=3
          
