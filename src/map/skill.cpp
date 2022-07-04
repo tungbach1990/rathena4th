@@ -3195,7 +3195,7 @@ int skill_mirage_cast(struct block_list* src, struct block_list* bl, int skill_i
 			switch (skill_id) {
 			case SS_KUNAIWAIKYOKU: {
 				if (!(distance_xy(x, y, itsu->unit->bl.x, itsu->unit->bl.y) < skill_get_range(skill_id, skill_lv)))
-					return 0;
+					continue;
 				clif_skill_poseffect(&itsu->unit->bl, skill_id, skill_lv, x, y, tick);
 				int i = skill_get_splash(skill_id, skill_lv);
 				map_foreachinallarea(skill_area_sub, src->m, x - i, y - i, x + i, y + i, BL_CHAR,
@@ -3594,7 +3594,7 @@ int64 skill_attack (int attack_type, struct block_list* src, struct block_list *
 
 	if( dmg.flag&BF_MAGIC && ( skill_id != NPC_EARTHQUAKE || (battle_config.eq_single_target_reflectable && (flag&0xFFF) == 1) ) )
 	{ // Earthquake on multiple targets is not counted as a target skill. [Inkfish]
-		if( (dmg.damage || dmg.damage2) && (type = skill_magic_reflect(src, bl, src==dsrc)) )
+		if( (dmg.damage || dmg.damage2) && (type = skill_magic_reflect(src, bl, (src==dsrc && (skill_get_inf(skill_id)&(INF_ATTACK_SKILL|INF_SUPPORT_SKILL))))) )
 		{	//Magic reflection, switch caster/target
 			struct block_list *tbl = bl;
 			rmdamage = true;
@@ -4756,6 +4756,9 @@ static TIMER_FUNC(skill_timerskill){
 					short tmpx = 0, tmpy = 0;
 					tmpx = skl->x - area + rnd() % (area * 2 + 1);
 					tmpy = skl->y - area + rnd() % (area * 2 + 1);
+					if( map_getcell(src->m, tmpx, tmpy, CELL_CHKLANDPROTECTOR) ) {
+						return 0;
+					}
 					clif_skill_poseffect(src, skl->skill_id, skl->skill_lv, tmpx, tmpy, tick);
 					map_foreachinarea(skill_area_sub, src->m, tmpx - splash, tmpy - splash, tmpx + splash, tmpy + splash, BL_CHAR,
 						src, skl->skill_id, skl->skill_lv, tick, skl->flag | BCT_ENEMY | SD_SPLASH | SKILL_ALTDMG_FLAG | 1, skill_castend_damage_id);
@@ -5731,7 +5734,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 	case SOA_EXORCISM_OF_MALICIOUS_SOUL:
 	case SOA_TALISMAN_OF_WHITE_TIGER:
 	case SOA_TALISMAN_OF_RED_PHOENIX:
-	case SOA_TALISMAN_OF_BLACK_TORTOISE:
 	case SOA_TALISMAN_OF_FOUR_BEARING_GOD:
 	case SOA_CIRCLE_OF_DIRECTIONS_AND_ELEMENTALS:
 	case BO_HELL_HOWLING:
@@ -5783,12 +5785,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 #endif
 				case SJ_PROMINENCEKICK: // Trigger the 2nd hit. (100% fire damage.)
 					skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, sflag|8|SD_ANIMATION);
-					break;
-
-				case SOA_TALISMAN_OF_BLACK_TORTOISE:
-					if (sc && (sc->data[SC_T_THIRD_GOD] && !sc->data[SC_T_FOURTH_GOD] && !sc->data[SC_T_FIFTH_GOD])){
-						sc_start(src, src, skill_get_sc(skill_id), 100, skill_lv, skill_get_time(skill_id, skill_lv));
-					}
 					break;
 			}
 		} else {
@@ -5938,7 +5934,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 						sc_start(src, src, skill_get_sc(skill_id), 100, skill_lv, skill_get_time(skill_id, skill_lv));
 					}
 					break;
-
 				case SOA_CIRCLE_OF_DIRECTIONS_AND_ELEMENTALS:
 					clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
 					skill_area_temp[0] = map_foreachinallrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, BCT_ENEMY, skill_area_sub_count);
@@ -14003,12 +13998,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 			PR_LEXAETERNA, 1, tick, flag|BCT_ENEMY|1, skill_castend_nodamage_id);
 		break;
 
-	case SOA_TALISMAN_OF_BLACK_TORTOISE:
-		i = skill_get_splash(skill_id, skill_lv);
-		map_foreachinallarea(skill_area_sub, src->m, x-i, y-i, x+i, y+i, BL_CHAR,
-			src, skill_id, skill_lv, tick, flag|BCT_ENEMY|1, skill_castend_damage_id);
-		break;
-
 	case SA_VOLCANO:
 	case SA_DELUGE:
 	case SA_VIOLENTGALE:
@@ -14174,6 +14163,13 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 	case GS_GROUNDDRIFT: //Ammo should be deleted right away.
 	case GN_WALLOFTHORN:
 	case GN_DEMONIC_FIRE:
+	case SS_FUUMASHOUAKU:
+		skill_unitsetting(src,skill_id,skill_lv,x,y,0);
+		break;
+	case SOA_TALISMAN_OF_BLACK_TORTOISE:
+		if (sc && (sc->data[SC_T_THIRD_GOD] && !sc->data[SC_T_FOURTH_GOD] && !sc->data[SC_T_FIFTH_GOD])){
+			sc_start(src, src, skill_get_sc(skill_id), 100, skill_lv, skill_get_time2(skill_id, skill_lv));
+		}
 		skill_unitsetting(src,skill_id,skill_lv,x,y,0);
 		break;
 	case SS_KUNAIKUSSETSU:
@@ -14304,6 +14300,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 	break;
 	case HN_JACK_FROST_NOVA:
 	case HN_GROUND_GRAVITATION: {
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) ) {
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL,0);
+			return 0;
+		}
 		int splash = skill_get_splash(skill_id, skill_lv);
 		map_foreachinarea(skill_area_sub, src->m, x - splash, y - splash, x + splash, y + splash, BL_CHAR,
 			src, skill_id, skill_lv, tick, flag | BCT_ENEMY | SD_SPLASH | SKILL_ALTDMG_FLAG | 1, skill_castend_damage_id);
@@ -14314,6 +14314,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		break;
 	}
 	case HN_METEOR_STORM_BUSTER: {
+			if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) ) {
+				clif_skill_fail(sd,skill_id,USESKILL_FAIL,0);
+				return 0;
+			}
 			int splash = skill_get_splash(skill_id, skill_lv);
 
 			map_foreachinarea(skill_area_sub, src->m, x - splash, y - splash, x + splash, y + splash, BL_CHAR,
@@ -14683,10 +14687,9 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		break;
 
 	case WM_SEVERE_RAINSTORM:
-		flag |= 1;
 		if (sd)
 			sd->canequip_tick = tick + skill_get_time(skill_id, skill_lv); // Can't switch equips for the duration of the skill.
-		skill_unitsetting(src,skill_id,skill_lv,x,y,0);
+		skill_unitsetting(src,skill_id,skill_lv,x,y,UNIT_NOCONSUME_AMMO);
 		break;
 
 	case GN_CRAZYWEED: {
@@ -14956,6 +14959,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 	case SS_RAIDENPOU:
 	case SS_SEKIENHOU:
 		skill_mirage_cast(src, NULL,SS_ANTENPOU, skill_lv, x, y, tick, flag);
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) ) {
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL,0);
+			return 0;
+		}
 		clif_skill_nodamage(src, src, skill_id, skill_lv, 1);
 		if (battle_config.skill_eightpath_algorithm) {
 			//Use official AoE algorithm
@@ -14982,6 +14989,10 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		break;
 	case SS_REIKETSUHOU:
 		skill_mirage_cast(src, NULL,SS_ANTENPOU, skill_lv, 0, 0, tick,flag);
+		if( map_getcell(src->m, x, y, CELL_CHKLANDPROTECTOR) ) {
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL,0);
+			return 0;
+		}
 		i = skill_get_splash(skill_id, skill_lv);
 		map_foreachinallarea(skill_area_sub, src->m, x - i, y - i, x + i, y + i, BL_CHAR,
 			src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_damage_id);
@@ -14991,15 +15002,12 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		i = skill_get_splash(skill_id, skill_lv);
 		map_foreachinallarea(skill_area_sub, src->m, x - i, y - i, x + i, y + i, BL_CHAR,
 			src, skill_id, skill_lv, tick, flag | BCT_ENEMY | 1, skill_castend_damage_id);
-	case SS_FUUMASHOUAKU:
-		flag |= 1;
-		skill_unitsetting(src, skill_id, skill_lv, x, y, 0);
+		skill_unitsetting(src, skill_id, skill_lv, x, y, UNIT_NOCONSUME_AMMO);
 		break;
 	case SS_KUNAIKAITEN:
 		sc_start(src, src, skill_get_sc(skill_id), 100, skill_lv, skill_get_time2(skill_id, skill_lv));
-		flag |= 1;
-		skill_unitsetting(src, skill_id, skill_lv, x, y, 0);
-		skill_unitsetting(src, SS_KUNAIWAIKYOKU, skill_lv, x, y, 0);
+		skill_unitsetting(src, skill_id, skill_lv, x, y, UNIT_NOCONSUME_AMMO);
+		skill_unitsetting(src, SS_KUNAIWAIKYOKU, skill_lv, x, y, UNIT_NOCONSUME_AMMO);
 		break;
 	case SS_FUUMAKOUCHIKU:
 		if (battle_config.skill_eightpath_algorithm) {
@@ -15694,7 +15702,7 @@ std::shared_ptr<s_skill_unit_group> skill_unitsetting(struct block_list *src, ui
 	group->link_group_id = link_group_id;
 	group->target_flag = target;
 	group->bl_flag = skill_get_unit_bl_target(skill_id);
-	group->state.ammo_consume = (sd && sd->state.arrow_atk && skill_id != GS_GROUNDDRIFT); //Store if this skill needs to consume ammo.
+	group->state.ammo_consume = (sd && sd->state.arrow_atk && skill_id != GS_GROUNDDRIFT && !(flag&UNIT_NOCONSUME_AMMO)); //Store if this skill needs to consume ammo.
 	group->state.song_dance = (((skill->unit_flag[UF_DANCE] || skill->unit_flag[UF_SONG])?1:0)|(skill->unit_flag[UF_ENSEMBLE]?2:0)); //Signals if this is a song/dance/duet
 	group->state.guildaura = ( skill_id >= GD_LEADERSHIP && skill_id <= GD_HAWKEYES )?1:0;
 	group->item_id = req_item;
@@ -16322,6 +16330,11 @@ int skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t_t
 		case UNT_HYUN_ROKS_BREEZE:
 		case UNT_FUUMASHOUAKU:
 		case UNT_KUNAIKAITEN:
+		case UNT_GRENADES_DROPPING:
+		case UNT_GROUND_GRAVITATION:
+		case UNT_STAR_BURST:
+		case UNT_MISSION_BOMBARD:
+		case UNT_JACK_FROST_NOVA:
 			skill_attack(skill_get_type(sg->skill_id),ss,&unit->bl,bl,sg->skill_id,sg->skill_lv,tick,0);
 			break;
 
@@ -16980,14 +16993,6 @@ int skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, t_t
 
 		case UNT_ACIDIFIED_ZONE_FIRE:
 			skill_attack(skill_get_type(BO_ACIDIFIED_ZONE_FIRE_ATK), ss, &unit->bl, bl, BO_ACIDIFIED_ZONE_FIRE_ATK, sg->skill_lv, tick, 0);
-			break;
-
-		case UNT_GRENADES_DROPPING:
-		case UNT_GROUND_GRAVITATION:
-		case UNT_STAR_BURST:
-		case UNT_MISSION_BOMBARD:
-		case UNT_JACK_FROST_NOVA:
-			skill_attack(skill_get_type(sg->skill_id), ss, &unit->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
 			break;
 			
 		case UNT_ASTRAL_STRIKE:
@@ -20584,7 +20589,7 @@ int skill_detonator(struct block_list *bl, va_list ap)
 
 		case UNT_KUNAIWAIKYOKU:
 			skill_delunit(unit);
-			skill_unitsetting(src,SS_KUNAIKUSSETSU,flag,bl->x, bl->y,0);
+			skill_unitsetting(src,SS_KUNAIKUSSETSU,flag,bl->x, bl->y,UNIT_NOCONSUME_AMMO);
 			break;
 	}
 	return 0;

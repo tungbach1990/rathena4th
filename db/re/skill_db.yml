@@ -40846,7 +40846,6 @@ Body:
     TargetType: Self
     DamageFlags:
       Splash: true
-    Range: -9
     Hit: Multi_Hit
     HitCount: 4
     Element: Weapon
@@ -41769,18 +41768,8 @@ Body:
     HitCount: -4
     Element: Endowed
     GiveAp: 3
-    SplashArea:
-      - Level: 1
-        Area: 3
-      - Level: 2
-        Area: 3
-      - Level: 3
-        Area: 4
-      - Level: 4
-        Area: 4
-      - Level: 5
-        Area: 5
-    Duration1:
+    Duration1: 100
+    Duration2:
       - Level: 1
         Time: 30000
       - Level: 2
@@ -41810,6 +41799,23 @@ Body:
       ItemCost:
         - Item: Soa_Charm
           Amount: 1
+    Unit:
+      Id: Dummyskill
+      Range:
+        - Level: 1
+          Size: 3
+        - Level: 2
+          Size: 3
+        - Level: 3
+          Size: 4
+        - Level: 4
+          Size: 4
+        - Level: 5
+          Size: 5
+      Interval: 1000
+      Target: Enemy
+      Flag:
+        PathCheck: true
     Status: T_Fourth_God
   - Id: 5430
     Name: SOA_TALISMAN_OF_FOUR_BEARING_GOD
@@ -43987,6 +43993,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 2
     AfterCastActDelay: 500
     Duration1: 5000
@@ -44036,6 +44043,8 @@ Body:
     Hit: Multi_Hit
     HitCount: -3
     Element: Weapon
+    DamageFlags:
+      IgnoreFlee: true
     ActiveInstance: 2
     AfterCastActDelay: 500
     Duration1: 2000
@@ -44086,6 +44095,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 7
     CastTime: 1500
     AfterCastActDelay: 500
@@ -44427,6 +44437,7 @@ Body:
     Element: Weapon
     DamageFlags:
       Splash: true
+      IgnoreFlee: true
     SplashArea: 6
     CastTime: 2000
     AfterCastActDelay: 500
@@ -44490,6 +44501,7 @@ Body:
     Flags:
       TargetTrap: true
     Range: 9
+    GiveAp: 2
     Hit: Multi_Hit
     HitCount: -2
     Element: Weapon
