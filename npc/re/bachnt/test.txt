@@ -1,7 +1,15 @@
 prontera,154,177,5	script	Tool Merchant#doram05t	4_DR_M_01,{
-callshop "testitemid";
-setquest 30002;
-}
+//callshop "testitemid";
 
-pay_dun01,229,71	monster	CuocDoiBuon	31180,1,5000,0,0,2,0
-pay_dun01,223,71	monster	CuocDoiBuon2	31181,1,5000,0,0,3,1
+//setquest 30002;
+
+
+//pay_dun01,229,71	monster	CuocDoiBuon	31180,1,5000,0,0,2,0
+//pay_dun01,223,71	monster	CuocDoiBuon2	31181,1,5000,0,0,3,1
+
+
+monster "prt_in",44,107,"Clone of mine",3198,1,strnpcinfo(3) + "::OnKilled",1,1;
+mes $@mobid[0];
+close;
+
+}

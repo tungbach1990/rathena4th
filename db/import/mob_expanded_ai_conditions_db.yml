@@ -102,7 +102,7 @@ Body:
    - not self endure
    
  - ready_for_concentration:
-   - not self concentration
+   - not self lkconcentration
    
  - ready_for_aurablade:
    - not self aurablade
