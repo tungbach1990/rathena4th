@@ -5810,18 +5810,24 @@
 	export_constant(IG_SHADOW_CUBE_SHIELD);
 	export_constant(IG_SHADOW_CUBE_SHOES);
 	export_constant(IG_SHADOW_CUBE_WEAPON);
+<<<<<<< HEAD
 	export_constant(IG_ODIN_RELIC);
+=======
+>>>>>>> 961951108c343d4057f90be2cdedba0c69fb0f80
 	export_constant(IG_AUTOMATIC_MODULE_MIX);
 	export_constant(IG_EPIC_MODULE_MIX);
 	export_constant(IG_AUTO_M_I_BOX_A);
 	export_constant(IG_AUTO_M_I_BOX_B);
 	export_constant(IG_ILLUSION_MODULE_MIX);
+<<<<<<< HEAD
 	export_constant(IG_ENCHANT_STONE_BOX22);
 	export_constant(IG_ENCHANT_STONE_BOX23);
 	export_constant(IG_ENCHANT_STONE_BOX24);
 	export_constant(IG_ENCHANT_STONE_BOX25);
 	export_constant(IG_ENCHANT_STONE_BOX27);
 	export_constant(IG_ANCIENT_HERO_BOX_1);
+=======
+>>>>>>> 961951108c343d4057f90be2cdedba0c69fb0f80
 
 	/* unit stop walking */
 	export_constant(USW_NONE);
@@ -8416,6 +8422,7 @@
 	export_constant(MD_NORANDOMWALK);
 	export_constant(MD_NOCAST);
 	export_constant(MD_CANATTACK);
+	export_constant(MD_SKILLONLY);
 	export_constant(MD_CASTSENSORCHASE);
 	export_constant(MD_CHANGECHASE);
 	export_constant(MD_ANGRY);
@@ -8430,6 +8437,7 @@
 	export_constant(MD_IGNOREMISC);
 	export_constant(MD_KNOCKBACKIMMUNE);
 	export_constant(MD_TELEPORTBLOCK);
+	export_constant(MD_PCSKILLBEHAVIOR);
 	export_constant(MD_FIXEDITEMDROP);
 	export_constant(MD_DETECTOR);
 	export_constant(MD_STATUSIMMUNE);

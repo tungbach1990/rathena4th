@@ -1571,10 +1571,6 @@ static int mob_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 	{
 		(*target) = bl;
 		md->target_id = bl->id;
-		if (md->lootitems) {
-			ShowWarning("Loot %d\n",md->lootitems[md->lootitem_count - 1]);
-		}
-		ShowWarning("Loot %d\n",md->target_id);
 		md->min_chase = md->db->range3;
 	}
 	else if (!battle_config.monster_loot_search_type)
