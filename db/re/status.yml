@@ -8591,3 +8591,12 @@ Body:
     DurationLookup: SOA_SOUL_OF_HEAVEN_AND_EARTH
     CalcFlags:
       Smatk: true
+  - Status: Sub_Weaponproperty
+    Flags:
+      NoBanishingBuster: true
+      NoDispell: true
+      NoClearance: true
+      NoRemoveOnDead: true
+      NoClearbuff: true
+    End:
+      Sub_Weaponproperty: true
