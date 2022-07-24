@@ -2079,7 +2079,9 @@ static bool mob_ai_sub_hard(struct mob_data *md, t_tick tick)
 		fitem = (struct flooritem_data *)tbl;
 		//Logs items, taken by (L)ooter Mobs [Lupus]
 		log_pick_mob(md, LOG_TYPE_LOOT, fitem->item.amount, &fitem->item);
-                ShowWarning("mob loot %d %d\n", md->bl.id, fitem->item.nameid);
+		if( Sql_Query( mmysql_handle, "INSERT IGNORE INTO `bachnt_moblooter`(`time`,`uniqueid`,`mobid`,`nameid`,`amount`,`refine`,`card0`,`card1`,`card2`,`card3`,`option_id0`,`option_val0`,`option_parm0`,`option_id1`,`option_val1`,`option_parm1`,`option_id2`,`option_val2`,`option_parm2`,`option_id3`,`option_val3`,`option_parm3`,`option_id4`,`option_val4`,`option_parm4`,`enchantgrade`,`claim`) VALUES (NOW(),%u,%u,%u);", md->bl.id, fitem->mob_id ,fitem->item.nameid,fitem->item.amount ) != SQL_SUCCESS ){
+			Sql_ShowDebug( mmysql_handle );
+		}
 		if (md->lootitem_count < LOOTITEM_SIZE) {
 			memcpy (&md->lootitems[md->lootitem_count].item, &fitem->item, sizeof(md->lootitems[0].item));
 			md->lootitems[md->lootitem_count].mob_id = fitem->mob_id;

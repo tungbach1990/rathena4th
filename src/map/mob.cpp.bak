@@ -1571,10 +1571,6 @@ static int mob_ai_sub_hard_lootsearch(struct block_list *bl,va_list ap)
 	{
 		(*target) = bl;
 		md->target_id = bl->id;
-		if (md->lootitems) {
-			ShowWarning("Loot %d\n",md->lootitems[md->lootitem_count - 1]);
-		}
-		ShowWarning("Loot %d\n",md->target_id);
 		md->min_chase = md->db->range3;
 	}
 	else if (!battle_config.monster_loot_search_type)
@@ -2083,7 +2079,9 @@ static bool mob_ai_sub_hard(struct mob_data *md, t_tick tick)
 		fitem = (struct flooritem_data *)tbl;
 		//Logs items, taken by (L)ooter Mobs [Lupus]
 		log_pick_mob(md, LOG_TYPE_LOOT, fitem->item.amount, &fitem->item);
-                ShowWarning("mob loot %d %d\n", md->bl.id, fitem->item.nameid);
+		if( Sql_Query( mmysql_handle, "INSERT IGNORE INTO `bachnt_moblooter`(`uniqueid`,`mobid`,`lootitem`,`amount`) VALUES (%u,%u,%u);", md->bl.id, fitem->mob_id ,fitem->item.nameid,fitem->item.amount ) != SQL_SUCCESS ){
+			Sql_ShowDebug( mmysql_handle );
+		}
 		if (md->lootitem_count < LOOTITEM_SIZE) {
 			memcpy (&md->lootitems[md->lootitem_count].item, &fitem->item, sizeof(md->lootitems[0].item));
 			md->lootitems[md->lootitem_count].mob_id = fitem->mob_id;
