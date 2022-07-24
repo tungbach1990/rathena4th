@@ -28275,7 +28275,6 @@ Body:
     HitCount: 5
     Element: Weapon
     SplashArea: 2
-    Knockback: 2
     AfterCastActDelay: 1000
     Duration1: 5000
     Cooldown: 2000
@@ -36796,7 +36795,7 @@ Body:
     CastTime: 4000
     AfterCastActDelay: 500
     Duration1: 20000
-    Cooldown: 1000
+    Cooldown: 1500
     FixedCastTime: 1000
     Requires:
       SpCost:
@@ -44788,6 +44787,8 @@ Body:
       - Level: 10
         Area: 4
     CastCancel: true
+    CastTime: 1000
+    FixedCastTime: 500
     AfterCastActDelay: 150
     Cooldown: 700
     Requires:

@@ -897,9 +897,10 @@ int battle_calc_cardfix(int attack_type, struct block_list *src, struct block_li
 											+ (sd->state.arrow_atk ? sd->indexed_bonus.arrow_addclass[tstatus->class_] + sd->indexed_bonus.arrow_addclass[CLASS_ALL] : 0)
 										) / 100;
 				}
-				if( sd->status.weapon == W_KATAR && (skill = pc_checkskill(sd,ASC_KATAR)) > 0 ) // Adv. Katar Mastery functions similar to a +%ATK card on official [helvetica]
-					cardfix = cardfix * (100 + (10 + 2 * skill)) / 100;
-				
+#ifndef RENEWAL
+					if( sd->status.weapon == W_KATAR && (skill = pc_checkskill(sd,ASC_KATAR)) > 0 ) // Adv. Katar Mastery functions similar to a +%ATK card on official [helvetica]
+						cardfix = cardfix * (100 + (10 + 2 * skill)) / 100;
+#endif
 
 				//! CHECKME: These right & left hand weapon ignores 'left_cardfix_to_right'?
 				for (const auto &it : sd->right_weapon.add_dmg) {
@@ -1119,9 +1120,9 @@ bool battle_status_block_damage(struct block_list *src, struct block_list *targe
 	int flag = d->flag;
 
 	// SC Types that must be first because they may or may not block damage
-	if ((sce = sc->data[SC_KYRIE]) && damage > 0) {
+	if ((sce = sc->data[SC_KYRIE]) && damage > 0 && (flag & BF_WEAPON)) {
 		sce->val2 -= static_cast<int>(cap_value(damage, INT_MIN, INT_MAX));
-		if (flag & BF_WEAPON || skill_id == TF_THROWSTONE) {
+		if (skill_id == TF_THROWSTONE) {
 			if (sce->val2 >= 0)
 				damage = 0;
 			else
@@ -4616,12 +4617,14 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 		case RK_HUNDREDSPEAR:
 			skillratio += -100 + 600 + 200 * skill_lv;
 			if (sd)
-				skillratio += 50 * pc_checkskill(sd,LK_SPIRALPIERCE) + 160 * pc_checkskill(sd, DK_DRAGONIC_AURA);
-			RE_LVL_DMOD(100);
+				skillratio += 50 * pc_checkskill(sd,LK_SPIRALPIERCE);
 			if (sc) {
+				if (sc->data[SC_DRAGONIC_AURA])
+					skillratio += sc->data[SC_DRAGONIC_AURA]->val1 * 160;
 				if (sc->data[SC_CHARGINGPIERCE_COUNT] && sc->data[SC_CHARGINGPIERCE_COUNT]->val1 >= 10)
 					skillratio *= 2;
 			}
+			RE_LVL_DMOD(100);
 			break;
 		case RK_WINDCUTTER:
 			if (sd) {
@@ -5490,9 +5493,9 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 		case WH_CRESCIVE_BOLT:
 			skillratio += -100 + 300 * skill_lv + 5 * sstatus->con;
 			RE_LVL_DMOD(100);
-			if (sc) { // At level 10 the SP usage of 100 increased by 20 on each count. So maybe damage increase is 20%??? [Rytech]
+			if (sc) {
 				if (sc->data[SC_CRESCIVEBOLT])
-					skillratio += skillratio * (20 * sc->data[SC_CRESCIVEBOLT]->val1) / 100;
+					skillratio += skillratio * (10 * sc->data[SC_CRESCIVEBOLT]->val1) / 100;
 
 				if (sc->data[SC_CALAMITYGALE]) {
 					skillratio += skillratio * 20 / 100;
@@ -5891,15 +5894,6 @@ static void battle_attack_sc_bonus(struct Damage* wd, struct block_list *src, st
 			ATK_ADD(wd->equipAtk, wd->equipAtk2, sc->data[SC_DRUMBATTLE]->val2);
 		if (sc->data[SC_MADNESSCANCEL])
 			ATK_ADD(wd->equipAtk, wd->equipAtk2, 100);
-		if (sc->data[SC_MAGICALBULLET]) {
-			short tmdef = tstatus->mdef + tstatus->mdef2;
-
-			if (sstatus->matk_min > tmdef && sstatus->matk_max > sstatus->matk_min) {
-				ATK_ADD(wd->weaponAtk, wd->weaponAtk2, i64max((sstatus->matk_min + rnd() % (sstatus->matk_max - sstatus->matk_min)) - tmdef, 0));
-			} else {
-				ATK_ADD(wd->weaponAtk, wd->weaponAtk2, i64max(sstatus->matk_min - tmdef, 0));
-			}
-		}
 		if (sc->data[SC_GATLINGFEVER])
 			ATK_ADD(wd->equipAtk, wd->equipAtk2, sc->data[SC_GATLINGFEVER]->val3);
 #else
@@ -6542,6 +6536,17 @@ static void battle_calc_weapon_final_atk_modifiers(struct Damage* wd, struct blo
 				if (enchant_dmg > 0)
 					ATK_ADD(wd->damage, wd->damage2, enchant_dmg);
 			}
+#ifdef RENEWAL
+			if (sc->data[SC_MAGICALBULLET]) {
+				short tmdef = tstatus->mdef + tstatus->mdef2;
+
+				if (sstatus->matk_min > tmdef && sstatus->matk_max > sstatus->matk_min) {
+					ATK_ADD(wd->damage, wd->damage2, i64max((sstatus->matk_min + rnd() % (sstatus->matk_max - sstatus->matk_min)) - tmdef, 0));
+				} else {
+					ATK_ADD(wd->damage, wd->damage2, i64max((int64)sstatus->matk_min - tmdef, 0));
+				}
+			}
+#endif
 		}
 		if (skill_id != SN_SHARPSHOOTING && skill_id != RA_ARROWSTORM)
 			status_change_end(src, SC_CAMOUFLAGE, INVALID_TIMER);
@@ -8164,9 +8169,9 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 						RE_LVL_DMOD(100);
 						break;
 					case IG_JUDGEMENT_CROSS:
-						skillratio += -100 + 750 * skill_lv + 10 * sstatus->spl;
+						skillratio += -100 + 1950 * skill_lv + 10 * sstatus->spl;
 						if (tstatus->race == RC_PLANT || tstatus->race == RC_INSECT)
-							skillratio += 350 * skill_lv;
+							skillratio += 150 * skill_lv;
 						RE_LVL_DMOD(100);
 						if ((i = pc_checkskill_imperial_guard(sd, 3)) > 0)
 							skillratio += skillratio * i / 100;

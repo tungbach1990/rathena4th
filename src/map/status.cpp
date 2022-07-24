@@ -4392,15 +4392,14 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		sd->indexed_bonus.subele[ELE_FIRE] += skill*5;
 	}
 	if((skill=pc_checkskill(sd,SA_DRAGONOLOGY))>0) {
+		sd->right_weapon.addrace[RC_DRAGON]+=skill*4;
+		sd->left_weapon.addrace[RC_DRAGON]+=skill*4;
 #ifdef RENEWAL
-		skill = skill * 2;
+		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=skill*2;
 #else
-		skill = skill * 4;
+		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=skill*4;
 #endif
-		sd->right_weapon.addrace[RC_DRAGON]+=skill;
-		sd->left_weapon.addrace[RC_DRAGON]+=skill;
-		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=skill;
-		sd->indexed_bonus.subrace[RC_DRAGON]+=skill;
+		sd->indexed_bonus.subrace[RC_DRAGON]+=skill*4;
 	}
 	if ((skill = pc_checkskill(sd, AB_EUCHARISTICA)) > 0) {
 		sd->right_weapon.addrace[RC_DEMON] += skill;
@@ -12723,6 +12722,16 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_DEEP_POISONING_OPTION:
 			val3 = ELE_POISON;
+			break;
+		case SC_SUB_WEAPONPROPERTY:
+			if (sd && val3 == ASC_EDP) {
+				uint16 poison_level = pc_checkskill(sd, GC_RESEARCHNEWPOISON);
+
+				if (poison_level > 0) {
+					tick += 30000; // Base of 30 seconds
+					tick += poison_level * 15 * 1000; // Additional 15 seconds per level
+				}
+			}
 			break;
 		case SC_TALISMAN_OF_PROTECTION:
 			val2 = 2 * val1;

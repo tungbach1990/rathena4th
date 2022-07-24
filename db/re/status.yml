@@ -1195,8 +1195,6 @@ Body:
     DurationLookup: HP_BASILICA
     CalcFlags:
       All: true
-    States:
-      NoAttack: true
     Flags:
       NoSave: true
       NoClearance: true
@@ -5682,8 +5680,6 @@ Body:
     DurationLookup: AB_OFFERTORIUM
     Flags:
       DisplayPc: true
-    Fail:
-      Magnificat: true
     End:
       Magnificat: true
       Blind: true
@@ -7476,6 +7472,7 @@ Body:
       Flee: true
       Flee2: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deepsilence
@@ -7486,6 +7483,7 @@ Body:
     CalcFlags:
       Aspd: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Lassitude
@@ -7493,6 +7491,7 @@ Body:
       Speed: true
       Cri: true
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Frostbite
     Icon: EFST_HANDICAPSTATE_FROSTBITE
@@ -7506,6 +7505,7 @@ Body:
       Mdef: true
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
@@ -7516,6 +7516,7 @@ Body:
       NoCast: true
       NoConsumeItem: true
     Flags:
+      BossResist: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Lightningstrike
@@ -7528,6 +7529,7 @@ Body:
     CalcFlags:
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
@@ -7542,6 +7544,7 @@ Body:
       Mdef: true
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
@@ -7551,6 +7554,7 @@ Body:
     CalcFlags:
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Misfortune
@@ -7559,6 +7563,7 @@ Body:
     CalcFlags:
       Hit: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deadlypoison
@@ -7567,15 +7572,18 @@ Body:
     CalcFlags:
       Def: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Depression
     Icon: EFST_HANDICAPSTATE_DEPRESSION
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Holyflame
     Icon: EFST_HANDICAPSTATE_HOLYFLAME
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Servantweapon
     Icon: EFST_SERVANTWEAPON
@@ -8199,6 +8207,15 @@ Body:
       NoClearance: true
     Fail:
       S_Manapotion: true
+  - Status: Sub_Weaponproperty
+    Flags:
+      NoBanishingBuster: true
+      NoDispell: true
+      NoClearance: true
+      NoRemoveOnDead: true
+      NoClearbuff: true
+    End:
+      Sub_Weaponproperty: true
   - Status: Rush_Quake1
     Icon: EFST_RUSH_QUAKE1
     DurationLookup: MT_RUSH_QUAKE
@@ -8411,14 +8428,20 @@ Body:
     DurationLookup: HN_SHIELD_CHAIN_RUSH
     CalcFlags:
       Speed: true
+    Flags:
+      BossResist: true
   - Status: Mistyfrost
     Icon: EFST_MISTYFROST
     DurationLookup: HN_JACK_FROST_NOVA
+    Flags:
+      BossResist: true
   - Status: Groundgravity
     Icon: EFST_GROUNDGRAVITY
     DurationLookup: HN_GROUND_GRAVITATION
     CalcFlags:
       Speed: true
+    Flags:
+      BossResist: true
   - Status: Breakinglimit
     Icon: EFST_BREAKINGLIMIT
     DurationLookup: HN_BREAKINGLIMIT
