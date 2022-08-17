@@ -8242,7 +8242,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case EM_INCREASING_ACTIVITY:
 		if (bl->type == BL_PC) {
 			clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
-			status_heal(bl, 0, 0, 20 + 5 * skill_lv, 0);
+			status_heal(bl, 0, 0, 10 * skill_lv, 0);
 		} else
 			clif_skill_fail(sd, skill_id, USESKILL_FAIL, 0);
 		break;
@@ -18493,6 +18493,24 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 		case SKE_DAWN_BREAK:
 			if (!sc || (!sc->data[SC_DAWN_MOON] && !sc->data[SC_MIDNIGHT_MOON] && !sc->data[SC_SKY_ENCHANT])){
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_CONDITION,0);
+				return false;
+			}
+			break;
+		case RL_P_ALTER:
+			if (sc && (sc->data[SC_HEAT_BARREL] || sc->data[SC_MADNESSCANCEL])){
+				clif_msg_color( sd, SKILL_FAIL_P_ALT_HEAT_B_MADNESSC, color_table[COLOR_RED] );
+				return false;
+			}
+			break;
+		case RL_HEAT_BARREL:
+			if (sc && (sc->data[SC_P_ALTER] || sc->data[SC_MADNESSCANCEL])){
+				clif_msg_color( sd, SKILL_FAIL_P_ALT_HEAT_B_MADNESSC, color_table[COLOR_RED] );
+				return false;
+			}
+			break;
+		case GS_MADNESSCANCEL:
+			if (sc && (sc->data[SC_HEAT_BARREL] || sc->data[SC_P_ALTER])){
+				clif_msg_color( sd, SKILL_FAIL_P_ALT_HEAT_B_MADNESSC, color_table[COLOR_RED] );
 				return false;
 			}
 			break;
