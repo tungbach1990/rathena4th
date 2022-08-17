@@ -1649,8 +1649,35 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,t_tick tick)
 
 			if (map_search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)) {
 				if (unit_walktoxy(&md->bl, x, y, 0) == 0) { // Slave is too far from master (outside of battle_config.max_walk_path range), stay put
-					mob_stop_walking(md, USW_FIXPOS);
-					return 0; // Fail here so target will be picked back up when in range
+					//mob_stop_walking(md, USW_FIXPOS);
+					//return 0; // Fail here so target will be picked back up when in range
+					if (md->ud.walktimer == INVALID_TIMER) {
+						// Because it is not unset when the mob finishes walking.
+						md->state.skillstate = MSS_IDLE;
+						if (md->idle_event[0] && npc_event_do_id( md->idle_event, md->bl.id ) > 0) {
+							md->idle_event[0] = 0;
+							return 0;
+						}
+					}
+
+					if( DIFF_TICK(md->next_walktime,tick) < 0 && status_has_mode(&md->status,MD_CANMOVE) && unit_can_move(&md->bl) )
+					{
+						// Move probability for mobs away from players
+						// In Aegis, this is 100% for mobs that have been activated by players and none otherwise.
+						if( mob_is_spotted(md) &&
+							((!status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.mob_nopc_move_rate) ||
+							(status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.boss_nopc_move_rate)))
+							mob_randomwalk(md, tick);
+					}
+					else if( md->ud.walktimer == INVALID_TIMER )
+					{
+						// Probability for mobs far from players from doing their IDLE skill.
+						// In Aegis, this is 100% for mobs that have been activated by players and none otherwise.
+						if( mob_is_spotted(md) &&
+							((!status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.mob_nopc_idleskill_rate) ||
+							(status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.boss_nopc_idleskill_rate)))
+							mobskill_use(md, tick, -1);
+					}
 				} else { // Slave will walk back to master if in range
 					mob_stop_attack(md);
 					return 1;
@@ -2078,8 +2105,19 @@ static bool mob_ai_sub_hard(struct mob_data *md, t_tick tick)
 		fitem = (struct flooritem_data *)tbl;
 		//Logs items, taken by (L)ooter Mobs [Lupus]
 		log_pick_mob(md, LOG_TYPE_LOOT, fitem->item.amount, &fitem->item);
-		if( Sql_Query( mmysql_handle, "INSERT IGNORE INTO `bachnt_moblooter`(`time`,`uniqueid`,`mobid`,`nameid`,`amount`,`refine`,`card0`,`card1`,`card2`,`card3`,`option_id0`,`option_val0`,`option_parm0`,`option_id1`,`option_val1`,`option_parm1`,`option_id2`,`option_val2`,`option_parm2`,`option_id3`,`option_val3`,`option_parm3`,`option_id4`,`option_val4`,`option_parm4`,`enchantgrade`,`claim`) VALUES (NOW(),%u,%u,%u);", md->bl.id, fitem->mob_id ,fitem->item.nameid,fitem->item.amount ) != SQL_SUCCESS ){
-			Sql_ShowDebug( mmysql_handle );
+		if (md->master_id > 0) {
+			if( Sql_Query( mmysql_handle, "INSERT IGNORE INTO `bachnt_moblooter`(`time`,`dropid`,`map`,`x`,`y`,`masterid`,`uniqueid`,`mobid`,`nameid`,`amount`,`refine`,`card0`,`card1`,`card2`,`card3`,`option_id0`,`option_val0`,`option_parm0`,`option_id1`,`option_val1`,`option_parm1`,`option_id2`,`option_val2`,`option_parm2`,`option_id3`,`option_val3`,`option_parm3`,`option_id4`,`option_val4`,`option_parm4`,`enchantgrade`,`claim`)VALUES (NOW(),%u,'%s',%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u);", 
+										md->mob_id,map_getmapdata(md->bl.m)->name[0] ? map_getmapdata(md->bl.m)->name : "",md->bl.x,md->bl.y,md->master_id,md->bl.id, fitem->mob_id ,fitem->item.nameid,fitem->item.amount,fitem->item.refine,fitem->item.card[0],fitem->item.card[1],fitem->item.card[2],fitem->item.card[3]
+										,fitem->item.option[0].id,fitem->item.option[0].value,fitem->item.option[0].param,fitem->item.option[1].id,fitem->item.option[1].value,fitem->item.option[1].param
+										,fitem->item.option[2].id,fitem->item.option[2].value,fitem->item.option[2].param,fitem->item.option[3].id,fitem->item.option[3].value,fitem->item.option[3].param
+										,fitem->item.option[4].id,fitem->item.option[4].value,fitem->item.option[4].param,fitem->item.enchantgrade,0) != SQL_SUCCESS ){
+				Sql_ShowDebug( mmysql_handle );
+			}
+			if (md->lootitems[0].item.card[0] == CARD0_PET)
+				intif_delete_petdata(MakeDWord(md->lootitems[0].item.card[1],md->lootitems[0].item.card[2]));
+			memmove(&md->lootitems[0], &md->lootitems[1], (LOOTITEM_SIZE-1)*sizeof(md->lootitems[0]));
+			memcpy (&md->lootitems[LOOTITEM_SIZE-1].item, &fitem->item, sizeof(md->lootitems[0].item));
+			md->lootitems[LOOTITEM_SIZE-1].mob_id = fitem->mob_id;
 		}
 		if (md->lootitem_count < LOOTITEM_SIZE) {
 			memcpy (&md->lootitems[md->lootitem_count].item, &fitem->item, sizeof(md->lootitems[0].item));
