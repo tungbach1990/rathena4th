@@ -308,6 +308,20 @@ struct PACKET_ZC_RESPONSE_ENCHANT{
 struct PACKET_CZ_CLOSE_UI_ENCHANT{
 	int16 packetType;
 } __attribute__((packed));
+
+struct PACKET_ZC_REPUTE_INFO_sub{
+	uint64 type;
+	int64 points;
+} __attribute__((packed));
+
+struct PACKET_ZC_REPUTE_INFO{
+	int16 packetType;
+	int16 packetLength;
+	uint8 success;
+	struct PACKET_ZC_REPUTE_INFO_sub list[];
+} __attribute__((packed));
+
+
 // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
 #if !defined( sun ) && ( !defined( __NETBSD__ ) || __NetBSD_Version__ >= 600000000 )
 	#pragma pack( pop )
@@ -362,6 +376,7 @@ DEFINE_PACKET_HEADER(ZC_UNCONFIRMED_SPIRITS3, 0xb73)
 DEFINE_PACKET_HEADER(CZ_UNCONFIRMED_RODEX_RETURN, 0xb98)
 DEFINE_PACKET_HEADER(ZC_SUMMON_HP_INIT, 0xb6b)
 DEFINE_PACKET_HEADER(ZC_SUMMON_HP_UPDATE, 0xb6c)
+DEFINE_PACKET_HEADER(ZC_REPUTE_INFO, 0x0b8d)
 DEFINE_PACKET_HEADER(ZC_OPEN_REFORM_UI, 0x0b8f)
 DEFINE_PACKET_HEADER(CZ_CLOSE_REFORM_UI, 0x0b90)
 DEFINE_PACKET_HEADER(CZ_ITEM_REFORM, 0x0b91)
