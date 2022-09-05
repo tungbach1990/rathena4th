@@ -144,4 +144,9 @@ Thumbs.db
 
 # CMakeFiles
 /CMakeFiles/
+
 gdb.txt
+
+# generated files
+generated
+

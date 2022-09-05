@@ -619,8 +619,8 @@ enum class e_pet_evolution_result : uint32 {
 
 enum e_config_type : uint32 {
 	CONFIG_OPEN_EQUIPMENT_WINDOW = 0,
-	// Unknown
-	CONFIG_PET_AUTOFEED = 2,
+	CONFIG_CALL,
+	CONFIG_PET_AUTOFEED,
 	CONFIG_HOMUNCULUS_AUTOFEED
 };
 
@@ -1227,12 +1227,13 @@ void clif_summon_hp_bar(struct mob_data& md);
 void clif_laphine_synthesis_open( struct map_session_data *sd, std::shared_ptr<s_laphine_synthesis> synthesis );
 void clif_laphine_upgrade_open( struct map_session_data* sd, std::shared_ptr<s_laphine_upgrade> upgrade );
 
-// Item Reform UI
-void clif_item_reform_open( struct map_session_data& sd, t_itemid item );
 // Item Enchant UI
 void clif_enchantwindow_open( struct map_session_data& sd, uint64 clientLuaIndex );
 // Reputation System
 void clif_reputation_type( struct map_session_data& sd, int64 type, int64 points );
 void clif_reputation_list( struct map_session_data& sd );
+
+// Item Reform UI
+void clif_item_reform_open( struct map_session_data& sd, t_itemid item );
 
 #endif /* CLIF_HPP */
