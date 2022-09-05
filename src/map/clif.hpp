@@ -578,8 +578,11 @@ enum clif_messages : uint16_t {
 	MSG_ATTENDANCE_DISABLED = 0xd92,
 
 	// Unofficial names
-	C_ITEM_EQUIP_SWITCH = 0xbc7, 
+	C_ITEM_EQUIP_SWITCH = 0xbc7,
 	C_ITEM_NOEQUIP = 0x174,	/// <"You can't put this item on."
+	C_ENCHANT_OVERWEIGHT = 0xEFD,
+	C_ENCHANT_SUCCESS = 0xF11,
+	C_ENCHANT_FAILURE = 0xF12,
 };
 
 enum e_personalinfo : uint8_t {
@@ -1235,5 +1238,8 @@ void clif_reputation_list( struct map_session_data& sd );
 
 // Item Reform UI
 void clif_item_reform_open( struct map_session_data& sd, t_itemid item );
+
+// Item Enchant UI
+void clif_enchantwindow_open( struct map_session_data& sd, uint64 clientLuaIndex );
 
 #endif /* CLIF_HPP */

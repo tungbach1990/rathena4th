@@ -246,6 +246,41 @@ struct PACKET_ZC_SUMMON_HP_UPDATE {
 	uint32 Value;
 } __attribute__((packed));
 
+struct PACKET_ZC_REPUTE_INFO_sub{
+	uint64 type;
+	int64 points;
+} __attribute__((packed));
+
+struct PACKET_ZC_REPUTE_INFO{
+	int16 packetType;
+	int16 packetLength;
+	uint8 success;
+	struct PACKET_ZC_REPUTE_INFO_sub list[];
+} __attribute__((packed));
+
+
+struct PACKET_ZC_OPEN_REFORM_UI{
+	int16 packetType;
+	uint32 itemId;
+} __attribute__((packed));
+
+struct PACKET_CZ_CLOSE_REFORM_UI{
+	int16 packetType;
+} __attribute__((packed));
+
+struct PACKET_CZ_ITEM_REFORM{
+	int16 packetType;
+	uint32 itemId;
+	uint16 index;
+} __attribute__((packed));
+
+struct PACKET_ZC_ITEM_REFORM_ACK{
+	int16 packetType;
+	uint16 index;
+	uint8 result;
+} __attribute__((packed));
+
+
 struct PACKET_ZC_UI_OPEN_V3{
 	int16 packetType;
 	uint8 type;
@@ -286,40 +321,6 @@ struct PACKET_ZC_RESPONSE_ENCHANT{
 
 struct PACKET_CZ_CLOSE_UI_ENCHANT{
 	int16 packetType;
-} __attribute__((packed));
-
-struct PACKET_ZC_REPUTE_INFO_sub{
-	uint64 type;
-	int64 points;
-} __attribute__((packed));
-
-struct PACKET_ZC_REPUTE_INFO{
-	int16 packetType;
-	int16 packetLength;
-	uint8 success;
-	struct PACKET_ZC_REPUTE_INFO_sub list[];
-} __attribute__((packed));
-
-
-struct PACKET_ZC_OPEN_REFORM_UI{
-	int16 packetType;
-	uint32 itemId;
-} __attribute__((packed));
-
-struct PACKET_CZ_CLOSE_REFORM_UI{
-	int16 packetType;
-} __attribute__((packed));
-
-struct PACKET_CZ_ITEM_REFORM{
-	int16 packetType;
-	uint32 itemId;
-	uint16 index;
-} __attribute__((packed));
-
-struct PACKET_ZC_ITEM_REFORM_ACK{
-	int16 packetType;
-	uint16 index;
-	uint8 result;
 } __attribute__((packed));
 
 
@@ -389,7 +390,6 @@ DEFINE_PACKET_HEADER(CZ_REQUEST_UPGRADE_ENCHANT, 0x0b9d)
 DEFINE_PACKET_HEADER(CZ_REQUEST_RESET_ENCHANT, 0x0b9e)
 DEFINE_PACKET_HEADER(ZC_RESPONSE_ENCHANT, 0x0b9f)
 DEFINE_PACKET_HEADER(CZ_CLOSE_UI_ENCHANT, 0x0ba0)
-
 
 const int16 MAX_INVENTORY_ITEM_PACKET_NORMAL = ( ( INT16_MAX - ( sizeof( struct packet_itemlist_normal ) - ( sizeof( struct NORMALITEM_INFO ) * MAX_ITEMLIST) ) ) / sizeof( struct NORMALITEM_INFO ) );
 const int16 MAX_INVENTORY_ITEM_PACKET_EQUIP = ( ( INT16_MAX - ( sizeof( struct packet_itemlist_equip ) - ( sizeof( struct EQUIPITEM_INFO ) * MAX_ITEMLIST ) ) ) / sizeof( struct EQUIPITEM_INFO ) );
