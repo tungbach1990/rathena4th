@@ -1581,6 +1581,22 @@ static void clif_spiritcharm_single(int fd, struct map_session_data *sd)
 }
 
 /*==========================================
+ * Enchanting Shadow / Shadow Scar Spirit
+ *------------------------------------------*/
+void clif_enchantingshadow_spirit(unit_data &ud) {
+#if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191120 || PACKETVER_ZERO_NUM >= 20191127
+	PACKET_ZC_TARGET_SPIRITS p = {};
+
+	p.packetType = HEADER_ZC_TARGET_SPIRITS;
+	p.GID = ud.bl->id;
+	p.unknown_val = 0;
+	p.amount = static_cast<uint16>(ud.shadow_scar_timer.size());
+
+	clif_send(&p, sizeof(p), ud.bl, AREA);
+#endif
+}
+
+/*==========================================
  * Run when player changes map / refreshes
  * Tells its client to display all weather settings being used by this map
  *------------------------------------------*/
@@ -18745,6 +18761,28 @@ void clif_parse_MemorialDungeonCommand(int fd, map_session_data *sd)
 	}
 }
 
+void clif_instance_info( struct map_session_data& sd ){
+	if( sd.instance_id > 0 ){
+		instance_reqinfo( &sd, sd.instance_id );
+	}
+
+	if( sd.status.party_id > 0 ){
+		struct party_data* p = party_search( sd.status.party_id );
+
+		if( p != nullptr && p->instance_id > 0 ){
+			instance_reqinfo( &sd, p->instance_id );
+		}
+	}
+
+	if( sd.guild != nullptr && sd.guild->instance_id > 0 ){
+		instance_reqinfo( &sd, sd.guild->instance_id );
+	}
+
+	if( sd.clan != nullptr && sd.clan->instance_id > 0 ){
+		instance_reqinfo( &sd, sd.clan->instance_id );
+	}
+}
+
 /// Notifies clients about item picked up by a party member.
 /// 02b8 <account id>.L <name id>.W <identified>.B <damaged>.B <refine>.B <card1>.W <card2>.W <card3>.W <card4>.W <equip location>.W <item type>.B (ZC_ITEM_PICKUP_PARTY)
 void clif_party_show_picker( struct map_session_data* sd, struct item* item_data ){
@@ -19801,14 +19839,7 @@ static void clif_loadConfirm( struct map_session_data *sd ){
 
 	clif_send( &p, sizeof(p), &sd->bl, SELF );
 
-	if (sd->instance_id > 0)
-		instance_reqinfo(sd, sd->instance_id);
-	if (sd->status.party_id > 0)
-		party_member_joined(sd);
-	if (sd->status.guild_id > 0)
-		guild_member_joined(sd);
-	if (sd->status.clan_id > 0)
-		clan_member_joined(sd);
+	clif_instance_info( *sd );
 #endif
 }
 
@@ -23825,7 +23856,7 @@ void clif_parse_enchantgrade_close( int fd, struct map_session_data* sd ){
 }
 
 void clif_reputation_type( struct map_session_data& sd, int64 type, int64 points ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_ZC_REPUTE_INFO* p = (struct PACKET_ZC_REPUTE_INFO*)packet_buffer;
 
 	p->packetType = HEADER_ZC_REPUTE_INFO;
@@ -23842,7 +23873,7 @@ void clif_reputation_type( struct map_session_data& sd, int64 type, int64 points
 }
 
 void clif_reputation_list( struct map_session_data& sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_ZC_REPUTE_INFO* p = (struct PACKET_ZC_REPUTE_INFO*)packet_buffer;
 
 	p->packetType = HEADER_ZC_REPUTE_INFO;
@@ -23867,7 +23898,7 @@ void clif_reputation_list( struct map_session_data& sd ){
 }
 
 void clif_item_reform_open( struct map_session_data& sd, t_itemid item ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_ZC_OPEN_REFORM_UI p = {};
 
 	p.packetType = HEADER_ZC_OPEN_REFORM_UI;
@@ -23880,13 +23911,13 @@ void clif_item_reform_open( struct map_session_data& sd, t_itemid item ){
 }
 
 void clif_parse_item_reform_close( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	sd->state.item_reform = 0;
 #endif
 }
 
 void clif_item_reform_result( struct map_session_data& sd, uint16 index, uint8 result ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_ZC_ITEM_REFORM_ACK p = {};
 
 	p.packetType = HEADER_ZC_ITEM_REFORM_ACK;
@@ -23903,7 +23934,7 @@ void clif_item_reform_result( struct map_session_data& sd, uint16 index, uint8 r
 }
 
 void clif_parse_item_reform_start( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	// Not opened
 	if( sd->state.item_reform == 0 ){
 		return;
@@ -24057,7 +24088,7 @@ void clif_parse_item_reform_start( int fd, struct map_session_data* sd ){
 }
 
 void clif_enchantwindow_open( struct map_session_data& sd, uint64 clientLuaIndex ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	// Hardcoded clientside check
 	if( sd.weight > ( ( sd.max_weight * 70 ) / 100 ) ){
 		clif_msg_color( &sd, C_ENCHANT_OVERWEIGHT, color_table[COLOR_RED] );
@@ -24079,7 +24110,7 @@ void clif_enchantwindow_open( struct map_session_data& sd, uint64 clientLuaIndex
 }
 
 void clif_enchantwindow_result( struct map_session_data& sd, bool success, t_itemid enchant = 0 ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_ZC_RESPONSE_ENCHANT p = {};
 
 	p.packetType = HEADER_ZC_RESPONSE_ENCHANT;
@@ -24133,7 +24164,7 @@ bool clif_parse_enchant_basecheck( struct item& selected_item, std::shared_ptr<s
 }
 
 void clif_parse_enchantwindow_general( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_CZ_REQUEST_RANDOM_ENCHANT *p = (struct PACKET_CZ_REQUEST_RANDOM_ENCHANT*)RFIFOP( fd, 0 );
 
 	if( sd->state.item_enchant_index != p->clientLuaIndex ){
@@ -24262,7 +24293,7 @@ void clif_parse_enchantwindow_general( int fd, struct map_session_data* sd ){
 }
 
 void clif_parse_enchantwindow_perfect( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_CZ_REQUEST_PERFECT_ENCHANT *p = (struct PACKET_CZ_REQUEST_PERFECT_ENCHANT*)RFIFOP( fd, 0 );
 
 	if( sd->state.item_enchant_index != p->clientLuaIndex ){
@@ -24362,7 +24393,7 @@ void clif_parse_enchantwindow_perfect( int fd, struct map_session_data* sd ){
 }
 
 void clif_parse_enchantwindow_upgrade( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_CZ_REQUEST_UPGRADE_ENCHANT *p = (struct PACKET_CZ_REQUEST_UPGRADE_ENCHANT*)RFIFOP( fd, 0 );
 
 	if( sd->state.item_enchant_index != p->clientLuaIndex ){
@@ -24459,7 +24490,7 @@ void clif_parse_enchantwindow_upgrade( int fd, struct map_session_data* sd ){
 }
 
 void clif_parse_enchantwindow_reset( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	struct PACKET_CZ_REQUEST_RESET_ENCHANT *p = (struct PACKET_CZ_REQUEST_RESET_ENCHANT*)RFIFOP( fd, 0 );
 
 	if( sd->state.item_enchant_index != p->clientLuaIndex ){
@@ -24577,8 +24608,88 @@ void clif_parse_enchantwindow_reset( int fd, struct map_session_data* sd ){
 }
 
 void clif_parse_enchantwindow_close( int fd, struct map_session_data* sd ){
-#if PACKETVER_RE_NUM >= 20211103
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_MAIN_NUM >= 20220330
 	sd->state.item_enchant_index = 0;
+#endif
+}
+
+void clif_parse_itempackage_select( int fd, struct map_session_data* sd ){
+#if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+	struct PACKET_CZ_USE_PACKAGEITEM* p = (struct PACKET_CZ_USE_PACKAGEITEM*)RFIFOP( fd, 0 );
+
+	if( p->AID != sd->status.account_id ){
+		return;
+	}
+
+	uint16 index = server_index( p->index );
+
+	if( index >= MAX_INVENTORY ){
+		return;
+	}
+
+	if( sd->inventory_data[index] == nullptr ){
+		return;
+	}
+
+	if( sd->inventory_data[index]->nameid != p->itemID ){
+		return;
+	}
+
+	if( sd->inventory_data[index]->elv > sd->status.base_level ){
+		return;
+	}
+
+	std::shared_ptr<s_item_package> package = item_package_db.find( p->itemID );
+
+	if( package == nullptr ){
+		return;
+	}
+
+	std::shared_ptr<s_item_package_group> group = util::umap_find( package->groups, p->BoxIndex );
+
+	if( group == nullptr ){
+		return;
+	}
+
+	if( pc_delitem( sd, index, 1, 0, 0, LOG_TYPE_PACKAGE ) != 0 ){
+		return;
+	}
+
+	for( const auto& entry : group->items ){
+		struct item item = {};
+
+		item.nameid = entry.second->item_id;
+		item.identify = 1;
+		item.refine = (char)entry.second->refine;
+
+		if( entry.second->rentalhours ){
+			item.expire_time = (uint32)( time( nullptr ) + entry.second->rentalhours * 3600 );
+		}
+
+		// Check if it is a pet egg
+		std::shared_ptr<s_pet_db> pet = pet_db_search( item.nameid, PET_EGG );
+
+		if( pet != nullptr ){
+			for( int i = 0; i < entry.second->amount; i++ ){
+				pet_create_egg( sd, item.nameid );
+			}
+		}else if( entry.second->amount > 1 && ( !itemdb_isstackable( item.nameid ) || item.expire_time > 0 ) ){
+			for( int i = 0; i < entry.second->amount; i++ ){
+				// New random options on each iteration
+				if( entry.second->randomOptionGroup != nullptr ){
+					entry.second->randomOptionGroup->apply( item );
+				}
+
+				pc_additem( sd, &item, 1, LOG_TYPE_PACKAGE );
+			}
+		}else{
+			if( entry.second->randomOptionGroup != nullptr ){
+				entry.second->randomOptionGroup->apply( item );
+			}
+
+			pc_additem( sd, &item, entry.second->amount, LOG_TYPE_PACKAGE );
+		}
+	}
 #endif
 }
 
