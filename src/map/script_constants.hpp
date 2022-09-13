@@ -4538,6 +4538,7 @@
 	export_constant(MOB_ELEMENT);
 	export_constant(MOB_MODE);
 	export_constant(MOB_MVPEXP);
+	export_constant(MOB_MATK);	
 	export_constant(MOB_ID);
 
 	/* petinfo types */
@@ -4736,6 +4737,7 @@
 	export_constant(UMOB_ROBE);
 	export_constant(UMOB_BODY2);
 	export_constant(UMOB_GROUP_ID);
+	export_constant(UMOB_MATK);	
 	export_constant(UMOB_IGNORE_CELL_STACK_LIMIT);
 	export_constant(UMOB_RES);
 	export_constant(UMOB_MRES);

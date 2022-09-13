@@ -380,6 +380,7 @@ enum monsterinfo_types {
 	MOB_ELEMENT,
 	MOB_MODE,
 	MOB_MVPEXP,
+	MOB_MATK,
 	MOB_ID,
 };
 
@@ -491,6 +492,7 @@ enum unitdata_mobtypes {
 	UMOB_ROBE,
 	UMOB_BODY2,
 	UMOB_GROUP_ID,
+	UMOB_MATK,	
 	UMOB_IGNORE_CELL_STACK_LIMIT,
 	UMOB_RES,
 	UMOB_MRES,

@@ -1,20 +1,46 @@
-prontera,154,177,5	script	Tool Merchant#doram05t	4_DR_M_01,{
-//callshop "testitemid";
+-	script	Costume Drop	-1,{
+	OnNPCKillEvent:
+		if (BaseLevel >= 250)
+		callfunc("onkilledllan",2,"ONLan1Killed","Daﬁ T‚?u sinh Quest Quest 1");
 
-//setquest 30002;
+	end;
+
+	ONLan1Killed:
+	getunitdata killedgid,.@data2;
+		if (BaseLevel <= .@data2[UMOB_LEVEL])
+			BaseLevel = BaseLevel + 1;
+		end;
+	end;
+
+end;	
+}
 
 
-//pay_dun01,229,71	monster	CuocDoiBuon	31180,1,5000,0,0,2,0
-//pay_dun01,223,71	monster	CuocDoiBuon2	31181,1,5000,0,0,3,1
 
-
-monster "prontera",152,177,"Clone of mine",3198,1,strnpcinfo(3) + "::OnKilled",1,1;
-mes $@mobid[0];
-setunitdata $@mobid[0],UMOB_MASTERAID,getcharid(3);
-mes getunitname($@mobid[0]);
-unittalk $@mobid[0],"Readyyyyyyyyy";
-sleep2 1000;
-unitwarp $@mobid[0],"pay_dun02",-1,-1;
-close;
+function	script	onkilledllan	{
+.idmob = killedrid;
+getunitdata killedgid,.@data;
+.@m$ = mapid2name(.@data[UMOB_MAPID]);
+.@x = .@data[UMOB_X];
+.@y = .@data[UMOB_Y];
+monster .@m$,.@x,.@y,getarg(2),.idmob,1,strnpcinfo(3) +"::" + getarg(1);
+.GID = $@mobid[0];
+.@lv = .@data[UMOB_LEVEL]*(.@data[UMOB_LEVEL]  + 250)/10 + 250;
+.times = getarg(0) * .@lv;
+setunitdata .GID,UMOB_TARGETID,.@data[UMOB_TARGETID];
+setunitdata .GID,UMOB_LEVEL,.@lv;
+setunitdata .GID,UMOB_MAXHP,(.@data[UMOB_MAXHP]/.@data[UMOB_LEVEL])*(10+.times)/10 + .@data[UMOB_MAXHP]*.times;
+setunitdata .GID,UMOB_ATKMIN,.@data[UMOB_ATKMIN] + .times*3;
+setunitdata .GID,UMOB_ATKMAX,.@data[UMOB_ATKMAX] + .times*3;
+setunitdata .GID,UMOB_SPEED,.@data[UMOB_SPEED];
+setunitdata .GID,UMOB_MATK,.@data[UMOB_MATK] +.times*3;
+setunitdata .GID,UMOB_DEF,.@data[UMOB_DEF] +.times;
+setunitdata .GID,UMOB_MDEF,.@data[UMOB_MDEF] +.times;
+setunitdata .GID,UMOB_HIT,.@data[UMOB_HIT]*2+ .@lv;
+setunitdata .GID,UMOB_FLEE,.@data[UMOB_FLEE]*2 + .@lv;
+setunitdata .GID,UMOB_PDODGE,.@data[UMOB_PDODGE]*(10+.times)/10;
+setunitdata .GID,UMOB_CRIT,.@data[UMOB_CRIT]*(10+.times)/10;
+setunitdata .GID,UMOB_RES,.@data[UMOB_RES]*(10+.times)/10;
+setunitdata .GID,UMOB_MRES,.@data[UMOB_MRES]*(10+.times)/10;
 
 }

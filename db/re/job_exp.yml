@@ -3363,7 +3363,7 @@ Body:
       Night_Watch: true
       Hyper_Novice: true
       Spirit_Handler: true
-    MaxBaseLevel: 250
+    MaxBaseLevel: 9999
     BaseExp:
       - Level: 1
         Exp: 600
