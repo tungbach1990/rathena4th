@@ -4711,7 +4711,6 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 			sd->indexed_bonus.subele[ELE_POISON] += 100;
 			sd->indexed_bonus.subele[ELE_HOLY] -= 30;
 		}
-<<<<<<< HEAD
 		if( sc->data[SC_TALISMAN_OF_FIVE_ELEMENTS] ) {
 			const std::vector<e_element> elements = { ELE_FIRE, ELE_WATER, ELE_WIND, ELE_EARTH, ELE_NEUTRAL };
 			int bonus = sc->data[SC_TALISMAN_OF_FIVE_ELEMENTS]->val2;
@@ -4730,7 +4729,6 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 			sd->bonus.short_attack_atk_rate += i;
 			sd->bonus.long_attack_atk_rate += i;
 		}
-=======
 		if (sc->data[SC_INFINITY_DRINK]) {
 			sd->bonus.crit_atk_rate += 5;
 			sd->bonus.long_attack_atk_rate += 5;
@@ -4779,7 +4777,6 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		}
 		if (sc->data[SC_PORK_RIB_STEW])
 			sd->dsprate -= 2;
->>>>>>> f8cd4aa8c754fe375d85131cf1a5b49f48d73142
 	}
 	status_cpy(&sd->battle_status, base_status);
 
@@ -7384,16 +7381,12 @@ static signed short status_calc_hit(struct block_list *bl, struct status_change 
 		hit += sc->data[SC_PACKING_ENVELOPE10]->val1;
 	if (sc->data[SC_ABYSS_SLAYER])
 		hit += sc->data[SC_ABYSS_SLAYER]->val3;
-<<<<<<< HEAD
 	if (sc->data[SC_INTENSIVE_AIM])
 		hit += 250;
-=======
 	if (sc->data[SC_LIMIT_POWER_BOOSTER])
 		hit += sc->data[SC_LIMIT_POWER_BOOSTER]->val1;
 	if (sc->data[SC_ACARAJE])
 		hit += 5;
->>>>>>> f8cd4aa8c754fe375d85131cf1a5b49f48d73142
-
 	return (short)cap_value(hit,1,SHRT_MAX);
 }
 
@@ -7507,15 +7500,12 @@ static signed short status_calc_flee(struct block_list *bl, struct status_change
 		flee += sc->data[SC_GROOMING]->val2;
 	if (sc->data[SC_PACKING_ENVELOPE5])
 		flee += sc->data[SC_PACKING_ENVELOPE5]->val1;
-<<<<<<< HEAD
 	if (sc->data[SC_HANDICAPSTATE_DEEPBLIND])
 		flee -= flee * 30 / 100;
-=======
 	if (sc->data[SC_LIMIT_POWER_BOOSTER])
 		flee += sc->data[SC_LIMIT_POWER_BOOSTER]->val1;
 	if (sc->data[SC_MYSTICPOWDER])
 		flee += 20;
->>>>>>> f8cd4aa8c754fe375d85131cf1a5b49f48d73142
 
 	return (short)cap_value(flee,1,SHRT_MAX);
 }
@@ -8390,10 +8380,8 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate -= 100;
 	if (sc->data[SC_STARSTANCE])
 		aspd_rate -= 10 * sc->data[SC_STARSTANCE]->val2;
-<<<<<<< HEAD
 	if (sc->data[SC_HANDICAPSTATE_DEEPSILENCE])
 		aspd_rate += 50;
-=======
 	if( sc->data[SC_2011RWC_SCROLL] )
 		aspd_rate -= 50;
 	if( sc->data[SC_SPARKCANDY] )
@@ -8404,7 +8392,6 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
 	if( sc->data[SC_PORK_RIB_STEW] )
 		aspd_rate -= 50;
->>>>>>> f8cd4aa8c754fe375d85131cf1a5b49f48d73142
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }

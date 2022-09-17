@@ -19895,7 +19895,6 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			fixed = 0;
 		if (sc->data[SC_2011RWC_SCROLL])
 			VARCAST_REDUCTION(5);
->>>>>>> f8cd4aa8c754fe375d85131cf1a5b49f48d73142
 	}
 	if (sc && sc->data[SC_SECRAMENT] && skill_id == HW_MAGICPOWER && (flag&2)) // Sacrament lowers Mystical Amplification cast time
 		fixcast_r = max(fixcast_r, sc->data[SC_SECRAMENT]->val2);
