@@ -3090,11 +3090,11 @@ enum e_refine_chance_type {
 * Required because players have two of these, one in status_data
 * and another for their left hand weapon. */
 struct weapon_atk {
-	unsigned short atk, atk2;
+	unsigned int atk, atk2;
 	unsigned short range;
 	unsigned char ele;
 #ifdef RENEWAL
-	unsigned short matk;
+	unsigned int matk;
 	unsigned char wlv;
 #endif
 };
@@ -3108,7 +3108,7 @@ struct status_data {
 		str, agi, vit, int_, dex, luk,
 		pow, sta, wis, spl, con, crt,
 		eatk;
-	unsigned short
+	unsigned int
 		batk,
 #ifdef RENEWAL
 		watk,
@@ -3430,17 +3430,17 @@ int status_check_visibility(struct block_list *src, struct block_list *target);
 int status_change_spread(block_list *src, block_list *bl);
 
 #ifndef RENEWAL
-unsigned short status_base_matk_min(const struct status_data* status);
-unsigned short status_base_matk_max(const struct status_data* status);
+unsigned int status_base_matk_min(const struct status_data* status);
+unsigned int status_base_matk_max(const struct status_data* status);
 #else
 unsigned int status_weapon_atk(struct weapon_atk wa, struct map_session_data *sd);
-unsigned short status_base_atk_min(struct block_list *bl, const struct status_data* status, int level);
-unsigned short status_base_atk_max(struct block_list *bl, const struct status_data* status, int level);
-unsigned short status_base_matk_min(struct block_list *bl, const struct status_data* status, int level);
-unsigned short status_base_matk_max(struct block_list *bl, const struct status_data* status, int level);
+unsigned int status_base_atk_min(struct block_list *bl, const struct status_data* status, int level);
+unsigned int status_base_atk_max(struct block_list *bl, const struct status_data* status, int level);
+unsigned int status_base_matk_min(struct block_list *bl, const struct status_data* status, int level);
+unsigned int status_base_matk_max(struct block_list *bl, const struct status_data* status, int level);
 #endif
 
-unsigned short status_base_atk(const struct block_list *bl, const struct status_data *status, int level);
+unsigned int status_base_atk(const struct block_list *bl, const struct status_data *status, int level);
 
 // Status changes accessors for StatusChange database
 uint16 status_efst_get_bl_type(enum efst_type efst);

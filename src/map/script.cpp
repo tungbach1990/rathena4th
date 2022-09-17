@@ -18543,6 +18543,7 @@ BUILDIN_FUNC(getunitdata)
 			getunitdata_sub(UMOB_ATKRANGE, md->status.rhw.range);
 			getunitdata_sub(UMOB_ATKMIN, md->status.rhw.atk);
 			getunitdata_sub(UMOB_ATKMAX, md->status.rhw.atk2);
+			getunitdata_sub(UMOB_BATK, md->status.batk);
 			getunitdata_sub(UMOB_MATKMIN, md->status.matk_min);
 			getunitdata_sub(UMOB_MATKMAX, md->status.matk_max);
 			getunitdata_sub(UMOB_DEF, md->status.def);
@@ -18936,11 +18937,12 @@ BUILDIN_FUNC(setunitdata)
 				break;
 			case UMOB_DMGIMMUNE: md->ud.immune_attack = value > 0; break;
 			case UMOB_ATKRANGE: md->base_status->rhw.range = (unsigned short)value; calc_status = true; break;
-			case UMOB_ATKMIN: md->base_status->rhw.atk = (unsigned short)value; calc_status = true; break;
-			case UMOB_ATKMAX: md->base_status->rhw.atk2 = (unsigned short)value; calc_status = true; break;
+			case UMOB_ATKMIN: md->base_status->rhw.atk = (unsigned long)value; calc_status = true; break;
+			case UMOB_ATKMAX: md->base_status->rhw.atk2 = (unsigned long)value; calc_status = true; break;
+			case UMOB_BATK: md->base_status->batk = (unsigned long)value; calc_status = true; break;
 			case UMOB_MATKMIN: md->base_status->matk_min = (unsigned short)value; calc_status = true; break;
 			case UMOB_MATKMAX: md->base_status->matk_max = (unsigned short)value; calc_status = true; break;
-			case UMOB_MATK: md->base_status->rhw.matk = (unsigned short)value; calc_status = true; break;			
+			case UMOB_MATK: md->base_status->rhw.matk = (unsigned long)value; calc_status = true; break;			
 			case UMOB_DEF: md->base_status->def = (defType)value; calc_status = true; break;
 			case UMOB_MDEF: md->base_status->mdef = (defType)value; calc_status = true; break;
 			case UMOB_HIT: md->base_status->hit = (short)value; calc_status = true; break;

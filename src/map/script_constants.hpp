@@ -4740,6 +4740,7 @@
 	export_constant(UMOB_ATKRANGE);
 	export_constant(UMOB_ATKMIN);
 	export_constant(UMOB_ATKMAX);
+	export_constant(UMOB_BATK);
 	export_constant(UMOB_MATKMIN);
 	export_constant(UMOB_MATKMAX);
 	export_constant(UMOB_DEF);
