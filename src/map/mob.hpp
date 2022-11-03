@@ -206,7 +206,7 @@ enum e_mob_skill_target {
 	MST_AROUND = MST_AROUND4,
 };
 enum e_mob_skill_condition {
-	MSC_ALWAYS = 0x0000,
+	MSC_ALWAYS	=	0x0000,
 	MSC_MYHPLTMAXRATE,
 	MSC_MYHPINRATE,
 	MSC_FRIENDHPLTMAXRATE,
@@ -234,7 +234,9 @@ enum e_mob_skill_condition {
 	MSC_ALCHEMIST,
 	MSC_SPAWN,
 	MSC_MOBNEARBYGT,
-	MSC_EXPANDED
+	MSC_GROUNDATTACKED,
+	MSC_DAMAGEDGT,
+	MSC_EXPANDED,
 };
 
 
@@ -570,51 +572,8 @@ public:
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
 };
 
-enum e_mob_skill_target {
-	MST_TARGET	=	0,
-	MST_RANDOM,	//Random Target!
-	MST_SELF,
-	MST_FRIEND,
-	MST_MASTER,
-	MST_AROUND5,
-	MST_AROUND6,
-	MST_AROUND7,
-	MST_AROUND8,
-	MST_AROUND1,
-	MST_AROUND2,
-	MST_AROUND3,
-	MST_AROUND4,
-	MST_AROUND	=	MST_AROUND4,
-};
 
-enum e_mob_skill_condition {
-	MSC_ALWAYS	=	0x0000,
-	MSC_MYHPLTMAXRATE,
-	MSC_MYHPINRATE,
-	MSC_FRIENDHPLTMAXRATE,
-	MSC_FRIENDHPINRATE,
-	MSC_MYSTATUSON,
-	MSC_MYSTATUSOFF,
-	MSC_FRIENDSTATUSON,
-	MSC_FRIENDSTATUSOFF,
-	MSC_ATTACKPCGT,
-	MSC_ATTACKPCGE,
-	MSC_SLAVELT,
-	MSC_SLAVELE,
-	MSC_CLOSEDATTACKED,
-	MSC_LONGRANGEATTACKED,
-	MSC_AFTERSKILL,
-	MSC_SKILLUSED,
-	MSC_CASTTARGETED,
-	MSC_RUDEATTACKED,
-	MSC_MASTERHPLTMAXRATE,
-	MSC_MASTERATTACKED,
-	MSC_ALCHEMIST,
-	MSC_SPAWN,
-	MSC_MOBNEARBYGT,
-	MSC_GROUNDATTACKED,
-	MSC_DAMAGEDGT,
-};
+
 
 
 // The data structures for storing delayed item drops
@@ -714,3 +673,4 @@ void mob_setdropitem_option(struct item *itm, struct s_mob_drop *mobdrop);
 #define CHK_MOBSIZE(size) ((size) >= SZ_SMALL && (size) < SZ_MAX) /// Check valid Monster Size
 
 #endif /* MOB_HPP */
+

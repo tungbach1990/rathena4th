@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <unordered_map>
 #include <functional>
+#include <vector>
 #include "../common/cbasetypes.hpp"
 #include "../common/db.hpp"
 #include "../common/ers.hpp"
@@ -40,6 +41,7 @@
 #include "pc.hpp"
 #include "pet.hpp"
 #include "quest.hpp"
+
 
 using namespace rathena;
 
@@ -1652,35 +1654,8 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md,t_tick tick)
 
 			if (map_search_freecell(&md->bl, bl->m, &x, &y, MOB_SLAVEDISTANCE, MOB_SLAVEDISTANCE, 1)) {
 				if (unit_walktoxy(&md->bl, x, y, 0) == 0) { // Slave is too far from master (outside of battle_config.max_walk_path range), stay put
-					//mob_stop_walking(md, USW_FIXPOS);
-					//return 0; // Fail here so target will be picked back up when in range
-					if (md->ud.walktimer == INVALID_TIMER) {
-						// Because it is not unset when the mob finishes walking.
-						md->state.skillstate = MSS_IDLE;
-						if (md->idle_event[0] && npc_event_do_id( md->idle_event, md->bl.id ) > 0) {
-							md->idle_event[0] = 0;
-							return 0;
-						}
-					}
-
-					if( DIFF_TICK(md->next_walktime,tick) < 0 && status_has_mode(&md->status,MD_CANMOVE) && unit_can_move(&md->bl) )
-					{
-						// Move probability for mobs away from players
-						// In Aegis, this is 100% for mobs that have been activated by players and none otherwise.
-						if( mob_is_spotted(md) &&
-							((!status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.mob_nopc_move_rate) ||
-							(status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.boss_nopc_move_rate)))
-							mob_randomwalk(md, tick);
-					}
-					else if( md->ud.walktimer == INVALID_TIMER )
-					{
-						// Probability for mobs far from players from doing their IDLE skill.
-						// In Aegis, this is 100% for mobs that have been activated by players and none otherwise.
-						if( mob_is_spotted(md) &&
-							((!status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.mob_nopc_idleskill_rate) ||
-							(status_has_mode(&md->status,MD_STATUSIMMUNE) && rnd()%100 < battle_config.boss_nopc_idleskill_rate)))
-							mobskill_use(md, tick, -1);
-					}
+					mob_stop_walking(md, USW_FIXPOS);
+					return 0; // Fail here so target will be picked back up when in range
 				} else { // Slave will walk back to master if in range
 					mob_stop_attack(md);
 					return 1;
@@ -3981,14 +3956,18 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
 /*==========================================
  * Skill use judging
  *------------------------------------------*/
-
 int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 {
 	struct block_list *fbl = NULL; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
 	struct block_list *bl;
-	struct mob_data *fmd = NULL;	
+	struct mob_data *fmd = NULL;
+	int i,j,n;
+	short skill_target;
+
 	nullpo_ret(md);
+
 	std::vector<std::shared_ptr<s_mob_skill>> &ms = md->db->skill;
+
 	if (!battle_config.mob_skill_rate || md->ud.skilltimer != INVALID_TIMER || ms.empty() || status_has_mode(&md->status,MD_NOCAST))
 		return 0;
 
@@ -3996,21 +3975,18 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 		return 0; //Skill act delay only affects non-event skills.
 
 	//Pick a starting position and loop from that.
-	int i = battle_config.mob_ai&0x100?rnd()%ms.size():0;
+	i = battle_config.mob_ai&0x100?rnd()%ms.size():0;
 	for (n = 0; n < ms.size(); i++, n++) {
 		int64 c2;
 		int flag = 0;
 
-	for (int n = 0; n < ms.size(); i++, n++) {
-		int flag=0;
-		int c2 =ms[i]->cond2;
-
-		
 		if (i == ms.size())
 			i = 0;
-		skill_target= status_has_mode(&md->db->status, MD_RANDOMTARGET) ? MST_RANDOM:ms[i]->target;
+
 		if (DIFF_TICK(tick, md->skilldelay[i]) < ms[i]->delay)
 			continue;
+
+		c2 = ms[i]->cond2;
 
 		if (ms[i]->state != md->state.skillstate) {
 			if (md->state.skillstate != MSS_DEAD && (ms[i]->state == MSS_ANY ||
@@ -4058,14 +4034,6 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 				}
 				flag ^= (ms[i]->cond1 == MSC_MYSTATUSOFF); break;
 				break;
-			case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
-				flag = ((fbl = mob_getfriendhprate(md, 0, c2)) != NULL); break;
-			case MSC_FRIENDHPINRATE:
-				flag = ((fbl = mob_getfriendhprate(md, c2, ms[i]->val[0])) != NULL); break;
-			case MSC_FRIENDSTATUSON:	// friend status[num] on
-			case MSC_FRIENDSTATUSOFF:	// friend status[num] off
-				flag = ((fmd = mob_getfriendstatus(md, ms[i]->cond1, ms[i]->cond2)) != NULL); break;
-				break;
 			case MSC_ENEMYSTATUSON:	// enemy status[num] on
 			case MSC_ENEMYSTATUSOFF:	// enemy status[num] off
 				if (skill_target == MST_RANDOM) //Pick a random enemy within skill range.
@@ -4079,12 +4047,32 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 				} else
 					flag = 0;
 				break;
+			case MSC_MASTERSTATUSON:	// friend status[num] on
+			case MSC_MASTERSTATUSOFF:	// friend status[num] off
+				if (fbl != nullptr) {
+					if (!status_get_sc(fbl)->count) {
+						flag = 0;
+					} else if (ms[i]->cond2 == -1) {
+						for (j = SC_COMMON_MIN; j <= SC_COMMON_MAX; j++)
+							if ((flag = (md->sc.data[j]!=NULL)) != 0)
+								break;
+					} else {
+						flag = (md->sc.data[ms[i]->cond2]!=NULL);
+					}
+					flag ^= (ms[i]->cond1 == MSC_MYSTATUSOFF); break;
+			case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
+				flag = ((fbl = mob_getfriendhprate(md, 0, ms[i]->cond2)) != NULL); break;
+			case MSC_FRIENDHPINRATE	:
+				flag = ((fbl = mob_getfriendhprate(md, ms[i]->cond2, ms[i]->val[0])) != NULL); break;
+			case MSC_FRIENDSTATUSON:	// friend status[num] on
+			case MSC_FRIENDSTATUSOFF:	// friend status[num] off
+				flag = ((fmd = mob_getfriendstatus(md, ms[i]->cond1, ms[i]->cond2)) != NULL); break;
 			case MSC_SLAVELT:		// slave < num
-				flag = (mob_countslave(&md->bl) < c2); break;
+				flag = (mob_countslave(&md->bl) < c2 ); break;
 			case MSC_ATTACKPCGT:	// attack pc > num
 				flag = (unit_counttargeted(&md->bl) > c2); break;
 			case MSC_SLAVELE:		// slave <= num
-				flag = (mob_countslave(&md->bl) <= c2); break;
+				flag = (mob_countslave(&md->bl) <= c2 ); break;
 			case MSC_ATTACKPCGE:	// attack pc >= num
 				flag = (unit_counttargeted(&md->bl) >= c2); break;
 			case MSC_AFTERSKILL:
@@ -4095,29 +4083,12 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 				break;
 			case MSC_MASTERHPLTMAXRATE:
 				flag = ((fbl = mob_getmasterhpltmaxrate(md, ms[i]->cond2)) != NULL); break;
-			case MSC_MASTERSTATUSON:	// friend status[num] on
-			case MSC_MASTERSTATUSOFF:	// friend status[num] off
-				if (fbl != nullptr) {
-					if (!status_get_sc(fbl)->count) {
-						flag = 0;
-					} else if (ms[i]->cond2 == -1) {
-						for (int j = SC_COMMON_MIN; j <= SC_COMMON_MAX; j++)
-							if ((flag = (status_get_sc(fbl)->data[j] != NULL)) != 0)
-								break;
-					} else {
-						flag = (status_get_sc(fbl)->data[ms[i]->cond2] != NULL);
-					}
-					flag ^= (ms[i]->cond1 == MSC_MASTERSTATUSOFF);
-				} else
-					continue;
-				break;
 			case MSC_MASTERATTACKED:
-				flag = (md->master_id > 0 && (fbl = map_id2bl(md->master_id)) && unit_counttargeted(fbl) > 0); break;
+				flag = (md->master_id > 0 && (fbl=map_id2bl(md->master_id)) && unit_counttargeted(fbl) > 0); break;
 			case MSC_ALCHEMIST:
-				flag = (md->state.alchemist);
-				break;
+				flag = (md->state.alchemist); break;
 			case MSC_MOBNEARBYGT:
-					flag = (map_foreachinallrange(mob_count_sub, &md->bl, AREA_SIZE, BL_MOB) > c2 ); break;
+				flag = (map_foreachinallrange(mob_count_sub, &md->bl, AREA_SIZE, BL_MOB) > c2 ); break;
 			case MSC_EXPANDED:
 			{
 				std::map<e_mob_skill_target, block_list*> targets;
@@ -4269,12 +4240,12 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 		  	y = bl->y;
 			// Look for an area to cast the spell around...
 			if (skill_target >= MST_AROUND5) {
-				int j = skill_target >= MST_AROUND1 ?
-					(skill_target - MST_AROUND1) + 1 :
-					(skill_target - MST_AROUND5) + 1;
+				j = skill_target >= MST_AROUND1?
+					(skill_target-MST_AROUND1) +1:
+					(skill_target-MST_AROUND5) +1;
 				map_search_freecell(&md->bl, md->bl.m, &x, &y, j, j, 3);
 			}
-			
+			md->skill_idx = i;
 			map_freeblock_lock();
 			if (!battle_check_range(&md->bl, bl, skill_get_range2(&md->bl, ms[i]->skill_id, ms[i]->skill_lv, true)) ||
 				!unit_skilluse_pos2(&md->bl, x, y, ms[i]->skill_id, ms[i]->skill_lv, ms[i]->casttime, ms[i]->cancel))
@@ -4336,8 +4307,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 		if ( ms[i]->msg_id ){ //Display color message [SnakeDrak]
 			mob_chat_display_message(*md, ms[i]->msg_id);
 		}
-		if (!(battle_config.mob_ai & 0x200)) { //pass on delay to same skill.
-			for (int j = 0; j < ms.size(); j++)
+		if(!(battle_config.mob_ai&0x200)) { //pass on delay to same skill.
+			for (j = 0; j < ms.size(); j++)
 				if (ms[j]->skill_id == ms[i]->skill_id)
 					md->skilldelay[j]=tick;
 		} else
@@ -4348,6 +4319,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 	//No skill was used.
 	md->skill_idx = -1;
 	return 0;
+    }
 }
 /*==========================================
  * Skill use event processing
@@ -4420,7 +4392,7 @@ int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y, cons
 	int inf, fd;
 	struct mob_data *md;
 	struct status_data *status;
-	
+
 	nullpo_ret(sd);
 
 	if(pc_isdead(sd) && master_id && flag&1)
@@ -5558,8 +5530,6 @@ static bool mob_read_sqldb_sub(std::vector<std::string> str) {
 	if (!str[++index].empty())
 		modes["CanAttack"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
-	  	modes["SkillOnly"] << (std::stoi(str[index]) ? "true" : "false");
-	if (!str[++index].empty())
 		modes["CastSensorChase"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
 		modes["ChangeChase"] << (std::stoi(str[index]) ? "true" : "false");
@@ -5587,8 +5557,6 @@ static bool mob_read_sqldb_sub(std::vector<std::string> str) {
 		modes["KnockBackImmune"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
 		modes["TeleportBlock"] << (std::stoi(str[index]) ? "true" : "false");
-	if (!str[++index].empty())
-		modes["PcSkillBehavior"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
 		modes["FixedItemDrop"] << (std::stoi(str[index]) ? "true" : "false");
 	if (!str[++index].empty())
@@ -6599,6 +6567,7 @@ uint64 MobChatDatabase::parseBodyNode(const ryml::NodeRef& node) {
  *------------------------------------------*/
 static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 {
+
 	static const struct {
 		char str[32];
 		enum MobSkillState id;
@@ -6645,6 +6614,7 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		{ "mobnearbygt",       MSC_MOBNEARBYGT       },
 		{ "groundattacked",    MSC_GROUNDATTACKED    },
 		{ "damagedgt",         MSC_DAMAGEDGT         },
+		{ "expanded",		   MSC_EXPANDED  		 },
 	}, cond2[] ={
 		{	"anybad",		-1				},
 		{	"stone",		SC_STONE		},
@@ -6717,9 +6687,9 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	std::shared_ptr<s_mob_skill> ms = std::make_shared<s_mob_skill>();
 
 	//State
-	const std::string& str_state = str[2];
-	if (um_mobskillstatename2id.count(str_state))
-		ms->state=um_mobskillstatename2id.at(str_state);
+	ARR_FIND( 0, ARRAYLENGTH(state), j, strcmp(str[2],state[j].str) == 0 );
+	if( j < ARRAYLENGTH(state) )
+		ms->state = state[j].id;
 	else {
 		ShowError("mob_parse_row_mobskilldb: Unrecognized state '%s' in line %d\n", str[2], current);
 		return false;
@@ -6762,11 +6732,11 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 		ms->cancel=1;
 
 	//Target
-	const std::string& target_str=str[9];
-	if (skill_target_name2enumid.count(target_str))
-		ms->target=skill_target_name2enumid.at(target_str);
+	ARR_FIND( 0, ARRAYLENGTH(target), j, strcmp(str[9],target[j].str) == 0 );
+	if( j < ARRAYLENGTH(target) )
+		ms->target = target[j].id;
 	else {
-		ShowWarning("mob_parse_row_mobskilldb: Unrecognized target %s for %d\n", target_str, mob_id);
+		ShowWarning("mob_parse_row_mobskilldb: Unrecognized target %s for %d\n", str[9], mob_id);
 		ms->target = MST_TARGET;
 	}
 
@@ -6788,43 +6758,24 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	}
 
 	//Cond1
-	const std::string& str_cond = str[10];
-	try {
-		ms->cond1 = mob_skill_condition2name.at(str_cond);
-	}
-	catch (std::out_of_range oor) {
-		ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition 1 %s for %d\n", str_cond, mob_id);
-		return false;
+	ARR_FIND( 0, ARRAYLENGTH(cond1), j, strcmp(str[10],cond1[j].str) == 0 );
+	if( j < ARRAYLENGTH(cond1) )
+		ms->cond1 = cond1[j].id;
+	else {
+		ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition 1 %s for %d\n", str[10], mob_id);
+		ms->cond1 = -1;
 	}
 
 	//Cond2
-	const std::string& str_cond2 = str[11];
-	//search special constant ;
+// numeric value
+	ms->cond2 = atoi(str[11]);
+	// or special constant
+	ARR_FIND( 0, ARRAYLENGTH(cond2), j, strcmp(str[11],cond2[j].str) == 0 );
+	if( j < ARRAYLENGTH(cond2) )
+		ms->cond2 = cond2[j].id;
 
-	if(str_cond2 == "")
-		ms->cond2=0;
-	else if (um_statusname2id.count(str_cond2)) {
-		ms->cond2=um_statusname2id.at(str_cond2);
-	} else if (mob_expanded_ai_conditions_db.find(str_cond2) != nullptr)
-		ms->expanded_cond=str_cond2;
-	else{
-		try{
-			ms->cond2=stoi(str_cond2);
-		} catch(std::invalid_argument ia){
-			ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition2%s for %d\n", str_cond2, mob_id);
-			return false;
-		}
-	}
-	ms->expanded_cond=str_cond2;
-
-	const std::string& str_val0 = str[12];
-	if (str_val0 == "")
-		ms->val[0] = 0;
-	else if (um_name2mfm.count(str_val0)) {
-		ms->val[0] = um_name2mfm.at(str_val0);
-	} else
-		ms->val[0] = (int)strtol(str[12], NULL, 0);
-	ms->val[1] = (int)strtol(str[13], NULL, 0);
+	ms->val[0] = (int)strtol(str[12],NULL,0);
+	ms->val[1] = (int)strtol(str[13],NULL,0);
 	ms->val[2] = (int)strtol(str[14],NULL,0);
 	ms->val[3] = (int)strtol(str[15],NULL,0);
 	ms->val[4] = (int)strtol(str[16],NULL,0);
@@ -7527,7 +7478,7 @@ void mob_reload_itemmob_data(void) {
  */
 static int mob_reload_sub( struct mob_data *md, va_list args ){
 	// Slaves have to be killed
-	if( md->master_id != 0 && !(status_get_mode(&md->bl)&MD_PCSKILLBEHAVIOR)){
+	if( md->master_id != 0 ){
 		unit_remove_map( &md->bl, CLR_OUTSIGHT );
 		return 0;
 	}
@@ -7628,6 +7579,7 @@ void do_final_mob(bool is_reload){
 	mob_db.clear();
 	mob_chat_db.clear();
 	mob_expanded_ai_conditions_db.clear();
+	mob_skill_db.clear();
 	mob_item_drop_ratio.clear();
 	mob_summon_db.clear();
 	map_drop_db.clear();
