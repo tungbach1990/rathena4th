@@ -1,7 +1,7 @@
 -	script	Costume Drop	-1,{
 	OnNPCKillEvent:
 		if (BaseLevel >= 250)
-		callfunc("onkilledllan",2,"ONLan1Killed"," Daﬁ T‚?u sinh Quest Quest 1");
+		callfunc("onkilledllan",2,"ONLan1Killed"," Rebirth 1st time");
 
 	end;
 
