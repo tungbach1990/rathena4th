@@ -244,10 +244,10 @@ struct s_mob_skill {
 	short permillage;
 	int casttime,delay;
 	short cancel;
-	e_mob_skill_condition cond1;
-	short cond2;
 	std::string expanded_cond; // For expanded conditions
-	e_mob_skill_target target;
+	short cond1;
+	int64 cond2;
+	short target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
@@ -533,6 +533,7 @@ struct mob_data {
 	 * MvP Tombstone NPC ID
 	 **/
 	int tomb_nid;
+	uint16 damagetaken;
 
 	e_mob_bosstype get_bosstype();
 };
@@ -567,6 +568,52 @@ public:
 
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
+};
+
+enum e_mob_skill_target {
+	MST_TARGET	=	0,
+	MST_RANDOM,	//Random Target!
+	MST_SELF,
+	MST_FRIEND,
+	MST_MASTER,
+	MST_AROUND5,
+	MST_AROUND6,
+	MST_AROUND7,
+	MST_AROUND8,
+	MST_AROUND1,
+	MST_AROUND2,
+	MST_AROUND3,
+	MST_AROUND4,
+	MST_AROUND	=	MST_AROUND4,
+};
+
+enum e_mob_skill_condition {
+	MSC_ALWAYS	=	0x0000,
+	MSC_MYHPLTMAXRATE,
+	MSC_MYHPINRATE,
+	MSC_FRIENDHPLTMAXRATE,
+	MSC_FRIENDHPINRATE,
+	MSC_MYSTATUSON,
+	MSC_MYSTATUSOFF,
+	MSC_FRIENDSTATUSON,
+	MSC_FRIENDSTATUSOFF,
+	MSC_ATTACKPCGT,
+	MSC_ATTACKPCGE,
+	MSC_SLAVELT,
+	MSC_SLAVELE,
+	MSC_CLOSEDATTACKED,
+	MSC_LONGRANGEATTACKED,
+	MSC_AFTERSKILL,
+	MSC_SKILLUSED,
+	MSC_CASTTARGETED,
+	MSC_RUDEATTACKED,
+	MSC_MASTERHPLTMAXRATE,
+	MSC_MASTERATTACKED,
+	MSC_ALCHEMIST,
+	MSC_SPAWN,
+	MSC_MOBNEARBYGT,
+	MSC_GROUNDATTACKED,
+	MSC_DAMAGEDGT,
 };
 
 
@@ -637,8 +684,8 @@ int mob_warpslave(struct block_list *bl, int range);
 int mob_linksearch(struct block_list *bl,va_list ap);
 
 bool mob_chat_display_message (mob_data &md, uint16 msg_id);
-int mobskill_use(struct mob_data *md,t_tick tick,int event);
-int mobskill_event(struct mob_data *md,struct block_list *src,t_tick tick, int flag);
+int mobskill_use(struct mob_data *md,t_tick tick,int event, int64 damage = 0);
+int mobskill_event(struct mob_data *md,struct block_list *src,t_tick tick, int flag, int64 damage = 0);
 int mob_summonslave(struct mob_data *md2,int *value,int amount,uint16 skill_id);
 int mob_countslave(struct block_list *bl);
 int mob_count_sub(struct block_list *bl, va_list ap);
