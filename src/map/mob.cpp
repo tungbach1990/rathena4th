@@ -2648,7 +2648,6 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 	if( src != nullptr && md->special_state.ai == AI_SPHERE && !md->dmglog[0].id ) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
 		md->state.alchemist = 1;
 		mobskill_use(md, gettick(), MSC_ALCHEMIST);
-		unit_escape(&md->bl, src, 7, 2);
 	}
 
 	if (src && damage > 0) { //Store total damage...
@@ -3817,13 +3816,13 @@ int mob_skill_id2skill_idx(int mob_id,uint16 skill_id)
  *------------------------------------------*/
 int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 {
-	int min_rate, max_rate,rate;
+	int64 min_rate, max_rate,rate;
 	struct block_list **fr;
 	struct mob_data *md;
 
 	md = va_arg(ap,struct mob_data *);
-	min_rate=va_arg(ap,int);
-	max_rate=va_arg(ap,int);
+	min_rate=va_arg(ap,int64);
+	max_rate=va_arg(ap,int64);
 	fr=va_arg(ap,struct block_list **);
 
 	if( md->bl.id == bl->id && !(battle_config.mob_ai&0x10))
@@ -3841,7 +3840,7 @@ int mob_getfriendhprate_sub(struct block_list *bl,va_list ap)
 		(*fr) = bl;
 	return 1;
 }
-static struct block_list *mob_getfriendhprate(struct mob_data *md,int min_rate,int max_rate)
+static struct block_list *mob_getfriendhprate(struct mob_data *md,int64 min_rate,int64 max_rate)
 {
 	struct block_list *fr=NULL;
 	int type = BL_MOB;
@@ -3857,7 +3856,7 @@ static struct block_list *mob_getfriendhprate(struct mob_data *md,int min_rate,i
 /*==========================================
  * Check hp rate of its master
  *------------------------------------------*/
-struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int rate)
+struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int64 rate)
 {
 	if( md && md->master_id > 0 )
 	{
@@ -3873,7 +3872,7 @@ struct block_list *mob_getmasterhpltmaxrate(struct mob_data *md,int rate)
  *------------------------------------------*/
 int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 {
-	int cond1,cond2;
+	int64 cond1,cond2;
 	struct mob_data **fr, *md, *mmd;
 	int flag=0;
 
@@ -3886,8 +3885,8 @@ int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 
 	if (battle_check_target(&mmd->bl,bl,BCT_ENEMY)>0)
 		return 0;
-	cond1=va_arg(ap,int);
-	cond2=va_arg(ap,int);
+	cond1=va_arg(ap,int64);
+	cond2=va_arg(ap,int64);
 	fr=va_arg(ap,struct mob_data **);
 	if( cond2==-1 ){
 		int j;
@@ -3903,7 +3902,7 @@ int mob_getfriendstatus_sub(struct block_list *bl,va_list ap)
 	return 0;
 }
 
-struct mob_data *mob_getfriendstatus(struct mob_data *md,int cond1,int cond2)
+struct mob_data *mob_getfriendstatus(struct mob_data *md,int64 cond1,int64 cond2)
 {
 	struct mob_data* fr = NULL;
 	nullpo_ret(md);
@@ -3982,9 +3981,9 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
 /*==========================================
  * Skill use judging
  *------------------------------------------*/
- int mobskill_use(struct mob_data *md, t_tick tick, int event)
-{	
-	e_mob_skill_target skill_target;
+
+int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
+{
 	struct block_list *fbl = NULL; //Friend bl, which can either be a BL_PC or BL_MOB depending on the situation. [Skotlex]
 	struct block_list *bl;
 	struct mob_data *fmd = NULL;	
@@ -3998,6 +3997,9 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
 
 	//Pick a starting position and loop from that.
 	int i = battle_config.mob_ai&0x100?rnd()%ms.size():0;
+	for (n = 0; n < ms.size(); i++, n++) {
+		int64 c2;
+		int flag = 0;
 
 	for (int n = 0; n < ms.size(); i++, n++) {
 		int flag=0;
@@ -4025,7 +4027,11 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
 			flag = 1; //Trigger skill.
 		else if (ms[i]->cond1 == MSC_SKILLUSED)
 			flag = ((event & 0xffff) == MSC_SKILLUSED && ((event >> 16) == c2 || c2 == 0));
-		else if(event == -1) {
+		else if (ms[i]->cond1 == MSC_GROUNDATTACKED && damage > 0)
+			flag = ((event & 0xffff) == MSC_SKILLUSED && skill_get_inf((event >> 16))&INF_GROUND_SKILL);
+		else if (ms[i]->cond1 == MSC_DAMAGEDGT && damage > 0 && !((event & 0xffff) == MSC_SKILLUSED)) //Avoid double check if skill has been used [datawulf]
+			flag = (damage > c2);
+		else if(event == -1){
 			//Avoid entering on defined events to avoid "hyper-active skill use" due to the overflow of calls to this function in battle.
 			switch (ms[i]->cond1)
 			{
@@ -4346,7 +4352,7 @@ bool mob_chat_display_message(mob_data &md, uint16 msg_id) {
 /*==========================================
  * Skill use event processing
  *------------------------------------------*/
-int mobskill_event(struct mob_data *md, struct block_list *src, t_tick tick, int flag)
+int mobskill_event(struct mob_data *md, struct block_list *src, t_tick tick, int flag, int64 damage)
 {
 	int target_id, res = 0;
 
@@ -4360,11 +4366,13 @@ int mobskill_event(struct mob_data *md, struct block_list *src, t_tick tick, int
 	if (flag == -1)
 		res = mobskill_use(md, tick, MSC_CASTTARGETED);
 	else if ((flag&0xffff) == MSC_SKILLUSED)
-		res = mobskill_use(md, tick, flag);
+		res = mobskill_use(md, tick, flag, damage);
 	else if (flag&BF_SHORT)
-		res = mobskill_use(md, tick, MSC_CLOSEDATTACKED);
+		res = mobskill_use(md, tick, MSC_CLOSEDATTACKED, damage);
 	else if (flag&BF_LONG && !(flag&BF_MAGIC)) //Long-attacked should not include magic.
-		res = mobskill_use(md, tick, MSC_LONGRANGEATTACKED);
+		res = mobskill_use(md, tick, MSC_LONGRANGEATTACKED, damage);
+	else if (damage > 0) //Trigger for any damage dealt from other attack types without affecting other triggers [datawulf]
+		res = mobskill_use(md, tick, -2, damage);
 
 	if (!res)
 	//Restore previous target only if skill condition failed to trigger. [Skotlex]
@@ -6591,7 +6599,82 @@ uint64 MobChatDatabase::parseBodyNode(const ryml::NodeRef& node) {
  *------------------------------------------*/
 static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 {
-
+	static const struct {
+		char str[32];
+		enum MobSkillState id;
+	} state[] = {
+		{	"any",		MSS_ANY		}, //All states except Dead
+		{	"idle",		MSS_IDLE	},
+		{	"walk",		MSS_WALK	},
+		{	"loot",		MSS_LOOT	},
+		{	"dead",		MSS_DEAD	},
+		{	"attack",	MSS_BERSERK	}, //Retaliating attack
+		{	"angry",	MSS_ANGRY	}, //Preemptive attack (aggressive mobs)
+		{	"chase",	MSS_RUSH	}, //Chase escaping target
+		{	"follow",	MSS_FOLLOW	}, //Preemptive chase (aggressive mobs)
+		{	"anytarget",MSS_ANYTARGET	}, //Berserk+Angry+Rush+Follow
+	};
+	static const struct {
+		char str[32];
+		int id;
+	} cond1[] = {
+		// enum e_mob_skill_condition
+		{ "always",            MSC_ALWAYS            },
+		{ "myhpltmaxrate",     MSC_MYHPLTMAXRATE     },
+		{ "myhpinrate",        MSC_MYHPINRATE        },
+		{ "friendhpltmaxrate", MSC_FRIENDHPLTMAXRATE },
+		{ "friendhpinrate",    MSC_FRIENDHPINRATE    },
+		{ "mystatuson",        MSC_MYSTATUSON        },
+		{ "mystatusoff",       MSC_MYSTATUSOFF       },
+		{ "friendstatuson",    MSC_FRIENDSTATUSON    },
+		{ "friendstatusoff",   MSC_FRIENDSTATUSOFF   },
+		{ "attackpcgt",        MSC_ATTACKPCGT        },
+		{ "attackpcge",        MSC_ATTACKPCGE        },
+		{ "slavelt",           MSC_SLAVELT           },
+		{ "slavele",           MSC_SLAVELE           },
+		{ "closedattacked",    MSC_CLOSEDATTACKED    },
+		{ "longrangeattacked", MSC_LONGRANGEATTACKED },
+		{ "skillused",         MSC_SKILLUSED         },
+		{ "afterskill",        MSC_AFTERSKILL        },
+		{ "casttargeted",      MSC_CASTTARGETED      },
+		{ "rudeattacked",      MSC_RUDEATTACKED      },
+		{ "masterhpltmaxrate", MSC_MASTERHPLTMAXRATE },
+		{ "masterattacked",    MSC_MASTERATTACKED    },
+		{ "alchemist",         MSC_ALCHEMIST         },
+		{ "onspawn",           MSC_SPAWN             },
+		{ "mobnearbygt",       MSC_MOBNEARBYGT       },
+		{ "groundattacked",    MSC_GROUNDATTACKED    },
+		{ "damagedgt",         MSC_DAMAGEDGT         },
+	}, cond2[] ={
+		{	"anybad",		-1				},
+		{	"stone",		SC_STONE		},
+		{	"freeze",		SC_FREEZE		},
+		{	"stun",			SC_STUN			},
+		{	"sleep",		SC_SLEEP		},
+		{	"poison",		SC_POISON		},
+		{	"curse",		SC_CURSE		},
+		{	"silence",		SC_SILENCE		},
+		{	"confusion",	SC_CONFUSION	},
+		{	"blind",		SC_BLIND		},
+		{	"hiding",		SC_HIDING		},
+		{	"sight",		SC_SIGHT		},
+	}, target[] = {
+		// enum e_mob_skill_target
+		{	"target",	MST_TARGET	},
+		{	"randomtarget",	MST_RANDOM	},
+		{	"self",		MST_SELF	},
+		{	"friend",	MST_FRIEND	},
+		{	"master",	MST_MASTER	},
+		{	"around5",	MST_AROUND5	},
+		{	"around6",	MST_AROUND6	},
+		{	"around7",	MST_AROUND7	},
+		{	"around8",	MST_AROUND8	},
+		{	"around1",	MST_AROUND1	},
+		{	"around2",	MST_AROUND2	},
+		{	"around3",	MST_AROUND3	},
+		{	"around4",	MST_AROUND4	},
+		{	"around",	MST_AROUND	},
+	};
 	static int last_mob_id = 0;  // ensures that only one error message per mob id is printed
 	int mob_id;
 	int j, tmp;
