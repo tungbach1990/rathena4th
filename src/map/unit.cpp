@@ -1965,6 +1965,16 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 			if (sc && sc->data[SC_WUGDASH])
 				casttime = -1;
 			break;
+		case DK_SERVANT_W_PHANTOM: { // Stops servants from being consumed on unmarked targets.
+				status_change *tsc = status_get_sc(target);
+
+				// Only allow to attack if the enemy has a sign mark given by the caster.
+				if( tsc == nullptr || tsc->data[SC_SERVANT_SIGN] == nullptr || tsc->data[SC_SERVANT_SIGN]->val1 != src->id ){
+					clif_skill_fail(sd, skill_id, USESKILL_FAIL, 0);
+					return 0;
+				}
+			}
+			break;
 		case EL_WIND_SLASH:
 		case EL_HURRICANE:
 		case EL_TYPOON_MIS:
@@ -2777,8 +2787,8 @@ static int unit_attack_timer_sub(struct block_list* src, int tid, t_tick tick)
 
 			e_mode mode = static_cast<e_mode>(status_get_mode(&md->bl));
 			if (mode & MD_SKILLONLY) {
-				md->state.skillstate = md->state.aggressive ? MSS_ANGRY : MSS_BERSERK; // on met Ã§a car sinon il reste iddle aprÃ¨s le skill
-				mobskill_use(md, tick, -1); // si on enlÃ¨ve pas le if ca fait une auto au lieu de skill car pour si le retour vaut 0 c'est que le mob a Ã©chouÃ© le skill et ca continue le code qui conduit Ã  l'autoattaque
+				md->state.skillstate = md->state.aggressive ? MSS_ANGRY : MSS_BERSERK; // on met ça car sinon il reste iddle après le skill
+				mobskill_use(md, tick, -1); // si on enlève pas le if ca fait une auto au lieu de skill car pour si le retour vaut 0 c'est que le mob a échoué le skill et ca continue le code qui conduit à l'autoattaque
 				return 1;
 			}
 			//First attack is always a normal attack

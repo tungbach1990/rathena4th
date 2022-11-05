@@ -286,7 +286,6 @@ const std::unordered_map<std::string, MobSkillState> um_mobskillstatename2id{
 
 MapDropDatabase map_drop_db;
 
-
 /*==========================================
  * Local prototype declaration   (only required thing)
  *------------------------------------------*/
@@ -4060,6 +4059,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 						flag = (md->sc.data[ms[i]->cond2]!=NULL);
 					}
 					flag ^= (ms[i]->cond1 == MSC_MYSTATUSOFF); break;
+				}
 			case MSC_FRIENDHPLTMAXRATE:	// friend HP < maxhp%
 				flag = ((fbl = mob_getfriendhprate(md, 0, ms[i]->cond2)) != NULL); break;
 			case MSC_FRIENDHPINRATE	:
@@ -4319,7 +4319,6 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 	//No skill was used.
 	md->skill_idx = -1;
 	return 0;
-    }
 }
 /*==========================================
  * Skill use event processing
@@ -6767,15 +6766,33 @@ static bool mob_parse_row_mobskilldb(char** str, int columns, int current)
 	}
 
 	//Cond2
-// numeric value
-	ms->cond2 = atoi(str[11]);
-	// or special constant
-	ARR_FIND( 0, ARRAYLENGTH(cond2), j, strcmp(str[11],cond2[j].str) == 0 );
-	if( j < ARRAYLENGTH(cond2) )
-		ms->cond2 = cond2[j].id;
+	const std::string& str_cond2 = str[11];
+	//search special constant ;
 
-	ms->val[0] = (int)strtol(str[12],NULL,0);
-	ms->val[1] = (int)strtol(str[13],NULL,0);
+	if(str_cond2 == "")
+		ms->cond2=0;
+	else if (um_statusname2id.count(str_cond2)) {
+		ms->cond2=um_statusname2id.at(str_cond2);
+	} else if (mob_expanded_ai_conditions_db.find(str_cond2) != nullptr)
+		ms->expanded_cond=str_cond2;
+	else{
+		try{
+			ms->cond2=stoi(str_cond2);
+		} catch(std::invalid_argument ia){
+			ShowWarning("mob_parse_row_mobskilldb: Unrecognized condition2%s for %d\n", str_cond2, mob_id);
+			return false;
+		}
+	}
+	ms->expanded_cond=str_cond2;
+
+	const std::string& str_val0 = str[12];
+	if (str_val0 == "")
+		ms->val[0] = 0;
+	else if (um_name2mfm.count(str_val0)) {
+		ms->val[0] = um_name2mfm.at(str_val0);
+	} else
+		ms->val[0] = (int)strtol(str[12], NULL, 0);
+	ms->val[1] = (int)strtol(str[13], NULL, 0);
 	ms->val[2] = (int)strtol(str[14],NULL,0);
 	ms->val[3] = (int)strtol(str[15],NULL,0);
 	ms->val[4] = (int)strtol(str[16],NULL,0);

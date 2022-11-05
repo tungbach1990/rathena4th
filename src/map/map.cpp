@@ -5280,9 +5280,7 @@ int do_init(int argc, char *argv[])
 	do_init_duel();
 	do_init_vending();
 	do_init_buyingstore();
-
 	npc_event_do_oninit();	// Init npcs (OnInit)
-
 	if (battle_config.pk_mode)
 		ShowNotice("Server is running on '" CL_WHITE "PK Mode" CL_RESET "'.\n");
 
