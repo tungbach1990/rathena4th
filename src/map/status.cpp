@@ -995,7 +995,7 @@ std::bitset<SCB_MAX> StatusDatabase::getCalcFlag(sc_type type) {
 }
 
 /**
- * Get SC's EndOnStart list
+ * Get SC's END list
  * @param sc: SC type
  * @return End list
  **/
@@ -1901,6 +1901,7 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 				return false;
 			break;
 		case AL_TELEPORT:
+		case ALL_ODINS_POWER:
 			// Should fail when used on top of Land Protector [Skotlex]
 			if (src && map_getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
 				&& !status_has_mode(status,MD_STATUSIMMUNE)
@@ -2027,7 +2028,7 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 		}
 
 		if (sc->option) {
-			if ((sc->option&OPTION_HIDE) && (src->type == BL_PC || status_get_mode(src)& MD_PCSKILLBEHAVIOR) && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
+			if ((sc->option&OPTION_HIDE) && src->type == BL_PC && (skill_id == 0 || !skill_get_inf2(skill_id, INF2_ALLOWWHENHIDDEN))) {
 				// Non players can use all skills while hidden.
 				return false;
 			}
@@ -2546,7 +2547,7 @@ void status_calc_misc(struct block_list *bl, struct status_data *status, int lev
 #endif
 
 	//Critical
-	if( bl->type&battle_config.enable_critical || status_get_mode(bl) & MD_PCSKILLBEHAVIOR) {
+	if( bl->type&battle_config.enable_critical ) {
 		stat = status->cri;
 		stat += 10 + (status->luk*10/3); // (every 1 luk = +0.3 critical)
 		status->cri = cap_value(stat, 1, SHRT_MAX);
@@ -2806,9 +2807,9 @@ int status_calc_mob_(struct mob_data* md, uint8 opt)
 						// Its unknown how the summoner's stats affects the ABR's stats.
 						// I decided to do something similar to elementals for now until I know.
 						// Also added hit increase from ABR-Mastery for balance reasons. [Rytech]
-						status->max_hp = (5000 + 40000 * abr_mastery) * mstatus->vit / 100;
-						status->rhw.atk = (2 * mstatus->batk + 200 + 600 * abr_mastery) * 70 / 100;
-						status->rhw.atk2 = 2 * mstatus->batk + 200 + 600 * abr_mastery;
+						status->max_hp = (5000 + 2000 * abr_mastery) * mstatus->vit / 100;
+						status->rhw.atk = (2 * mstatus->batk + 500 + 200 * abr_mastery) * 70 / 100;
+						status->rhw.atk2 = 2 * mstatus->batk + 500 + 200 * abr_mastery;
 						status->def = mstatus->def + 20 * abr_mastery;
 						status->mdef = mstatus->mdef + 4 * abr_mastery;
 						status->hit = mstatus->hit + 5 * abr_mastery / 2;
@@ -2841,10 +2842,10 @@ int status_calc_mob_(struct mob_data* md, uint8 opt)
 						// Its unknown how the summoner's stats affects the bionic's stats.
 						// I decided to do something similar to elementals for now until I know.
 						// Also added hit increase from Bionic-Mastery for balance reasons. [Rytech]
-						status->max_hp = (5000 + 40000 * bionic_mastery) * mstatus->vit / 100;
+						status->max_hp = (5000 + 2000 * bionic_mastery) * mstatus->vit / 100;
 						//status->max_sp = (50 + 20 * bionic_mastery) * mstatus->int_ / 100;// Wait what??? Bionic Mastery increases MaxSP? They have SP???
-						status->rhw.atk = (2 * mstatus->batk + 600 * bionic_mastery) * 70 / 100;
-						status->rhw.atk2 = 2 * mstatus->batk + 600 * bionic_mastery;
+						status->rhw.atk = (2 * mstatus->batk + 200 * bionic_mastery) * 70 / 100;
+						status->rhw.atk2 = 2 * mstatus->batk + 200 * bionic_mastery;
 						status->def = mstatus->def + 20 * bionic_mastery;
 						status->mdef = mstatus->mdef + 4 * bionic_mastery;
 						status->hit = mstatus->hit + 5 * bionic_mastery / 2;
@@ -4685,6 +4686,12 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		}
 		if (sc->data[SC_STRIKING])
 			sd->bonus.perfect_hit += 20 + 10 * pc_checkskill(sd, SO_STRIKING);
+		if (sc->data[SC_VIGOR]) {
+			// Skill desc says increases physical damage. Supposed to affect damage from base ATK right???
+			// Because this is only boosting the ATK from the equipped weapon and not from base ATK. [Rytech]
+			sd->right_weapon.addrace[RC_DEMIHUMAN] += 50;
+			sd->left_weapon.addrace[RC_ANGEL] += 50;
+		}
 		if (sc->data[SC_RUSH_QUAKE2]) {
 			sd->bonus.short_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
 			sd->bonus.long_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
@@ -4702,6 +4709,10 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 			sd->special_state.no_magic_damage = 0;
 		if (sc->data[SC_CLIMAX_DES_HU])
 			sd->indexed_bonus.magic_atk_ele[ELE_WIND] += 30;
+		if (sc->data[SC_CLIMAX_EARTH])
+			sd->indexed_bonus.subele[ELE_EARTH] -= 100;
+		if (sc->data[SC_CLIMAX_BLOOM])
+			sd->indexed_bonus.subele[ELE_FIRE] -= 100;
 		if (sc->data[SC_CLIMAX_CRYIMP]) {
 			sd->indexed_bonus.subele[ELE_WATER] += 30;
 			sd->indexed_bonus.magic_atk_ele[ELE_WATER] += 30;
@@ -5664,14 +5675,8 @@ void status_calc_bl_main(struct block_list *bl, std::bitset<SCB_MAX> flag)
 		}
 		else status->watk = status_calc_watk(bl, sc, b_status->watk);
 		// Monsters still use these in renewal so they are necessary
-		ShowWarning(" status->rhw.atk %d \n", status->rhw.atk);
-		ShowWarning(" status->rhw.atk2 %d \n", status->rhw.atk2);
-		ShowWarning(" bstatus->rhw.atk %d \n", b_status->rhw.atk);
-		ShowWarning(" bstatus->rhw.atk %d \n", b_status->rhw.atk2);
 		status->rhw.atk = status_calc_watk(bl, sc, b_status->rhw.atk);
 		status->rhw.atk2 = status_calc_watk(bl, sc, b_status->rhw.atk2);		
-		ShowWarning(" status->rhw.atk %d \n", status->rhw.atk);
-		ShowWarning(" status->rhw.atk2 %d \n", status->rhw.atk2);
 #endif
 	}
 
@@ -7138,6 +7143,8 @@ static unsigned int status_calc_watk(struct block_list *bl, struct status_change
 		watk += sc->data[SC_POWERFUL_FAITH]->val2;
 	if (sc->data[SC_GUARD_STANCE])
 		watk -= sc->data[SC_GUARD_STANCE]->val3;
+	if (sc->data[SC_ATTACK_STANCE])
+		watk += sc->data[SC_ATTACK_STANCE]->val3;
 
 	return (unsigned int)cap_value(watk,0,INT32_MAX);
 }
@@ -12532,6 +12539,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 				if (sd)
 					n = (uint8)sd->spiritball_old;
 				val2 = 10 * n; // +atk
+				val3 = (status->max_hp * (val1 * 5) / 100); // Barrier HP
 			}
 			break;
 		case SC_E_CHAIN:
@@ -12761,7 +12769,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val4 = tick - tick_time; // Remaining Time
 			break;
 		case SC_VIGOR: {
-				uint8 hp_loss[10] = { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10 };
+				uint8 hp_loss[10] = { 15, 14, 12, 11, 9, 8, 6, 5, 3, 2 };
 
 				val2 = hp_loss[val1- 1];
 			}
@@ -12784,7 +12792,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			tick = INFINITE_TICK;
 			break;
 		case SC_GUARDIAN_S:
-			val2 = (status->max_hp / 2 ) * (50 * val1) / 100 + 15 * sd->status.sta;// Barrier HP
+			val2 = status->max_hp * (50 * val1) / 100;// Barrier HP
 			break;
 		case SC_REBOUND_S:
 			val2 = 10 * val1;// Reduced Damage From Devotion
@@ -12793,7 +12801,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_ATTACK_STANCE:
 			val2 = 40 * val1;// DEF Decrease
-			val3 = 3 * val1;// P.ATK/S.MATK Increase
+			val3 = 5 + 5 * val1;// ATK Increase
 			tick = INFINITE_TICK;
 			break;
 		case SC_HOLY_S:
@@ -12823,7 +12831,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			tick_time = 300;
 			break;
 		case SC_POTENT_VENOM:
-			val2 = 2 * val1;// Res Pierce Percentage
+			val2 = 3 * val1;// Res Pierce Percentage
 			break;
 		case SC_A_MACHINE:
 			val4 = tick / 1000;
@@ -12966,7 +12974,6 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		case SC_WEAPONBREAKER:
 			val2 = val1 * 2 * 100; // Chance to break weapon
 			break;
-
 
 		default:
 			if (calc_flag.none() && scdb->skill_id == 0 && scdb->icon == EFST_BLANK && scdb->opt1 == OPT1_NONE && scdb->opt2 == OPT2_NONE && scdb->state.none() && scdb->flag.none() && scdb->endonstart.empty() && scdb->endreturn.empty() && scdb->fail.empty() && scdb->endonend.empty()) {
@@ -13528,6 +13535,11 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 						((TBL_MER*)d_bl)->devotion_flag = 0;
 					clif_devotion(d_bl, NULL);
 				}
+
+				status_change_end(bl, SC_AUTOGUARD);
+				status_change_end(bl, SC_DEFENDER);
+				status_change_end(bl, SC_REFLECTSHIELD);
+				status_change_end(bl, SC_ENDURE);
 			}
 			break;
 
@@ -13589,6 +13601,12 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 
 				if((sce->val1&0xFFFF) == CG_MOONLIT)
 					clif_status_change(bl,EFST_MOON,0,0,0,0,0);
+
+#ifdef RENEWAL
+				status_change_end(bl, SC_ENSEMBLEFATIGUE);
+#else
+				status_change_end(bl, SC_LONGING);
+#endif
 			}
 			break;
 		case SC_NOCHAT:
@@ -13816,6 +13834,9 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 				}
 			}
 			break;
+		case SC_TEARGAS:
+			status_change_end(bl,SC_TEARGAS_SOB);
+			break;
 		case SC_SITDOWN_FORCE:
 		case SC_BANANA_BOMB_SITDOWN:
 			if( sd && pc_issit(sd) && pc_setstand(sd, false) )
@@ -13829,6 +13850,25 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			calc_flag = status_db.getSCB_ALL(); // Required for overlapping
 			break;
 
+		case SC_SUNSTANCE:
+			status_change_end(bl, SC_LIGHTOFSUN);
+			break;
+		case SC_LUNARSTANCE:
+			status_change_end(bl, SC_NEWMOON);
+			status_change_end(bl, SC_LIGHTOFMOON);
+			break;
+		case SC_STARSTANCE:
+			status_change_end(bl, SC_FALLINGSTAR);
+			status_change_end(bl, SC_LIGHTOFSTAR);
+			break;
+		case SC_UNIVERSESTANCE:
+			status_change_end(bl, SC_LIGHTOFSUN);
+			status_change_end(bl, SC_NEWMOON);
+			status_change_end(bl, SC_LIGHTOFMOON);
+			status_change_end(bl, SC_FALLINGSTAR);
+			status_change_end(bl, SC_LIGHTOFSTAR);
+			status_change_end(bl, SC_DIMENSION);
+			break;
 		case SC_GRAVITYCONTROL:
 			status_fix_damage(bl, bl, sce->val2, clif_damage(bl, bl, gettick(), 0, 0, sce->val2, 0, DMG_NORMAL, 0, false), 0);
 			clif_specialeffect(bl, 223, AREA);
@@ -13902,6 +13942,13 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			///< !CHECKME: Seems on official, there's delay before same target can be vacuumed in same area again [Cydh]
 			sc_start2(bl, bl, SC_VACUUM_EXTREME_POSTDELAY, 100, sce->val1, sce->val2, skill_get_time2(SO_VACUUM_EXTREME,sce->val1));
 			break;
+		case SC_SWORDCLAN:
+		case SC_ARCWANDCLAN:
+		case SC_GOLDENMACECLAN:
+		case SC_CROSSBOWCLAN:
+		case SC_JUMPINGCLAN:
+			status_change_end(bl,SC_CLAN_INFO);
+			break;
 		case SC_DIMENSION1:
 		case SC_DIMENSION2:
 			if (sd)
@@ -13939,6 +13986,9 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 				pc_delservantball( *sd, sd->servantball );
 			}
 			break;
+		case SC_CHARGINGPIERCE:
+			status_change_end(bl, SC_CHARGINGPIERCE_COUNT);
+			break;
 		case SC_ABYSSFORCEWEAPON:
 			if( sd ){
 				pc_delabyssball( *sd, sd->abyssball );
@@ -13948,8 +13998,7 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			sc_start(bl,bl, SC_BLESSING_OF_M_C_DEBUFF, 100, 1, skill_get_time2(SH_BLESSING_OF_MYSTICAL_CREATURES, 1));
 			status_percent_change(bl,bl,0, 0, -100,1);
 			break;
-	}
-
+	}			
 	// End statuses found in the EndOnEnd list.
 	if (!scdb->endonend.empty()) {
 		for (const auto &it : scdb->endonend) {
@@ -15097,7 +15146,7 @@ TIMER_FUNC(status_change_timer){
 	case SC_SERVANTWEAPON:
 		if (sce->val4 >= 0) {
 			if( sd && sd->servantball < MAX_SERVANTBALL ){
-				pc_addservantball( *sd, 1 );
+				pc_addservantball( *sd, MAX_SERVANTBALL );
 			}
 			interval = max(500, skill_get_time2(DK_SERVANTWEAPON, sce->val1));
 			map_freeblock_lock();
