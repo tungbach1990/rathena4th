@@ -48008,7 +48008,7 @@ Body:
       bonus2 bMagicAddRace,RC_Plant,50;
       bonus bUseSPrate,50;
   - Id: 300240
-    AegisName: aegis_300240
+    AegisName: Gan_Ceann_Card
     Name: Gan Ceann Card
     Type: Card
     Weight: 10
@@ -48023,7 +48023,7 @@ Body:
          bonus2 bAddSize,Size_Large,25;
       }
   - Id: 300241
-    AegisName: aegis_300241
+    AegisName: Brutal_Murderer_Card
     Name: Brutal Murderer Card
     Type: Card
     Weight: 10
@@ -48038,7 +48038,7 @@ Body:
          bonus2 bAddSize,Size_Medium,25;
       }
   - Id: 300242
-    AegisName: aegis_300242
+    AegisName: Ghost_Cube_Card
     Name: Ghost Cube Card
     Type: Card
     Weight: 10
@@ -48052,7 +48052,7 @@ Body:
          bonus bMaxHP,1500;
       }
   - Id: 300243
-    AegisName: aegis_300243
+    AegisName: Lude_Gal_Card
     Name: Lude Gal Card
     Type: Card
     Weight: 10
@@ -48066,7 +48066,7 @@ Body:
          bonus bMaxSP,500;
       }
   - Id: 300244
-    AegisName: aegis_300244
+    AegisName: Disguiser_Card
     Name: Disguiser Card
     Type: Card
     Weight: 10
@@ -48086,7 +48086,7 @@ Body:
          }
       }
   - Id: 300245
-    AegisName: aegis_300245
+    AegisName: Bluemoon_Loli_Ruri_Card
     Name: Blue Moon Loli Ruri Card
     Type: Card
     Weight: 10
@@ -48106,7 +48106,7 @@ Body:
          }
       }
   - Id: 300246
-    AegisName: aegis_300246
+    AegisName: Grote_Card
     Name: Grote Card
     Type: Card
     Weight: 10
@@ -48127,7 +48127,7 @@ Body:
          }
       }
   - Id: 300247
-    AegisName: aegis_300247
+    AegisName: Pierrotzoist_Card
     Name: Pierrotzoist Card
     Type: Card
     Weight: 10
@@ -48147,7 +48147,7 @@ Body:
          }
       }
   - Id: 300248
-    AegisName: aegis_300248
+    AegisName: Death_Witch_Card
     Name: Death Witch Card
     Type: Card
     Weight: 10
@@ -48234,7 +48234,7 @@ Body:
       bonus2 bMagicAtkEle,Ele_Poison,7;
       bonus bUseSPrate,5;
   - Id: 300254
-    AegisName: aegis_300254
+    AegisName: Amitera_Card
     Name: Amitera Card
     Type: Card
     Weight: 10
@@ -48293,7 +48293,7 @@ Body:
       bonus2 bMagicAtkEle,Ele_Water,7;
       bonus bUseSPrate,5;
   - Id: 300258
-    AegisName: aegis_300258
+    AegisName: Lava_Eater_Card
     Name: Lavaeter Card
     Type: Card
     Weight: 10

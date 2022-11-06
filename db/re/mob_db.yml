@@ -100748,32 +100748,32 @@ Body:
     Name: Lavaeter
     Level: 243
     Hp: 9064251
-    BaseExp: 854120
-    JobExp: 675400
-    Attack: 6610
-    Attack2: 3200
-    Defense: 310
-    MagicDefense: 130
-    Str: 201
-    Agi: 131
-    Vit: 140
-    Int: 100
-    Dex: 248
-    Luk: 66
-    AttackRange: 1
+    BaseExp: 317899
+    JobExp: 222529
+    Attack: 8941
+    Attack2: 1178
+    Defense: 441
+    MagicDefense: 101
+    MagicResistance: 175
+    Resistance: 175
+    Str: 299
+    Agi: 203
+    Vit: 144
+    Int: 144
+    Dex: 201
+    Luk: 200
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Small
     Race: Formless
     Element: Fire
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1020
-    AttackMotion: 620
-    DamageMotion: 620
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 150
+    AttackDelay: 700
+    AttackMotion: 1152  # TODO
+    DamageMotion: 300
+    Ai: 04
     Drops:
       - Item: Boody_Red
         Rate: 300
@@ -100789,7 +100789,7 @@ Body:
         Rate: 20
       - Item: Shadowdecon
         Rate: 20
-      - Item: aegis_300258
+      - Item: Lava_Eater_Card
         Rate: 1
         StealProtected: true
   - Id: 20921
@@ -100797,32 +100797,32 @@ Body:
     Name: Fulgor
     Level: 244
     Hp: 8900729
-    BaseExp: 800000
-    JobExp: 640000
-    Attack: 6322
-    Attack2: 3145
-    Defense: 305
-    MagicDefense: 124
-    Str: 200
-    Agi: 198
-    Vit: 100
-    Int: 114
-    Dex: 254
-    Luk: 47
-    AttackRange: 1
+    BaseExp: 314774
+    JobExp: 220342
+    Attack: 9023
+    Attack2: 1197
+    Defense: 511
+    MagicDefense: 142
+    MagicResistance: 168
+    Resistance: 167
+    Str: 303
+    Agi: 201
+    Vit: 137
+    Int: 138
+    Dex: 181
+    Luk: 114
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Brute
     Element: Water
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1047
-    AttackMotion: 640
-    DamageMotion: 632
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 200
+    AttackDelay: 576
+    AttackMotion: 1152
+    DamageMotion: 432
+    Ai: 04
     Drops:
       - Item: Horn
         Rate: 2100
@@ -100846,32 +100846,32 @@ Body:
     Name: Napeo
     Level: 244
     Hp: 8700729
-    BaseExp: 810500
-    JobExp: 632000
-    Attack: 6010
-    Attack2: 3054
-    Defense: 303
-    MagicDefense: 120
-    Str: 133
-    Agi: 144
-    Vit: 109
-    Int: 195
-    Dex: 248
-    Luk: 77
-    AttackRange: 1
+    BaseExp: 315666
+    JobExp: 220966
+    Attack: 9033
+    Attack2: 1170
+    Defense: 511
+    MagicDefense: 144
+    MagicResistance: 172
+    Resistance: 203
+    Str: 301
+    Agi: 147
+    Vit: 166
+    Int: 141
+    Dex: 157
+    Luk: 207
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
-    Size: Small
-    Race: Formless
+    Size: Medium
+    Race: Plant
     Element: Wind
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1011
-    AttackMotion: 624
-    DamageMotion: 610
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 190
+    AttackDelay: 576
+    AttackMotion: 1152
+    DamageMotion: 576
+    Ai: 04
     Drops:
       - Item: Insect_Feeler
         Rate: 2000
@@ -100895,47 +100895,47 @@ Body:
     Name: Galensis
     Level: 244
     Hp: 9300729
-    BaseExp: 894560
-    JobExp: 741200
-    Attack: 6400
-    Attack2: 2741
-    Defense: 310
-    MagicDefense: 130
-    Str: 211
-    Agi: 148
-    Vit: 100
-    Int: 98
-    Dex: 265
-    Luk: 85
-    AttackRange: 1
+    BaseExp: 316687
+    JobExp: 221681
+    Attack: 9017
+    Attack2: 1211
+    Defense: 395
+    MagicDefense: 114
+    MagicResistance: 188
+    Resistance: 133
+    Str: 317
+    Agi: 186
+    Vit: 109
+    Int: 154
+    Dex: 207
+    Luk: 186
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Demihuman
     Element: Earth
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 960
-    AttackMotion: 614
-    DamageMotion: 623
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 180
+    AttackDelay: 480
+    AttackMotion: 960
+    DamageMotion: 432
+    Ai: 04
     Drops:
       - Item: Fluff
-        Rate: 2000
+        Rate: 2400
       - Item: Animal's_Skin
         Rate: 1600
       - Item: Yellow_Live
-        Rate: 20
-      - Item: Great_Nature
         Rate: 300
-      - Item: Shadowdecon_Ore
+      - Item: Great_Nature
         Rate: 50
+      - Item: Shadowdecon_Ore
+        Rate: 150
       - Item: Zelunium_Ore
         Rate: 150
       - Item: Zelunium
-        Rate: 150
+        Rate: 20
       - Item: Galensis_Card
         Rate: 1
         StealProtected: true
@@ -100944,32 +100944,32 @@ Body:
     Name: Amitera
     Level: 227
     Hp: 5814712
-    BaseExp: 687400
-    JobExp: 487000
-    Attack: 5200
-    Attack2: 2500
-    Defense: 266
-    MagicDefense: 112
-    Str: 180
-    Agi: 133
-    Vit: 115
-    Int: 108
-    Dex: 237
-    Luk: 49
-    AttackRange: 1
+    BaseExp: 297411
+    JobExp: 208188
+    Attack: 8102
+    Attack2: 981
+    Defense: 345
+    MagicDefense: 101
+    MagicResistance: 137
+    Resistance: 141
+    Str: 277
+    Agi: 188
+    Vit: 124
+    Int: 121
+    Dex: 177
+    Luk: 140
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Brute
     Element: Earth
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1050
-    AttackMotion: 653
-    DamageMotion: 611
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 150
+    AttackDelay: 480
+    AttackMotion: 960
+    DamageMotion: 480
+    Ai: 04
     Drops:
       - Item: Feather
         Rate: 2400
@@ -100993,32 +100993,32 @@ Body:
     Name: Litus
     Level: 228
     Hp: 6140768
-    BaseExp: 658000
-    JobExp: 500000
-    Attack: 5000
-    Attack2: 2865
-    Defense: 250
-    MagicDefense: 102
-    Str: 140
-    Agi: 125
-    Vit: 109
-    Int: 210
-    Dex: 235
-    Luk: 28
-    AttackRange: 1
+    BaseExp: 294168
+    JobExp: 205918
+    Attack: 8126
+    Attack2: 988
+    Defense: 421
+    MagicDefense: 125
+    MagicResistance: 144
+    Resistance: 145
+    Str: 277
+    Agi: 199
+    Vit: 127
+    Int: 126
+    Dex: 181
+    Luk: 150
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Demihuman
     Element: Wind
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1100
-    AttackMotion: 650
-    DamageMotion: 625
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 160
+    AttackDelay: 540
+    AttackMotion: 1080
+    DamageMotion: 768
+    Ai: 04
     Drops:
       - Item: Soft_Leaf
         Rate: 2400
@@ -101042,32 +101042,32 @@ Body:
     Name: Fillia
     Level: 229
     Hp: 5766824
-    BaseExp: 689500
-    JobExp: 500000
-    Attack: 5144
-    Attack2: 2187
-    Defense: 240
-    MagicDefense: 104
-    Str: 201
-    Agi: 166
-    Vit: 110
-    Int: 99
-    Dex: 250
-    Luk: 47
-    AttackRange: 1
+    BaseExp: 293478
+    JobExp: 205435
+    Attack: 8322
+    Attack2: 990
+    Defense: 486
+    MagicDefense: 130
+    MagicResistance: 145
+    Resistance: 145
+    Str: 288
+    Agi: 190
+    Vit: 127
+    Int: 127
+    Dex: 177
+    Luk: 161
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Brute
     Element: Fire
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 950
-    AttackMotion: 640
-    DamageMotion: 618
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 155
+    AttackDelay: 900
+    AttackMotion: 1800
+    DamageMotion: 480
+    Ai: 04
     Drops:
       - Item: Feather_Of_Birds
         Rate: 2500
@@ -101091,32 +101091,32 @@ Body:
     Name: Vanilaqus
     Level: 230
     Hp: 6092880
-    BaseExp: 700000
-    JobExp: 475000
-    Attack: 4780
-    Attack2: 5541
-    Defense: 250
-    MagicDefense: 100
-    Str: 121
-    Agi: 147
-    Vit: 110
-    Int: 268
-    Dex: 222
-    Luk: 50
-    AttackRange: 1
+    BaseExp: 296635
+    JobExp: 207645
+    Attack: 8109
+    Attack2: 997
+    Defense: 431
+    MagicDefense: 114
+    MagicResistance: 151
+    Resistance: 167
+    Str: 281
+    Agi: 165
+    Vit: 145
+    Int: 131
+    Dex: 177
+    Luk: 128
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Small
     Race: Formless
     Element: Water
     ElementLevel: 3
-    WalkSpeed: 170
-    AttackDelay: 1087
-    AttackMotion: 645
-    DamageMotion: 633
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    WalkSpeed: 150
+    AttackDelay: 1536
+    AttackMotion: 3072
+    DamageMotion: 576
+    Ai: 04
     Drops:
       - Item: Crystal_Blue
         Rate: 300
@@ -101137,49 +101137,50 @@ Body:
     AegisName: CHIMERA_THEONE
     Name: The One
     Level: 245
-    Hp: 95000000
-    BaseExp: 8542600
-    JobExp: 7505000
-    Attack: 13540
-    Attack2: 6352
-    Defense: 420
-    MagicDefense: 200
-    Str: 211
-    Agi: 151
-    Vit: 109
-    Int: 136
-    Dex: 278
-    Luk: 56
-    AttackRange: 1
+    Hp: 275042400
+    BaseExp: 7599887
+    JobExp: 5319921
+    Attack: 14541
+    Attack2: 2756
+    Defense: 654
+    MagicDefense: 114
+    MagicResistance: 470
+    Resistance: 271
+    Str: 415
+    Agi: 244
+    Vit: 221
+    Int: 384
+    Dex: 264
+    Luk: 188
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Large
     Race: Formless
     Element: Neutral
     ElementLevel: 3
-    WalkSpeed: 200
-    AttackDelay: 1011
-    AttackMotion: 642
-    DamageMotion: 642
-    DamageTaken: 50
+    WalkSpeed: 150
+    AttackDelay: 1440
+    AttackMotion: 2880
+    DamageMotion: 576
+    DamageTaken: 10
     Ai: 21
     Class: Boss
     Modes:
-      Detector: true
-      KnockBackImmune: true
-      StatusImmune: true
       Mvp: true
     Drops:
       - Item: Rough_Wind
-        Rate: 300
+        Rate: 1000
       - Item: Great_Nature
-        Rate: 2400
+        Rate: 1000
       - Item: Mistic_Frozen
-        Rate: 150
+        Rate: 1000
+      - Item: Flame_Heart
+        Rate: 1000
       - Item: Shadowdecon
-        Rate: 150
+        Rate: 1000
       - Item: Zelunium
-        Rate: 15
+        Rate: 1000
       - Item: The_One_Card
         Rate: 1
         StealProtected: true
@@ -101476,18 +101477,20 @@ Body:
     Name: Gan Ceann
     Level: 215
     Hp: 4681632
-    BaseExp: 205200
-    JobExp: 168700
-    Attack: 7854
-    Attack2: 1448
-    Defense: 280
-    MagicDefense: 90
-    Str: 221
-    Agi: 129
-    Vit: 151
-    Int: 65
-    Dex: 245
-    Luk: 43
+    BaseExp: 267854
+    JobExp: 188128
+    Attack: 7951
+    Attack2: 922
+    Defense: 380
+    MagicDefense: 99
+    MagicResistance: 130
+    Resistance: 130
+    Str: 278
+    Agi: 166
+    Vit: 121
+    Int: 121
+    Dex: 178
+    Luk: 123
     AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
@@ -101496,39 +101499,45 @@ Body:
     Element: Neutral
     ElementLevel: 1
     WalkSpeed: 155
-    AttackDelay: 647
-    AttackMotion: 652
-    DamageMotion: 480
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    AttackDelay: 238
+    AttackMotion: 576
+    DamageMotion: 360
+    Ai: 04
     Drops:
-      - Item: Broken_Steel_Piece
-        Rate: 1000
       - Item: Broken_Armor_Piece
-        Rate: 4850
-      - Item: Etel_Dust
-        Rate: 50
-      - Item: aegis_300240
+        Rate: 2400
+      - Item: Broken_Steel_Piece
+        Rate: 1600
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 12
+      - Item: Zelunium
+        Rate: 12
+      - Item: Gan_Ceann_Card
         Rate: 1
         StealProtected: true
   - Id: 20936
     AegisName: DISGUISER
     Name: Disguiser
     Level: 254
-    Hp: 6854120
-    BaseExp: 266400
-    JobExp: 150700
-    Attack: 7338
-    Attack2: 1282
-    Defense: 285
-    MagicDefense: 111
-    Str: 242
-    Agi: 153
-    Vit: 127
-    Int: 75
-    Dex: 210
-    Luk: 47
+    Hp: 8965513
+    BaseExp: 335956
+    JobExp: 235169
+    Attack: 9874
+    Attack2: 1230
+    Defense: 542
+    MagicDefense: 168
+    MagicResistance: 171
+    Resistance: 187
+    Str: 314
+    Agi: 203
+    Vit: 147
+    Int: 135
+    Dex: 201
+    Luk: 198
     AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
@@ -101536,24 +101545,27 @@ Body:
     Race: Demon
     Element: Undead
     ElementLevel: 2
-    WalkSpeed: 147
-    AttackDelay: 516
-    AttackMotion: 568
+    WalkSpeed: 150
+    AttackDelay: 384
+    AttackMotion: 768
     DamageMotion: 384
-    Ai: 09
-    Modes:
-      ChangeChase: true
-      Detector: true
+    Ai: 04
     Drops:
       - Item: Red_Scarf
-        Rate: 4850
+        Rate: 2500
       - Item: Tangled_Chain
-        Rate: 3686
+        Rate: 1800
       - Item: White_Powder
-        Rate: 100
-      - Item: Honey
-        Rate: 100
-      - Item: aegis_300244
+        Rate: 50
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Disguiser_Card
         Rate: 1
         StealProtected: true
   - Id: 20937
@@ -101561,18 +101573,20 @@ Body:
     Name: Brutal Murderer
     Level: 214
     Hp: 4960787
-    BaseExp: 219080
-    JobExp: 182200
-    Attack: 7397
-    Attack2: 1498
-    Defense: 284
-    MagicDefense: 91
-    Str: 222
-    Agi: 145
-    Vit: 166
-    Int: 41
-    Dex: 247
-    Luk: 46
+    BaseExp: 269952
+    JobExp: 188966
+    Attack: 8135
+    Attack2: 998
+    Defense: 470
+    MagicDefense: 80
+    MagicResistance: 143
+    Resistance: 187
+    Str: 277
+    Agi: 174
+    Vit: 175
+    Int: 134
+    Dex: 131
+    Luk: 130
     AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
@@ -101581,18 +101595,26 @@ Body:
     Element: Neutral
     ElementLevel: 2
     WalkSpeed: 175
-    AttackDelay: 614
-    AttackMotion: 644
-    DamageMotion: 384
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    AttackDelay: 336
+    AttackMotion: 672
+    DamageMotion: 288
+    Ai: 04
     Drops:
       - Item: Old_Manteau
-        Rate: 4171
+        Rate: 2400
       - Item: Rusty_Cleaver
-        Rate: 2000
-      - Item: aegis_300241
+        Rate: 1600
+      - Item: Mr_Scream
+        Rate: 20
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 12
+      - Item: Zelunium
+        Rate: 12
+      - Item: Brutal_Murderer_Card
         Rate: 1
         StealProtected: true
   - Id: 20938
@@ -101600,18 +101622,20 @@ Body:
     Name: Ghost Cube
     Level: 213
     Hp: 4439942
-    BaseExp: 152500
-    JobExp: 124700
-    Attack: 4294
-    Attack2: 1270
-    Defense: 277
-    MagicDefense: 75
-    Str: 184
-    Agi: 154
-    Vit: 155
-    Int: 66
-    Dex: 231
-    Luk: 60
+    BaseExp: 261542
+    JobExp: 183079
+    Attack: 8114
+    Attack2: 1032
+    Defense: 482
+    MagicDefense: 114
+    MagicResistance: 171
+    Resistance: 171
+    Str: 274
+    Agi: 185
+    Vit: 161
+    Int: 161
+    Dex: 177
+    Luk: 169
     AttackRange: 1
     SkillRange: 10
     ChaseRange: 12
@@ -101620,20 +101644,26 @@ Body:
     Element: Undead
     ElementLevel: 1
     WalkSpeed: 150
-    AttackDelay: 512
-    AttackMotion: 548
+    AttackDelay: 624
+    AttackMotion: 1248
     DamageMotion: 576
-    Ai: 09
-    Modes:
-      ChangeChase: true
+    Ai: 04
     Drops:
       - Item: Piece_Of_Black_Cloth
-        Rate: 3200
+        Rate: 2400
       - Item: Ectoplasm
-        Rate: 5723
+        Rate: 2000
       - Item: Black_Powder
-        Rate: 500
-      - Item: aegis_300242
+        Rate: 250
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 12
+      - Item: Zelunium
+        Rate: 12
+      - Item: Ghost_Cube_Card
         Rate: 1
         StealProtected: true
   - Id: 20939
@@ -101641,19 +101671,21 @@ Body:
     Name: Lude Gal
     Level: 213
     Hp: 4439942
-    BaseExp: 169900
-    JobExp: 139000
-    Attack: 4283
-    Attack2: 1378
-    Defense: 277
-    MagicDefense: 77
-    Str: 197
-    Agi: 138
-    Vit: 105
-    Int: 182
-    Dex: 203
-    Luk: 55
-    AttackRange: 1
+    BaseExp: 259877
+    JobExp: 181914
+    Attack: 7925
+    Attack2: 1001
+    Defense: 410
+    MagicDefense: 105
+    MagicResistance: 151
+    Resistance: 179
+    Str: 274
+    Agi: 171
+    Vit: 168
+    Int: 142
+    Dex: 168
+    Luk: 134
+    AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
     Size: Small
@@ -101661,39 +101693,47 @@ Body:
     Element: Undead
     ElementLevel: 2
     WalkSpeed: 150
-    AttackDelay: 590
-    AttackMotion: 560
+    AttackDelay: 480
+    AttackMotion: 960
     DamageMotion: 480
     Ai: 04
     Drops:
       - Item: Pumpkin_Bucket
-        Rate: 3200
+        Rate: 2500
       - Item: Ectoplasm
-        Rate: 5723
+        Rate: 2000
       - Item: Transparent_Cloth
-        Rate: 1000
-      - Item: Yellow_Powder
-        Rate: 300
-      - Item: aegis_300243
+        Rate: 500
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 12
+      - Item: Zelunium
+        Rate: 12
+      - Item: Lude_Gal_Card
         Rate: 1
         StealProtected: true
   - Id: 20940
     AegisName: BLUEMOON_LOLI_RURI
     Name: Blue Moon Loli Ruri
     Level: 255
-    Hp: 6685410
-    BaseExp: 288700
-    JobExp: 180100
-    Attack: 7423
-    Attack2: 2280
-    Defense: 273
-    MagicDefense: 84
-    Str: 111
-    Agi: 105
-    Vit: 127
-    Int: 179
-    Dex: 295
-    Luk: 79
+    Hp: 9301992
+    BaseExp: 339785
+    JobExp: 237850
+    Attack: 9325
+    Attack2: 1345
+    Defense: 457
+    MagicDefense: 191
+    MagicResistance: 260
+    Resistance: 238
+    Str: 301
+    Agi: 205
+    Vit: 187
+    Int: 204
+    Dex: 192
+    Luk: 205
     AttackRange: 2
     SkillRange: 10
     ChaseRange: 12
@@ -101702,46 +101742,47 @@ Body:
     Element: Water
     ElementLevel: 3
     WalkSpeed: 125
-    AttackDelay: 647
-    AttackMotion: 632
-    DamageMotion: 376
-    Ai: 09
-    Modes:
-      ChangeChase: true
-      Detector: true
+    AttackDelay: 510
+    AttackMotion: 1020
+    DamageMotion: 576
+    Ai: 04
     Drops:
       - Item: Black_Kitty_Doll
-        Rate: 800
+        Rate: 500
       - Item: Striped_Socks
-        Rate: 3000
+        Rate: 2400
       - Item: Bat_Cage
-        Rate: 5044
-      - Item: Elunium
-        Rate: 100
+        Rate: 2000
       - Item: Loki's_Whispers
-        Rate: 1
-      - Item: Yellow_Powder
-        Rate: 300
-      - Item: aegis_300245
+        Rate: 2
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Bluemoon_Loli_Ruri_Card
         Rate: 1
         StealProtected: true
   - Id: 20941
     AegisName: GROTE
     Name: Grote
     Level: 253
-    Hp: 5750150
-    BaseExp: 1625
-    JobExp: 1547
-    Attack: 6697
-    Attack2: 1285
-    Defense: 270
-    MagicDefense: 80
-    Str: 183
-    Agi: 156
-    Vit: 162
-    Int: 75
-    Dex: 213
-    Luk: 37
+    Hp: 9929035
+    BaseExp: 346622
+    JobExp: 242635
+    Attack: 9354
+    Attack2: 1320
+    Defense: 456
+    MagicDefense: 117
+    MagicResistance: 153
+    Resistance: 237
+    Str: 311
+    Agi: 207
+    Vit: 187
+    Int: 121
+    Dex: 199
+    Luk: 207
     AttackRange: 1
     SkillRange: 10
     ChaseRange: 12
@@ -101750,48 +101791,47 @@ Body:
     Element: Earth
     ElementLevel: 2
     WalkSpeed: 180
-    AttackDelay: 717
-    AttackMotion: 784
+    AttackDelay: 792
+    AttackMotion: 1584
     DamageMotion: 576
     Ai: 04
-    Modes:
-      CastSensorIdle: true
-      Detector: true
     Drops:
       - Item: Hanging_Doll
-        Rate: 1800
+        Rate: 1000
       - Item: Rotten_Rope
-        Rate: 5335
+        Rate: 2500
       - Item: Tree_Knot
-        Rate: 4074
-      - Item: Cardinal_Jewel_
-        Rate: 300
-      - Item: Red_Gemstone
-        Rate: 100
+        Rate: 2000
       - Item: Branch_Of_Dead_Tree
-        Rate: 10
-      - Item: Elder_Branch
-        Rate: 100
-      - Item: aegis_300246
+        Rate: 5
+      - Item: Bloody_Dead_Branch
+        Rate: 2
+      - Item: Shadowdecon
+        Rate: 25
+      - Item: Zelunium
+        Rate: 25
+      - Item: Grote_Card
         Rate: 1
         StealProtected: true
   - Id: 20942
     AegisName: PIERROTZOIST
     Name: Pierrotzoist
     Level: 255
-    Hp: 5358000
-    BaseExp: 156500
-    JobExp: 148700
-    Attack: 6548
-    Attack2: 1281
-    Defense: 273
-    MagicDefense: 68
-    Str: 197
-    Agi: 167
-    Vit: 172
-    Int: 88
-    Dex: 233
-    Luk: 60
+    Hp: 9701992
+    BaseExp: 339451
+    JobExp: 237616
+    Attack: 9356
+    Attack2: 1247
+    Defense: 541
+    MagicDefense: 134
+    MagicResistance: 226
+    Resistance: 212
+    Str: 311
+    Agi: 177
+    Vit: 166
+    Int: 177
+    Dex: 201
+    Luk: 169
     AttackRange: 1
     SkillRange: 10
     ChaseRange: 12
@@ -101800,79 +101840,79 @@ Body:
     Element: Dark
     ElementLevel: 2
     WalkSpeed: 155
-    AttackDelay: 741
-    AttackMotion: 736
+    AttackDelay: 768
+    AttackMotion: 1536
     DamageMotion: 480
     Ai: 04
-    Modes:
-      Detector: true
     Drops:
       - Item: Broken_Needle
-        Rate: 4365
-      - Item: Spool
-        Rate: 5335
+        Rate: 2400
       - Item: Needle_Pouch
         Rate: 2000
       - Item: Stuffed_Doll
-        Rate: 80
+        Rate: 40
       - Item: Ectoplasm
-        Rate: 300
-      - Item: aegis_300247
+        Rate: 150
+      - Item: Shadowdecon_Ore
+        Rate: 150
+      - Item: Zelunium_Ore
+        Rate: 150
+      - Item: Zelunium
+        Rate: 25
+      - Item: Pierrotzoist_Card
         Rate: 1
         StealProtected: true
   - Id: 20943
     AegisName: DEATH_WITCH
     Name: Death Witch
     Level: 255
-    Hp: 88000000
-    BaseExp: 35000000
-    JobExp: 25000000
-    MvpExp: 15000000
-    Attack: 8840
-    Attack2: 13000
-    Defense: 610
-    MagicDefense: 110
-    Str: 141
-    Agi: 123
-    Vit: 118
-    Int: 255
-    Dex: 270
-    Luk: 70
-    AttackRange: 1
+    Hp: 398856250
+    BaseExp: 9051055
+    JobExp: 6335739
+    Attack: 14658
+    Attack2: 2687
+    Defense: 687
+    MagicDefense: 210
+    MagicResistance: 539
+    Resistance: 273
+    Str: 424
+    Agi: 236
+    Vit: 214
+    Int: 423
+    Dex: 241
+    Luk: 174
+    AttackRange: 3
     SkillRange: 10
     ChaseRange: 12
     Size: Medium
     Race: Demihuman
     Element: Dark
     ElementLevel: 2
-    WalkSpeed: 155
-    AttackDelay: 541
-    AttackMotion: 536
+    WalkSpeed: 150
+    AttackDelay: 517
+    AttackMotion: 1134
     DamageMotion: 480
+    DamageTaken: 10
     Ai: 21
     Class: Boss
     Modes:
-      Detector: true
-      KnockBackImmune: true
-      StatusImmune: true
       Mvp: true
-    MvpDrops:
-      - Item: Old_Card_Album
-        Rate: 10000
-      - Item: Old_Violet_Box
-        Rate: 10000
     Drops:
-      - Item: aegis_300248
+      - Item: Ectoplasm
+        Rate: 200
+      - Item: Yggdrasilberry
+        Rate: 1500
+      - Item: Seed_Of_Yggdrasil
+        Rate: 1500
+      - Item: Leaf_Of_Yggdrasil
+        Rate: 1500
+      - Item: Shadowdecon
+        Rate: 1000
+      - Item: Zelunium
+        Rate: 1000
+      - Item: Death_Witch_Card
         Rate: 1
         StealProtected: true
-      - Item: Yggdrasilberry
-        Rate: 10000
-      - Item: Bat_Cage
-        Rate: 10000
-      - Item: Old_Card_Album
-        Rate: 3000
-      - Item: Old_Violet_Box
-        Rate: 5000
 #  - Id: 20944
 #    AegisName: JP_E_MONSTER_151
 #  - Id: 20945

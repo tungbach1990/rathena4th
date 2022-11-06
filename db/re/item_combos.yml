@@ -19168,20 +19168,20 @@ Body:
       bonus2 bMagicAddRace,RC_Insect,20;
   - Combos:
       - Combo:
-          - aegis_300240
+          - Gan_Ceann_Card
           - Dullahan_Card
     Script: |
       bonus2 bAddSize,Size_Large,30;
   - Combos:
       - Combo:
-          - aegis_300241
+          - Brutal_Murderer_Card
           - Bloody_Murderer_Card
     Script: |
       bonus2 bAddSize,Size_Medium,30;
   - Combos:
       - Combo:
-          - aegis_300242
-          - aegis_300243
+          - Ghost_Cube_Card
+          - Lude_Gal_Card
     Script: |
       if (BaseJob == Job_Novice || BaseJob == Job_SuperNovice) {
          autobonus "{ bonus bNoSizeFix; }",1,7000,BF_WEAPON;
