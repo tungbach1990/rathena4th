@@ -5872,6 +5872,8 @@
 	export_constant(IG_BS_ITEM_M_S_54);
 	export_constant(IG_BS_ITEM_M_S_55);
 	export_constant(IG_BS_ITEM_M_S_56);
+	export_constant(IG_Ein_1HITEMbox);
+	export_constant(IG_Ein_UNDIUM);	
 	export_constant(IG_ENCHANT_STONE_BOX28);
 	export_constant(IG_S_FULLPENE_EARRING);
 	export_constant(IG_S_FULLPENE_PENDANT);
