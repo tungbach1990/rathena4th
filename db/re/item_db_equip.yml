@@ -21965,7 +21965,7 @@ Body:
          bonus2 bSubSize,Size_All,25;
       }
   - Id: 2058
-    AegisName: Detecting_Staff
+    AegisName: Ein_BHSTAFF
     Name: Detecting Staff
     Type: Weapon
     SubType: 2hStaff

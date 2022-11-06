@@ -31147,6 +31147,64 @@ Body:
         List:
           - Item: Enchant_Ticket
             Amount: 2
+  - Group: Ein_1HITEMbox
+    SubGroups:
+      - SubGroup: 1
+        List:
+          - Item: Ring
+            Rate: 1
+          - Item: Ein_BHSWORD
+            Rate: 1
+          - Item: Ein_BHSTAFF
+            Rate: 1
+          - Item: Ein_BHHuuma
+            Rate: 1
+          - Item: Ein_BHKATAR
+            Rate: 1
+          - Item: Ein_BHAXE
+            Rate: 1
+          - Item: Ein_BHBOW
+            Rate: 1
+          - Item: Ein_1HKNUCK
+            Rate: 1
+          - Item: Ein_1HHAMMER
+            Rate: 1
+          - Item: Ein_1HWAND
+            Rate: 1
+          - Item: Ein_1HWHIP
+            Rate: 1
+          - Item: Ein_1HBOOK
+            Rate: 1
+          - Item: Ein_1HDAGGER
+            Rate: 1
+          - Item: Ein_1HMAGGER
+            Rate: 1
+          - Item: Ein_1HSPEAR
+            Rate: 1
+          - Item: Ein_1HLUTE
+            Rate: 1
+          - Item: Ein_1HSWORD
+            Rate: 1
+          - Item: Ein_1HGUN
+            Rate: 1
+          - Item: Ein_1H_Foxtail
+            Rate: 1
+  - Group: Ein_UNDIUM
+    SubGroups:
+      - SubGroup: 1
+        List:
+          - Item: Ein_REDIUM
+            Rate: 1
+          - Item: Ein_RINDIUM
+            Rate: 1
+          - Item: Ein_ODIUM
+            Rate: 1
+          - Item: Ein_PURDIUM
+            Rate: 1
+          - Item: Ein_WHIDIUM
+            Rate: 1
+#          - Item: Ein_DYNITE # todo check
+#            Rate: 1            
   - Group: ENCHANT_STONE_BOX28
     SubGroups:
       - SubGroup: 1

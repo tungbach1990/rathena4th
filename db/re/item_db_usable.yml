@@ -2174,6 +2174,26 @@ Body:
       NoAuction: true
     Script: |
       laphine_upgrade();
+  - Id: 9515
+    AegisName: Ein_1HITEMbox
+    Name: Einbeck Weapon Box
+    Type: Usable
+    Weight: 10
+    Flags:
+      Container: true
+    Script: |
+      getgroupitem(IG_Ein_1HITEMbox);
+  - Id: 9517
+    AegisName: Ein_UNDIUM
+    Name: Untouched Gemstone
+    Type: Usable
+    Weight: 10
+    Flags:
+      Container: true
+    Flags:
+      DropEffect: CLIENT
+    Script: |
+      getgroupitem(IG_Ein_UNDIUM);      
   - Id: 9523
     AegisName: Metal_Smelting_Ticket
     Name: Metal Refining Ticket
