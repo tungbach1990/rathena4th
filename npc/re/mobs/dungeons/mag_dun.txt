@@ -34,15 +34,14 @@ mag_dun02,0,0	monster	Gig	1387,10,5000
 //==================================================
 // mag_dun03 - Nogg Road
 //==================================================
-mag_dun03,0,0	monster	Rigid Blazer	20372,20,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Nightmare	20373,35,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Deleter	20374,40,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Deleter	20375,45,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Explosion	20376,20,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Kaho	20377,20,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-mag_dun03,0,0	monster	Rigid Lava Golem	20378,15,5000,5000,"#MagmaF3_Drop::OnMagma3MobDead"
-
-mag_dun03,0,0	boss_monster	Rigid Muspellskoll	20419,1,7200000,600000,"#MagmaF3_Drop::OnMagma3MobDead"
+mag_dun03	monster	Rigid Lava Golem	20378,18
+mag_dun03	monster	Rigid Kaho	20377,20
+mag_dun03	monster	Rigid Explosion	20376,20
+mag_dun03	monster	Rigid Sky Deleter	20374,32
+mag_dun03	monster	Rigid Earth Deleter	20375,32
+mag_dun03	monster	Rigid Nightmare Terror	20373,27
+mag_dun03	monster	Rigid Blazer	20372,18
+mag_dun03	boss_monster	Rigid Muspellskoll	20419,1,3600000,600000,1
 
 //==================================================
 // Party Drop Script
