@@ -113,7 +113,7 @@ struct status: public condition_predicate {
 	int mStatus;
 	status(e_mob_skill_target target_type_id,int mStatus): condition_predicate(target_type_id),mStatus{mStatus}{}
 	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
-		return checkTarget(targets) && status_get_sc(targets.at(target_type_id))->getSCE(mStatus) != NULL;
+		return checkTarget(targets) && status_get_sc(targets.at(target_type_id))->data[mStatus] != NULL;
 	}
 };
 template <class TComparator>
@@ -185,8 +185,8 @@ struct physical_reflect: public condition_predicate {
 		int totalReflect=0;
 		block_list* target = targets.at(target_type_id);
 		status_change *sc = status_get_sc(target);
-		if(sc->getSCE(SC_REFLECTSHIELD))
-			totalReflect+=sc->getSCE(SC_REFLECTSHIELD)->val2;
+		if(sc->data[SC_REFLECTSHIELD])
+			totalReflect+=sc->data[SC_REFLECTSHIELD]->val2;
 		map_session_data* ssd = BL_CAST(BL_PC,target);
 		if(ssd && ssd->bonus.short_weapon_damage_return != 0)
 			totalReflect+=ssd->bonus.short_weapon_damage_return;

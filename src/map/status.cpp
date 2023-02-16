@@ -71,9 +71,9 @@ static unsigned short status_calc_wis(struct block_list *, status_change *, int)
 static unsigned short status_calc_spl(struct block_list *, status_change *, int);
 static unsigned short status_calc_con(struct block_list *, status_change *, int);
 static unsigned short status_calc_crt(struct block_list *, status_change *, int);
-static unsigned short status_calc_batk(struct block_list *,status_change *,int);
-static unsigned short status_calc_watk(struct block_list *,status_change *,int);
-static unsigned short status_calc_matk(struct block_list *,status_change *,int);
+static unsigned int status_calc_batk(struct block_list *,status_change *,int);
+static unsigned int status_calc_watk(struct block_list *,status_change *,int);
+static unsigned int status_calc_matk(struct block_list *,status_change *,int);
 static signed short status_calc_hit(struct block_list *,status_change *,int);
 static signed short status_calc_critical(struct block_list *,status_change *,int);
 static signed short status_calc_flee(struct block_list *,status_change *,int);
@@ -103,7 +103,7 @@ static unsigned char status_calc_element(struct block_list *bl, status_change *s
 static unsigned char status_calc_element_lv(struct block_list *bl, status_change *sc, int lv);
 static int status_calc_mode(struct block_list *bl, status_change *sc, int mode);
 #ifdef RENEWAL
-static unsigned short status_calc_ematk(struct block_list *,status_change *,int);
+static unsigned int status_calc_ematk(struct block_list *,status_change *,int);
 #endif
 static int status_get_hpbonus(struct block_list *bl, enum e_status_bonus type);
 static int status_get_spbonus(struct block_list *bl, enum e_status_bonus type);
@@ -4757,19 +4757,19 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 			sd->right_weapon.addrace[RC_DEMIHUMAN] += 50;
 			sd->left_weapon.addrace[RC_ANGEL] += 50;
 		}
-		if (sc->getSCE[SC_RUSH_QUAKE2]) {
+		if (sc->getSCE(SC_RUSH_QUAKE2)) {
 			sd->bonus.short_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
 			sd->bonus.long_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
 		}
-		if (sc->getSCE[SC_BO_HELL_DUSTY]) {
+		if (sc->getSCE(SC_BO_HELL_DUSTY)) {
 			sd->bonus.long_attack_atk_rate += 20;
 			sd->right_weapon.addrace[RC_FORMLESS] += 20;
 			sd->right_weapon.addrace[RC_PLANT] += 20;
 		}
-		if (sc->getSCE[SC_UNLIMIT])
-			sd->bonus.long_attack_atk_rate += sc->getSCE[SC_UNLIMIT]->val2;
-		if (sc->getSCE[SC_HIDDEN_CARD])
-			sd->bonus.long_attack_atk_rate += sc->getSCE[SC_HIDDEN_CARD]->val3;
+		if (sc->getSCE(SC_UNLIMIT))
+			sd->bonus.long_attack_atk_rate += sc->getSCE(SC_UNLIMIT)->val2;
+		if (sc->getSCE(SC_HIDDEN_CARD))
+			sd->bonus.long_attack_atk_rate += sc->getSCE(SC_HIDDEN_CARD)->val3;
 		if (sc->getSCE(SC_DEADLY_DEFEASANCE))
 			sd->special_state.no_magic_damage = 0;
 		if (sc->getSCE(SC_CLIMAX_DES_HU))
@@ -4819,10 +4819,9 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 			sd->indexed_bonus.subele[ELE_POISON] += 100;
 			sd->indexed_bonus.subele[ELE_HOLY] -= 30;
 		}
-<<<<<<< HEAD
-		if( sc->getSCE[SC_TALISMAN_OF_FIVE_ELEMENTS] ) {
+		if( sc->getSCE(SC_TALISMAN_OF_FIVE_ELEMENTS) ) {
 			const std::vector<e_element> elements = { ELE_FIRE, ELE_WATER, ELE_WIND, ELE_EARTH, ELE_NEUTRAL };
-			int bonus = sc->getSCE[SC_TALISMAN_OF_FIVE_ELEMENTS]->val2;
+			int bonus = sc->getSCE(SC_TALISMAN_OF_FIVE_ELEMENTS)->val2;
 
 			for( e_element element : elements ){
 				sd->indexed_bonus.magic_atk_ele[(int)element] += bonus;
@@ -4830,15 +4829,15 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 				sd->left_weapon.addele[(int)element] += bonus;
 			}
 		}
-		if( sc->getSCE[SC_HEAVEN_AND_EARTH] ) {
-			i = sc->getSCE[SC_HEAVEN_AND_EARTH]->val2;
+		if( sc->getSCE(SC_HEAVEN_AND_EARTH) ) {
+			i = sc->getSCE(SC_HEAVEN_AND_EARTH)->val2;
 			sd->right_weapon.addele[ELE_ALL] += i;
 			sd->left_weapon.addele[ELE_ALL] += i;
 			sd->indexed_bonus.magic_atk_ele[ELE_ALL] += i;
 			sd->bonus.short_attack_atk_rate += i;
 			sd->bonus.long_attack_atk_rate += i;
 		}
-		if (sc->getSCE[SC_INFINITY_DRINK]) {
+		if (sc->getSCE(SC_INFINITY_DRINK)) {
 			sd->bonus.crit_atk_rate += 5;
 			sd->bonus.long_attack_atk_rate += 5;
 			sd->indexed_bonus.magic_atk_ele[ELE_ALL] += 5;
@@ -6908,10 +6907,10 @@ static unsigned short status_calc_pow(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(pow, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_BENEDICTUM])
-		pow += sc->getSCE[SC_BENEDICTUM]->val2;
-	if (sc->getSCE[SC_MARINE_FESTIVAL])
-		pow += sc->getSCE[SC_MARINE_FESTIVAL]->val2;
+	if (sc->getSCE(SC_BENEDICTUM))
+		pow += sc->getSCE(SC_BENEDICTUM)->val2;
+	if (sc->getSCE(SC_MARINE_FESTIVAL))
+		pow += sc->getSCE(SC_MARINE_FESTIVAL)->val2;
 	
 	return (unsigned short)cap_value(pow, 0, USHRT_MAX);
 }
@@ -6928,10 +6927,10 @@ static unsigned short status_calc_sta(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(sta, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_RELIGIO])
-		sta += sc->getSCE[SC_RELIGIO]->val2;
-	if (sc->getSCE[SC_SANDY_FESTIVAL])
-		sta += sc->getSCE[SC_SANDY_FESTIVAL]->val2;
+	if (sc->getSCE(SC_RELIGIO))
+		sta += sc->getSCE(SC_RELIGIO)->val2;
+	if (sc->getSCE(SC_SANDY_FESTIVAL))
+		sta += sc->getSCE(SC_SANDY_FESTIVAL)->val2;
 
 	return (unsigned short)cap_value(sta, 0, USHRT_MAX);
 }
@@ -6948,10 +6947,10 @@ static unsigned short status_calc_wis(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(wis, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_RELIGIO])
-		wis += sc->getSCE[SC_RELIGIO]->val2;
-	if (sc->getSCE[SC_SANDY_FESTIVAL])
-		wis += sc->getSCE[SC_SANDY_FESTIVAL]->val2;
+	if (sc->getSCE(SC_RELIGIO))
+		wis += sc->getSCE(SC_RELIGIO)->val2;
+	if (sc->getSCE(SC_SANDY_FESTIVAL))
+		wis += sc->getSCE(SC_SANDY_FESTIVAL)->val2;
 
 	return (unsigned short)cap_value(wis, 0, USHRT_MAX);
 }
@@ -6968,10 +6967,10 @@ static unsigned short status_calc_spl(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(spl, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_RELIGIO])
-		spl += sc->getSCE[SC_RELIGIO]->val2;
-	if (sc->getSCE[SC_SANDY_FESTIVAL])
-		spl += sc->getSCE[SC_SANDY_FESTIVAL]->val2;
+	if (sc->getSCE(SC_RELIGIO))
+		spl += sc->getSCE(SC_RELIGIO)->val2;
+	if (sc->getSCE(SC_SANDY_FESTIVAL))
+		spl += sc->getSCE(SC_SANDY_FESTIVAL)->val2;
 
 	return (unsigned short)cap_value(spl, 0, USHRT_MAX);
 }
@@ -6988,10 +6987,10 @@ static unsigned short status_calc_con(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(con, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_BENEDICTUM])
-		con += sc->getSCE[SC_BENEDICTUM]->val2;
-	if (sc->getSCE[SC_MARINE_FESTIVAL])
-		con += sc->getSCE[SC_MARINE_FESTIVAL]->val2;
+	if (sc->getSCE(SC_BENEDICTUM))
+		con += sc->getSCE(SC_BENEDICTUM)->val2;
+	if (sc->getSCE(SC_MARINE_FESTIVAL))
+		con += sc->getSCE(SC_MARINE_FESTIVAL)->val2;
 	
 	return (unsigned short)cap_value(con, 0, USHRT_MAX);
 }
@@ -7008,10 +7007,10 @@ static unsigned short status_calc_crt(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(crt, 0, USHRT_MAX);
 
-	if (sc->getSCE[SC_BENEDICTUM])
-		crt += sc->getSCE[SC_BENEDICTUM]->val2;
-	if (sc->getSCE[SC_MARINE_FESTIVAL])
-		crt += sc->getSCE[SC_MARINE_FESTIVAL]->val2;
+	if (sc->getSCE(SC_BENEDICTUM))
+		crt += sc->getSCE(SC_BENEDICTUM)->val2;
+	if (sc->getSCE(SC_MARINE_FESTIVAL))
+		crt += sc->getSCE(SC_MARINE_FESTIVAL)->val2;
 	
 	return (unsigned short)cap_value(crt, 0, USHRT_MAX);
 }
@@ -7088,11 +7087,11 @@ static unsigned int status_calc_batk(struct block_list *bl, status_change *sc, i
 	if (sc->getSCE(SC_NIBELUNGEN) && sc->getSCE(SC_NIBELUNGEN)->val2 == RINGNBL_ATKRATE)
 		batk += batk * 20 / 100;
 #endif
-	if (sc->getSCE[SC_SUNSTANCE])
-		batk += batk * sc->getSCE[SC_SUNSTANCE]->val2 / 100;
-	if (sc->getSCE[SC_INTENSIVE_AIM])
+	if (sc->getSCE(SC_SUNSTANCE))
+		batk += batk * sc->getSCE(SC_SUNSTANCE)->val2 / 100;
+	if (sc->getSCE(SC_INTENSIVE_AIM))
 		batk += 150;
-	if (sc->getSCE[SC_ALMIGHTY])
+	if (sc->getSCE(SC_ALMIGHTY))
 		batk += 30;
 	if (sc->getSCE(SC_ULTIMATECOOK))
 		batk += 30;
@@ -7409,21 +7408,21 @@ static signed short status_calc_critical(struct block_list *bl, status_change *s
 	if (sc->getSCE(SC_TWOHANDQUICKEN))
 		critical += (2 + sc->getSCE(SC_TWOHANDQUICKEN)->val1) * 10;
 #endif
-	if (sc->getSCE[SC__INVISIBILITY])
-		critical += sc->getSCE[SC__INVISIBILITY]->val3 * 10;
-	if (sc->getSCE[SC__UNLUCKY])
-		critical -= sc->getSCE[SC__UNLUCKY]->val2;
-	if (sc->getSCE[SC_SOULSHADOW])
-		critical += 10 * sc->getSCE[SC_SOULSHADOW]->val3;
-	if(sc->getSCE[SC_BEYONDOFWARCRY])
-		critical += sc->getSCE[SC_BEYONDOFWARCRY]->val3;
-	if (sc->getSCE[SC_MTF_HITFLEE])
-		critical += sc->getSCE[SC_MTF_HITFLEE]->val1;
-	if (sc->getSCE[SC_PACKING_ENVELOPE9])
-		critical += sc->getSCE[SC_PACKING_ENVELOPE9]->val1 * 10;
-	if (sc->getSCE[SC_HANDICAPSTATE_LASSITUDE])
+	if (sc->getSCE(SC__INVISIBILITY))
+		critical += sc->getSCE(SC__INVISIBILITY)->val3 * 10;
+	if (sc->getSCE(SC__UNLUCKY))
+		critical -= sc->getSCE(SC__UNLUCKY)->val2;
+	if (sc->getSCE(SC_SOULSHADOW))
+		critical += 10 * sc->getSCE(SC_SOULSHADOW)->val3;
+	if(sc->getSCE(SC_BEYONDOFWARCRY))
+		critical += sc->getSCE(SC_BEYONDOFWARCRY)->val3;
+	if (sc->getSCE(SC_MTF_HITFLEE))
+		critical += sc->getSCE(SC_MTF_HITFLEE)->val1;
+	if (sc->getSCE(SC_PACKING_ENVELOPE9))
+		critical += sc->getSCE(SC_PACKING_ENVELOPE9)->val1 * 10;
+	if (sc->getSCE(SC_HANDICAPSTATE_LASSITUDE))
 		critical -= critical * 30 / 100;
-	if (sc->getSCE[SC_INTENSIVE_AIM])
+	if (sc->getSCE(SC_INTENSIVE_AIM))
 		critical += 300;
 
 	return (short)cap_value(critical,10,SHRT_MAX);
@@ -7465,13 +7464,13 @@ static signed short status_calc_hit(struct block_list *bl, status_change *sc, in
 		hit += hit * sc->getSCE(SC_INCHITRATE)->val1/100;
 	if(sc->getSCE(SC_BLIND))
 		hit -= hit * 25/100;
-	if(sc->getSCE[SC_HEAT_BARREL])
-		hit -= sc->getSCE[SC_HEAT_BARREL]->val4;
-	if(sc->getSCE[SC__GROOMY])
-		hit -= hit * sc->getSCE[SC__GROOMY]->val3 / 100;
-	if(sc->getSCE[SC_HANDICAPSTATE_MISFORTUNE])
+	if(sc->getSCE(SC_HEAT_BARREL))
+		hit -= sc->getSCE(SC_HEAT_BARREL)->val4;
+	if(sc->getSCE(SC__GROOMY))
+		hit -= hit * sc->getSCE(SC__GROOMY)->val3 / 100;
+	if(sc->getSCE(SC_HANDICAPSTATE_MISFORTUNE))
 		hit -= hit * 30 / 100;
-	if(sc->getSCE[SC_FEAR])
+	if(sc->getSCE(SC_FEAR))
 		hit -= hit * 20 / 100;
 	if (sc->getSCE(SC_ASH))
 		hit -= hit * sc->getSCE(SC_ASH)->val2 / 100;
@@ -7491,19 +7490,19 @@ static signed short status_calc_hit(struct block_list *bl, status_change *sc, in
 	if (sc->getSCE(SC_NIBELUNGEN) && sc->getSCE(SC_NIBELUNGEN)->val2 == RINGNBL_HIT)
 		hit += 50;
 #endif
-	if (sc->getSCE[SC_SOULFALCON])
-		hit += sc->getSCE[SC_SOULFALCON]->val3;
-	if (sc->getSCE[SC_SATURDAYNIGHTFEVER])
-		hit -= 50 + 50 * sc->getSCE[SC_SATURDAYNIGHTFEVER]->val1;
-	if (sc->getSCE[SC_PACKING_ENVELOPE10])
-		hit += sc->getSCE[SC_PACKING_ENVELOPE10]->val1;
-	if (sc->getSCE[SC_ABYSS_SLAYER])
-		hit += sc->getSCE[SC_ABYSS_SLAYER]->val3;
-	if (sc->getSCE[SC_INTENSIVE_AIM])
+	if (sc->getSCE(SC_SOULFALCON))
+		hit += sc->getSCE(SC_SOULFALCON)->val3;
+	if (sc->getSCE(SC_SATURDAYNIGHTFEVER))
+		hit -= 50 + 50 * sc->getSCE(SC_SATURDAYNIGHTFEVER)->val1;
+	if (sc->getSCE(SC_PACKING_ENVELOPE10))
+		hit += sc->getSCE(SC_PACKING_ENVELOPE10)->val1;
+	if (sc->getSCE(SC_ABYSS_SLAYER))
+		hit += sc->getSCE(SC_ABYSS_SLAYER)->val3;
+	if (sc->getSCE(SC_INTENSIVE_AIM))
 		hit += 250;
-	if (sc->getSCE[SC_LIMIT_POWER_BOOSTER])
-		hit += sc->getSCE[SC_LIMIT_POWER_BOOSTER]->val1;
-	if (sc->getSCE[SC_ACARAJE])
+	if (sc->getSCE(SC_LIMIT_POWER_BOOSTER))
+		hit += sc->getSCE(SC_LIMIT_POWER_BOOSTER)->val1;
+	if (sc->getSCE(SC_ACARAJE))
 		hit += 5;
 
 	return (short)cap_value(hit,1,SHRT_MAX);
@@ -7613,17 +7612,17 @@ static signed short status_calc_flee(struct block_list *bl, status_change *sc, i
 		flee += flee * 20 / 100;
 	if (sc->getSCE(SC_TEARGAS))
 		flee -= flee * 50 / 100;
-	//if( sc->getSCE[SC_C_MARKER] )
-	//	flee -= (flee * sc->getSCE[SC_C_MARKER]->val3) / 100;
-	if (sc->getSCE[SC_GROOMING])
-		flee += sc->getSCE[SC_GROOMING]->val2;
-	if (sc->getSCE[SC_PACKING_ENVELOPE5])
-		flee += sc->getSCE[SC_PACKING_ENVELOPE5]->val1;
-	if (sc->getSCE[SC_HANDICAPSTATE_DEEPBLIND])
+	//if( sc->getSCE(SC_C_MARKER) )
+	//	flee -= (flee * sc->getSCE(SC_C_MARKER)->val3) / 100;
+	if (sc->getSCE(SC_GROOMING))
+		flee += sc->getSCE(SC_GROOMING)->val2;
+	if (sc->getSCE(SC_PACKING_ENVELOPE5))
+		flee += sc->getSCE(SC_PACKING_ENVELOPE5)->val1;
+	if (sc->getSCE(SC_HANDICAPSTATE_DEEPBLIND))
 		flee -= flee * 30 / 100;
-	if (sc->getSCE[SC_LIMIT_POWER_BOOSTER])
-		flee += sc->getSCE[SC_LIMIT_POWER_BOOSTER]->val1;
-	if (sc->getSCE[SC_MYSTICPOWDER])
+	if (sc->getSCE(SC_LIMIT_POWER_BOOSTER))
+		flee += sc->getSCE(SC_LIMIT_POWER_BOOSTER)->val1;
+	if (sc->getSCE(SC_MYSTICPOWDER))
 		flee += 20;
 
 	return (short)cap_value(flee,1,SHRT_MAX);
@@ -7641,17 +7640,17 @@ static signed short status_calc_flee2(struct block_list *bl, status_change *sc, 
 	if(!sc || !sc->count)
 		return cap_value(flee2,10,SHRT_MAX);
 
-	if(sc->getSCE[SC_INCFLEE2])
-		flee2 += sc->getSCE[SC_INCFLEE2]->val2;
-	if(sc->getSCE[SC_WHISTLE])
-		flee2 += sc->getSCE[SC_WHISTLE]->val3*10;
-	if(sc->getSCE[SC__UNLUCKY])
-		flee2 -= flee2 * sc->getSCE[SC__UNLUCKY]->val2 / 100;
-	if (sc->getSCE[SC_HISS])
-		flee2 += sc->getSCE[SC_HISS]->val2*10;
-	if (sc->getSCE[SC_DORAM_FLEE2])
-		flee2 += sc->getSCE[SC_DORAM_FLEE2]->val1;
-	if (sc->getSCE[SC_HANDICAPSTATE_DEEPBLIND] )
+	if(sc->getSCE(SC_INCFLEE2))
+		flee2 += sc->getSCE(SC_INCFLEE2)->val2;
+	if(sc->getSCE(SC_WHISTLE))
+		flee2 += sc->getSCE(SC_WHISTLE)->val3*10;
+	if(sc->getSCE(SC__UNLUCKY))
+		flee2 -= flee2 * sc->getSCE(SC__UNLUCKY)->val2 / 100;
+	if (sc->getSCE(SC_HISS))
+		flee2 += sc->getSCE(SC_HISS)->val2*10;
+	if (sc->getSCE(SC_DORAM_FLEE2))
+		flee2 += sc->getSCE(SC_DORAM_FLEE2)->val1;
+	if (sc->getSCE(SC_HANDICAPSTATE_DEEPBLIND) )
 		flee2 -= flee2 * 30 / 100;
 
 	return (short)cap_value(flee2,10,SHRT_MAX);
@@ -7701,29 +7700,29 @@ static defType status_calc_def(struct block_list *bl, status_change *sc, int def
 		def += def * sc->getSCE(SC_INCDEFRATE)->val1/100;
 	if(sc->getSCE(SC_EARTH_INSIGNIA) && sc->getSCE(SC_EARTH_INSIGNIA)->val1 == 2)
 		def += 50;
-	if(sc->getSCE[SC_ODINS_POWER])
-		def -= 20 * sc->getSCE[SC_ODINS_POWER]->val1;
-	if( sc->getSCE[SC_ANGRIFFS_MODUS] )
-		def -= 20 + 10 * sc->getSCE[SC_ANGRIFFS_MODUS]->val1;
-	if(sc->getSCE[SC_STONEHARDSKIN])
-		def += sc->getSCE[SC_STONEHARDSKIN]->val1;
-	if(sc->getSCE[SC_STONE])
+	if(sc->getSCE(SC_ODINS_POWER))
+		def -= 20 * sc->getSCE(SC_ODINS_POWER)->val1;
+	if( sc->getSCE(SC_ANGRIFFS_MODUS) )
+		def -= 20 + 10 * sc->getSCE(SC_ANGRIFFS_MODUS)->val1;
+	if(sc->getSCE(SC_STONEHARDSKIN))
+		def += sc->getSCE(SC_STONEHARDSKIN)->val1;
+	if(sc->getSCE(SC_STONE))
 		def >>=1;
-	if(sc->getSCE[SC_FREEZE])
+	if(sc->getSCE(SC_FREEZE))
 		def >>=1;
-	if(sc->getSCE[SC_SIGNUMCRUCIS])
-		def -= def * sc->getSCE[SC_SIGNUMCRUCIS]->val2/100;
-	if(sc->getSCE[SC_CONCENTRATION])
-		def -= def * sc->getSCE[SC_CONCENTRATION]->val4/100;
-	if(sc->getSCE[SC_SKE])
+	if(sc->getSCE(SC_SIGNUMCRUCIS))
+		def -= def * sc->getSCE(SC_SIGNUMCRUCIS)->val2/100;
+	if(sc->getSCE(SC_CONCENTRATION))
+		def -= def * sc->getSCE(SC_CONCENTRATION)->val4/100;
+	if(sc->getSCE(SC_SKE))
 		def >>=1;
-	if(sc->getSCE[SC_PROVOKE] && bl->type != BL_PC) // Provoke doesn't alter player defense->
-		def -= def * sc->getSCE[SC_PROVOKE]->val3/100;
-	if(sc->getSCE[SC_STRIPSHIELD] && bl->type != BL_PC) // Player doesn't have def reduction only equip removed
-		def -= def * sc->getSCE[SC_STRIPSHIELD]->val2/100;
-	if (sc->getSCE[SC_FLING])
-		def -= def * (sc->getSCE[SC_FLING]->val2)/100;
-	if( sc->getSCE[SC_FREEZING] || sc->getSCE[SC_HANDICAPSTATE_FROSTBITE] || sc->getSCE[SC_HANDICAPSTATE_DEADLYPOISON] )
+	if(sc->getSCE(SC_PROVOKE) && bl->type != BL_PC) // Provoke doesn't alter player defense->
+		def -= def * sc->getSCE(SC_PROVOKE)->val3/100;
+	if(sc->getSCE(SC_STRIPSHIELD) && bl->type != BL_PC) // Player doesn't have def reduction only equip removed
+		def -= def * sc->getSCE(SC_STRIPSHIELD)->val2/100;
+	if (sc->getSCE(SC_FLING))
+		def -= def * (sc->getSCE(SC_FLING)->val2)/100;
+	if( sc->getSCE(SC_FREEZING) || sc->getSCE(SC_HANDICAPSTATE_FROSTBITE) || sc->getSCE(SC_HANDICAPSTATE_DEADLYPOISON) )
 		def -= def * (bl->type == BL_PC ? 30 : 10) / 100;
 	if( sc->getSCE(SC_ANALYZE) )
 		def -= def * (14 * sc->getSCE(SC_ANALYZE)->val1) / 100;
@@ -7877,9 +7876,9 @@ static defType status_calc_mdef(struct block_list *bl, status_change *sc, int md
 		mdef += 25 * mdef / 100;
 	if(sc->getSCE(SC_FREEZE))
 		mdef += 25 * mdef / 100;
-	if( sc->getSCE[SC_HANDICAPSTATE_FROSTBITE] || sc->getSCE[SC_HANDICAPSTATE_CRYSTALLIZATION] )
+	if( sc->getSCE(SC_HANDICAPSTATE_FROSTBITE) || sc->getSCE(SC_HANDICAPSTATE_CRYSTALLIZATION) )
 		mdef -= mdef * (bl->type == BL_PC ? 30 : 10) / 100;
-	if(sc->getSCE[SC_BURNING])
+	if(sc->getSCE(SC_BURNING))
 		mdef -= 25 * mdef / 100;
 	if( sc->getSCE(SC_NEUTRALBARRIER) )
 		mdef += mdef * sc->getSCE(SC_NEUTRALBARRIER)->val2 / 100;
@@ -8065,9 +8064,9 @@ static unsigned short status_calc_speed(struct block_list *bl, status_change *sc
 				val = max(val, sc->getSCE(SC_SP_SHA)->val2);
 			if (sc->getSCE(SC_CREATINGSTAR))
 				val = max(val, 90);
-			if (sc->getSCE[SC_SHIELDCHAINRUSH])
+			if (sc->getSCE(SC_SHIELDCHAINRUSH))
 				val = max(val, 20); 
-			if (sc->getSCE[SC_GROUNDGRAVITY])
+			if (sc->getSCE(SC_GROUNDGRAVITY))
 				val = max(val, 20);
 			if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate > 0 ) // Permanent item-based speedup
 				val = max( val, sd->bonus.speed_rate + sd->bonus.speed_add_rate );
@@ -8119,11 +8118,11 @@ static unsigned short status_calc_speed(struct block_list *bl, status_change *sc
 			val = max(val, sc->getSCE(SC_DORAM_WALKSPEED)->val1);
 		if (sc->getSCE(SC_RUSHWINDMILL))
 			val = max(val, 25); // !TODO: Confirm bonus movement speed
-		if (sc->getSCE[SC_EMERGENCY_MOVE])
-			val = max(val, sc->getSCE[SC_EMERGENCY_MOVE]->val2);
-		if (sc->getSCE[SC_SHADOW_CLOCK])
+		if (sc->getSCE(SC_EMERGENCY_MOVE))
+			val = max(val, sc->getSCE(SC_EMERGENCY_MOVE)->val2);
+		if (sc->getSCE(SC_SHADOW_CLOCK))
 			val = max(val, 75);
-		if( sc->getSCE[SC_JAWAII_SERENADE] ){
+		if( sc->getSCE(SC_JAWAII_SERENADE) ){
 			val = max( val, 25 );
 		}
 
@@ -8133,7 +8132,7 @@ static unsigned short status_calc_speed(struct block_list *bl, status_change *sc
 		if( sd && sd->bonus.speed_rate + sd->bonus.speed_add_rate < 0 ) // Permanent item-based speedup
 			val = max( val, -(sd->bonus.speed_rate + sd->bonus.speed_add_rate) );
 
-		if (sc->getSCE[SC_HANDICAPSTATE_LASSITUDE])
+		if (sc->getSCE(SC_HANDICAPSTATE_LASSITUDE))
 			val = val * 130 / 100;
 		speed_rate -= val;
 
@@ -8497,11 +8496,11 @@ static short status_calc_aspd_rate(struct block_list *bl, status_change *sc, int
 		aspd_rate -= sc->getSCE(SC_GOLDENE_FERSE)->val3 * 10;
 	if (sc->getSCE(SC_WIND_INSIGNIA) && sc->getSCE(SC_WIND_INSIGNIA)->val1 == 2)
 		aspd_rate -= 100;
-	if (sc->getSCE[SC_STARSTANCE])
-		aspd_rate -= 10 * sc->getSCE[SC_STARSTANCE]->val2;
-	if (sc->getSCE[SC_HANDICAPSTATE_DEEPSILENCE])
+	if (sc->getSCE(SC_STARSTANCE))
+		aspd_rate -= 10 * sc->getSCE(SC_STARSTANCE)->val2;
+	if (sc->getSCE(SC_HANDICAPSTATE_DEEPSILENCE))
 		aspd_rate += 50;
-	if( sc->getSCE[SC_2011RWC_SCROLL] )
+	if( sc->getSCE(SC_2011RWC_SCROLL) )
 		aspd_rate -= 50;
 	if( sc->getSCE(SC_SPARKCANDY) )
 		aspd_rate -= 250;
@@ -8556,26 +8555,26 @@ static signed short status_calc_patk(struct block_list *bl, status_change *sc, i
 	if (!sc || !sc->count)
 		return cap_value(patk, 0, SHRT_MAX);
 
-	if (sc->getSCE[SC_POWERFUL_FAITH])
-		patk += sc->getSCE[SC_POWERFUL_FAITH]->val3;
-	if (sc->getSCE[SC_COMPETENTIA])
-		patk += sc->getSCE[SC_COMPETENTIA]->val2;
-	if (sc->getSCE[SC_ABYSS_SLAYER])
-		patk += sc->getSCE[SC_ABYSS_SLAYER]->val2;
-	if (sc->getSCE[SC_PRON_MARCH])
-		patk += sc->getSCE[SC_PRON_MARCH]->val2;
-	if (sc->getSCE[SC_TALISMAN_OF_WARRIOR])
-		patk += sc->getSCE[SC_TALISMAN_OF_WARRIOR]->val2;
-	if (sc->getSCE[SC_ATTACK_STANCE])
-		patk += sc->getSCE[SC_ATTACK_STANCE]->val3;
-	if (sc->getSCE[SC_TEMPERING])
-		patk += sc->getSCE[SC_TEMPERING]->val2;
-	if (sc->getSCE[SC_HIDDEN_CARD])
-		patk += sc->getSCE[SC_HIDDEN_CARD]->val2;
-	if (sc->getSCE[SC_TEMPORARY_COMMUNION])
-		patk += sc->getSCE[SC_TEMPORARY_COMMUNION]->val2;
-	if (sc->getSCE[SC_BLESSING_OF_M_CREATURES])
-		patk += sc->getSCE[SC_BLESSING_OF_M_CREATURES]->val2;
+	if (sc->getSCE(SC_POWERFUL_FAITH))
+		patk += sc->getSCE(SC_POWERFUL_FAITH)->val3;
+	if (sc->getSCE(SC_COMPETENTIA))
+		patk += sc->getSCE(SC_COMPETENTIA)->val2;
+	if (sc->getSCE(SC_ABYSS_SLAYER))
+		patk += sc->getSCE(SC_ABYSS_SLAYER)->val2;
+	if (sc->getSCE(SC_PRON_MARCH))
+		patk += sc->getSCE(SC_PRON_MARCH)->val2;
+	if (sc->getSCE(SC_TALISMAN_OF_WARRIOR))
+		patk += sc->getSCE(SC_TALISMAN_OF_WARRIOR)->val2;
+	if (sc->getSCE(SC_ATTACK_STANCE))
+		patk += sc->getSCE(SC_ATTACK_STANCE)->val3;
+	if (sc->getSCE(SC_TEMPERING))
+		patk += sc->getSCE(SC_TEMPERING)->val2;
+	if (sc->getSCE(SC_HIDDEN_CARD))
+		patk += sc->getSCE(SC_HIDDEN_CARD)->val2;
+	if (sc->getSCE(SC_TEMPORARY_COMMUNION))
+		patk += sc->getSCE(SC_TEMPORARY_COMMUNION)->val2;
+	if (sc->getSCE(SC_BLESSING_OF_M_CREATURES))
+		patk += sc->getSCE(SC_BLESSING_OF_M_CREATURES)->val2;
 
 	return (short)cap_value(patk, 0, SHRT_MAX);
 }
@@ -8592,24 +8591,24 @@ static signed short status_calc_smatk(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(smatk, 0, SHRT_MAX);
 
-	if (sc->getSCE[SC_COMPETENTIA])
-		smatk += sc->getSCE[SC_COMPETENTIA]->val2;
-	if (sc->getSCE[SC_ABYSS_SLAYER])
-		smatk += sc->getSCE[SC_ABYSS_SLAYER]->val2;
-	if (sc->getSCE[SC_JAWAII_SERENADE])
-		smatk += sc->getSCE[SC_JAWAII_SERENADE]->val2;
-	if (sc->getSCE[SC_SPELL_ENCHANTING])
-		smatk += sc->getSCE[SC_SPELL_ENCHANTING]->val2;
-	if (sc->getSCE[SC_TALISMAN_OF_MAGICIAN])
-		smatk += sc->getSCE[SC_TALISMAN_OF_MAGICIAN]->val2;
-	if (sc->getSCE[SC_T_FIFTH_GOD])
-		smatk += sc->getSCE[SC_T_FIFTH_GOD]->val2;
-	if (sc->getSCE[SC_ATTACK_STANCE])
-		smatk += sc->getSCE[SC_ATTACK_STANCE]->val3;
-	if (sc->getSCE[SC_TEMPORARY_COMMUNION])
-		smatk += sc->getSCE[SC_TEMPORARY_COMMUNION]->val2;
-	if (sc->getSCE[SC_BLESSING_OF_M_CREATURES])
-		smatk += sc->getSCE[SC_BLESSING_OF_M_CREATURES]->val2;
+	if (sc->getSCE(SC_COMPETENTIA))
+		smatk += sc->getSCE(SC_COMPETENTIA)->val2;
+	if (sc->getSCE(SC_ABYSS_SLAYER))
+		smatk += sc->getSCE(SC_ABYSS_SLAYER)->val2;
+	if (sc->getSCE(SC_JAWAII_SERENADE))
+		smatk += sc->getSCE(SC_JAWAII_SERENADE)->val2;
+	if (sc->getSCE(SC_SPELL_ENCHANTING))
+		smatk += sc->getSCE(SC_SPELL_ENCHANTING)->val2;
+	if (sc->getSCE(SC_TALISMAN_OF_MAGICIAN))
+		smatk += sc->getSCE(SC_TALISMAN_OF_MAGICIAN)->val2;
+	if (sc->getSCE(SC_T_FIFTH_GOD))
+		smatk += sc->getSCE(SC_T_FIFTH_GOD)->val2;
+	if (sc->getSCE(SC_ATTACK_STANCE))
+		smatk += sc->getSCE(SC_ATTACK_STANCE)->val3;
+	if (sc->getSCE(SC_TEMPORARY_COMMUNION))
+		smatk += sc->getSCE(SC_TEMPORARY_COMMUNION)->val2;
+	if (sc->getSCE(SC_BLESSING_OF_M_CREATURES))
+		smatk += sc->getSCE(SC_BLESSING_OF_M_CREATURES)->val2;
 
 	return (short)cap_value(smatk, 0, SHRT_MAX);
 }
@@ -8626,20 +8625,20 @@ static signed short status_calc_res(struct block_list *bl, status_change *sc, in
 	if (!sc || !sc->count)
 		return cap_value(res, 0, SHRT_MAX);
 
-	if (sc->getSCE[SC_FIRM_FAITH])
-		res += sc->getSCE[SC_FIRM_FAITH]->val3;
-	if (sc->getSCE[SC_D_MACHINE])
-		res += sc->getSCE[SC_D_MACHINE]->val3;
-	if (sc->getSCE[SC_MUSICAL_INTERLUDE])
-		res += sc->getSCE[SC_MUSICAL_INTERLUDE]->val2;
-	if (sc->getSCE[SC_GOLDENE_TONE])
-		res += sc->getSCE[SC_GOLDENE_TONE]->val2;
-	if (sc->getSCE[SC_SHADOW_STRIP] && bl->type != BL_PC)
-		res -= res * sc->getSCE[SC_SHADOW_STRIP]->val2 / 100;
-	if (sc->getSCE[SC_AIN_RHAPSODY])
-		res -= sc->getSCE[SC_AIN_RHAPSODY]->val2;
-	if (sc->getSCE[SC_TOXIN_OF_MANDARA])
-		res -= sc->getSCE[SC_TOXIN_OF_MANDARA]->val2;
+	if (sc->getSCE(SC_FIRM_FAITH))
+		res += sc->getSCE(SC_FIRM_FAITH)->val3;
+	if (sc->getSCE(SC_D_MACHINE))
+		res += sc->getSCE(SC_D_MACHINE)->val3;
+	if (sc->getSCE(SC_MUSICAL_INTERLUDE))
+		res += sc->getSCE(SC_MUSICAL_INTERLUDE)->val2;
+	if (sc->getSCE(SC_GOLDENE_TONE))
+		res += sc->getSCE(SC_GOLDENE_TONE)->val2;
+	if (sc->getSCE(SC_SHADOW_STRIP) && bl->type != BL_PC)
+		res -= res * sc->getSCE(SC_SHADOW_STRIP)->val2 / 100;
+	if (sc->getSCE(SC_AIN_RHAPSODY))
+		res -= sc->getSCE(SC_AIN_RHAPSODY)->val2;
+	if (sc->getSCE(SC_TOXIN_OF_MANDARA))
+		res -= sc->getSCE(SC_TOXIN_OF_MANDARA)->val2;
 
 	return (short)cap_value(res, 0, SHRT_MAX);
 }
@@ -8655,14 +8654,14 @@ static signed short status_calc_mres(struct block_list *bl, status_change *sc, i
 {
 	if (!sc || !sc->count)
 		return cap_value(mres, 0, SHRT_MAX);
-	if (sc->getSCE[SC_GOLDENE_TONE])
-		mres += sc->getSCE[SC_GOLDENE_TONE]->val2;
-	if (sc->getSCE[SC_SHADOW_STRIP] && bl->type != BL_PC)
-		mres -= mres * sc->getSCE[SC_SHADOW_STRIP]->val2 / 100;
-	if (sc->getSCE[SC_GEF_NOCTURN])
-		mres -= sc->getSCE[SC_GEF_NOCTURN]->val2;
-	if (sc->getSCE[SC_TOXIN_OF_MANDARA])
-		mres -= sc->getSCE[SC_TOXIN_OF_MANDARA]->val2;
+	if (sc->getSCE(SC_GOLDENE_TONE))
+		mres += sc->getSCE(SC_GOLDENE_TONE)->val2;
+	if (sc->getSCE(SC_SHADOW_STRIP) && bl->type != BL_PC)
+		mres -= mres * sc->getSCE(SC_SHADOW_STRIP)->val2 / 100;
+	if (sc->getSCE(SC_GEF_NOCTURN))
+		mres -= sc->getSCE(SC_GEF_NOCTURN)->val2;
+	if (sc->getSCE(SC_TOXIN_OF_MANDARA))
+		mres -= sc->getSCE(SC_TOXIN_OF_MANDARA)->val2;
 
 	return (short)cap_value(mres, 0, SHRT_MAX);
 }
@@ -8679,8 +8678,8 @@ static signed short status_calc_hplus(struct block_list *bl, status_change *sc, 
 	if (!sc || !sc->count)
 		return cap_value(hplus, 0, SHRT_MAX);
 
-	if (sc->getSCE[SC_TEMPORARY_COMMUNION])
-		hplus += sc->getSCE[SC_TEMPORARY_COMMUNION]->val2;
+	if (sc->getSCE(SC_TEMPORARY_COMMUNION))
+		hplus += sc->getSCE(SC_TEMPORARY_COMMUNION)->val2;
 	return (short)cap_value(hplus, 0, SHRT_MAX);
 }
 
@@ -8771,13 +8770,13 @@ static unsigned char status_calc_element(struct block_list *bl, status_change *s
 	if(!sc || !sc->count)
 		return cap_value(element, 0, UCHAR_MAX);
 
-	if(sc->getSCE[SC_FREEZE] || sc->getSCE[SC_CRYSTAL_ARMOR_OPTION] || sc->getSCE[SC_HANDICAPSTATE_FROSTBITE])
+	if(sc->getSCE(SC_FREEZE) || sc->getSCE(SC_CRYSTAL_ARMOR_OPTION) || sc->getSCE(SC_HANDICAPSTATE_FROSTBITE))
 		return ELE_WATER;
-	if(sc->getSCE[SC_STONE] || sc->getSCE[SC_STRONG_PROTECTION_OPTION] || sc->getSCE[SC_HANDICAPSTATE_CRYSTALLIZATION])
+	if(sc->getSCE(SC_STONE) || sc->getSCE(SC_STRONG_PROTECTION_OPTION) || sc->getSCE(SC_HANDICAPSTATE_CRYSTALLIZATION))
 		return ELE_EARTH;
-	if(sc->getSCE[SC_FLAMEARMOR_OPTION] || sc->getSCE[SC_HANDICAPSTATE_CONFLAGRATION])
+	if(sc->getSCE(SC_FLAMEARMOR_OPTION) || sc->getSCE(SC_HANDICAPSTATE_CONFLAGRATION))
 		return ELE_FIRE;
-	if(sc->getSCE[SC_EYES_OF_STORM_OPTION] || sc->getSCE[SC_HANDICAPSTATE_LIGHTNINGSTRIKE])
+	if(sc->getSCE(SC_EYES_OF_STORM_OPTION) || sc->getSCE(SC_HANDICAPSTATE_LIGHTNINGSTRIKE))
 		return ELE_WIND;
 	if(sc->getSCE(SC_POISON_SHIELD_OPTION))
 		return ELE_POISON;
@@ -10064,22 +10063,22 @@ int  status_get_sc_total_resist(struct block_list* src, struct block_list* bl, e
 	}
 
 	if (sc) {
-		if (sc->getSCE[SC_SCRESIST])
-			sc_def += sc->getSCE[SC_SCRESIST]->val1 * 100; // Status resist
+		if (sc->getSCE(SC_SCRESIST))
+			sc_def += sc->getSCE(SC_SCRESIST)->val1 * 100; // Status resist
 #ifdef RENEWAL
-		else if (sc->getSCE[SC_SIEGFRIED] && (type == SC_BLIND || type == SC_STONE || type == SC_FREEZE || type == SC_STUN || type == SC_CURSE || type == SC_SLEEP || type == SC_SILENCE))
-			sc_def += sc->getSCE[SC_SIEGFRIED]->val3 * 100; // Status resistance.
+		else if (sc->getSCE(SC_SIEGFRIED) && (type == SC_BLIND || type == SC_STONE || type == SC_FREEZE || type == SC_STUN || type == SC_CURSE || type == SC_SLEEP || type == SC_SILENCE))
+			sc_def += sc->getSCE(SC_SIEGFRIED)->val3 * 100; // Status resistance.
 #else
-		else if (sc->getSCE[SC_SIEGFRIED])
-			sc_def += sc->getSCE[SC_SIEGFRIED]->val3 * 100; // Status resistance.
+		else if (sc->getSCE(SC_SIEGFRIED))
+			sc_def += sc->getSCE(SC_SIEGFRIED)->val3 * 100; // Status resistance.
 #endif
-		else if (sc->getSCE[SC_LEECHESEND] && sc->getSCE[SC_LEECHESEND]->val3 == 0) {
+		else if (sc->getSCE(SC_LEECHESEND) && sc->getSCE(SC_LEECHESEND)->val3 == 0) {
 			switch (type) {
 			case SC_BLIND:
 			case SC_STUN:
 				return  0; // Immune
 			}
-		} else if (sc->getSCE[SC_OBLIVIONCURSE] && sc->getSCE[SC_OBLIVIONCURSE]->val3 == 0) {
+		} else if (sc->getSCE(SC_OBLIVIONCURSE) && sc->getSCE(SC_OBLIVIONCURSE)->val3 == 0) {
 			switch (type) {
 			case SC_SILENCE:
 			case SC_CURSE:
@@ -10106,8 +10105,8 @@ int  status_get_sc_total_resist(struct block_list* src, struct block_list* bl, e
 				if (it.id == type)
 					rate -= rate * it.val / 10000;
 			}
-			if (sd->sc.data[SC_COMMONSC_RESIST] && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
-				rate -= rate * sd->sc.data[SC_COMMONSC_RESIST]->val1 / 100;
+			if (sd->sc.getSCE(SC_COMMONSC_RESIST) && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
+				rate -= rate * sd->sc.getSCE(SC_COMMONSC_RESIST)->val1 / 100;
 		}
 
 		// Aegis accuracy
@@ -14209,7 +14208,7 @@ TIMER_FUNC(status_change_timer){
 		if (sce->val4-- > 0) {
 			int i = skill_get_splash(SH_KI_SUL_RAMPAGE, sce->val1);
 			int lv = sce->val1;
-			if ((sd && pc_checkskill(sd, SH_COMMUNE_WITH_KI_SUL)) || (sc && sc->getSCE[SC_TEMPORARY_COMMUNION]))
+			if ((sd && pc_checkskill(sd, SH_COMMUNE_WITH_KI_SUL)) || (sc && sc->getSCE(SC_TEMPORARY_COMMUNION)))
 			{
 				i += 2;
 				lv += skill_get_max(SH_KI_SUL_RAMPAGE);
@@ -15228,7 +15227,7 @@ TIMER_FUNC(status_change_timer){
 		}
 		break;
 	case SC_INTENSIVE_AIM:
-		if (!sc || !sc->getSCE[SC_INTENSIVE_AIM_COUNT])
+		if (!sc || !sc->getSCE(SC_INTENSIVE_AIM_COUNT))
 			sce->val4 = 0;
 		if (sce->val4 < 10) {
 			sce->val4++;

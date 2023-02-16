@@ -4057,7 +4057,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 					else
 						bl = map_id2bl(md->target_id);
 					if (bl) {
-						flag = status_get_sc(bl)->data[ms[i]->cond2] != NULL;
+						flag = status_get_sc(bl)->getSCE(ms[i]->cond2) != NULL;
 						flag ^= (ms[i]->cond1 == MSC_ENEMYSTATUSOFF); break;
 					} else
 						flag = 0;
@@ -4198,8 +4198,8 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 						md->db->skill.erase(md->db->skill.begin() + i);
 						flag = 0;
 					}
-					break;
-				}
+                                	break;
+				}	
 				default:
 					break;					
 				}
@@ -4328,6 +4328,7 @@ int mobskill_use(struct mob_data *md, t_tick tick, int event, int64 damage)
 	//No skill was used.
 	md->skill_idx = -1;
 	return 0;
+    }
 }
 /*==========================================
  * Skill use event processing
