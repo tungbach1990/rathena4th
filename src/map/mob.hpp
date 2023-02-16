@@ -6,9 +6,9 @@
 
 #include <vector>
 
-#include "../common/database.hpp"
-#include "../common/mmo.hpp" // struct item
-#include "../common/timer.hpp"
+#include <common/database.hpp>
+#include <common/mmo.hpp> // struct item
+#include <common/timer.hpp>
 #include <algorithm>
 
 #include "status.hpp" // struct status data, struct status_change
