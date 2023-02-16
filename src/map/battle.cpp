@@ -4075,14 +4075,6 @@ static void battle_calc_multi_attack(struct Damage* wd, struct block_list *src,s
 			if( tsc && tsc->getSCE(SC_JYUMONJIKIRI) )
 				wd->div_ = wd->div_ * -1;// needs more info
 			break;
-		case MH_BLAZING_AND_FURIOUS: {
-			struct homun_data *hd = BL_CAST(BL_HOM, src);
-			if (hd) {
-				wd->div_ = hd->homunculus.spiritball;
-				hom_delspiritball(hd, MAX_SPIRITBALL, 1);
-			}
-			break;
-		}
 		case NW_SPIRAL_SHOOTING:
 			if (sd && sd->weapontype1 == W_GRENADE)
 				wd->div_ += 1;
