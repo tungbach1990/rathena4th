@@ -8681,10 +8681,7 @@ static signed short status_calc_mres(struct block_list *bl, status_change *sc, i
 {
 	if (!sc || !sc->count)
 		return cap_value(mres, 0, SHRT_MAX);
-<<<<<<< HEAD
-=======
 
->>>>>>> 240f71cbce415c60da99285db8c41d19b78d4266
 	if (sc->getSCE(SC_GOLDENE_TONE))
 		mres += sc->getSCE(SC_GOLDENE_TONE)->val2;
 	if (sc->getSCE(SC_SHADOW_STRIP) && bl->type != BL_PC)
@@ -12461,17 +12458,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val2 += 100 + 10*val1; // atk bonus // !TODO: Confirm formula
 			break;
 		case SC_TEMPERING:
-<<<<<<< HEAD
-			val2 += 5 + val1; // patk bonus //
-			break;
-		case SC_GOLDENE_TONE:
-			val2 += 3 * val1; // res/mres bonus //
-=======
 			val2 += 5 + val1; // patk bonus
 			break;
 		case SC_GOLDENE_TONE:
 			val2 += 3 * val1; // res/mres bonus
->>>>>>> 240f71cbce415c60da99285db8c41d19b78d4266
 			break;
 		case SC_PARALYSIS: // [Lighta] need real info
 			val2 = 2*val1; // def reduction
