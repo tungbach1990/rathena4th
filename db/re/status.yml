@@ -364,6 +364,8 @@ Body:
       NoBanishingBuster: true
       NoDispell: true
       NoClearance: true
+    EndOnStart:
+      Hiding: true
   - Status: Encpoison
     Icon: EFST_ENCHANTPOISON
     DurationLookup: AS_ENCHANTPOISON
@@ -1266,8 +1268,6 @@ Body:
     DurationLookup: HP_BASILICA
     CalcFlags:
       All: true
-    States:
-      NoAttack: true
     Flags:
       NoSave: true
       NoClearance: true
@@ -5739,6 +5739,8 @@ Body:
   - Status: Unlimit
     Icon: EFST_UNLIMIT
     DurationLookup: RA_UNLIMIT
+    CalcFlags:
+      All: true
     Flags:
       DisplayPc: true
   - Status: Kings_Grace
@@ -5789,8 +5791,6 @@ Body:
     DurationLookup: AB_OFFERTORIUM
     Flags:
       DisplayPc: true
-    Fail:
-      Magnificat: true
     EndOnStart:
       Magnificat: true
       Blind: true
@@ -7599,16 +7599,18 @@ Body:
       Flee: true
       Flee2: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deepsilence
     Icon: EFST_HANDICAPSTATE_DEEPSILENCE
     DurationLookup: CD_ARBITRIUM
-    #States:
-      #NoCast: true
+    States:
+      NoCast: true
     CalcFlags:
       Aspd: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Lassitude
@@ -7616,62 +7618,70 @@ Body:
       Speed: true
       Cri: true
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Frostbite
     Icon: EFST_HANDICAPSTATE_FROSTBITE
     DurationLookup: EM_DIAMOND_STORM
     States:
-      #NoMove: true
-      #NoCast: true
+      NoMove: true
+      NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Def: true
       Mdef: true
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Swooning
     Icon: EFST_HANDICAPSTATE_SWOONING
     States:
-      #NoMove: true
-      #NoCast: true
+      NoMove: true
+      NoCast: true
       NoConsumeItem: true
     Flags:
+      BossResist: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Lightningstrike
     Icon: EFST_HANDICAPSTATE_LIGHTNINGSTRIKE
-    DurationLookup: WH_SWIFTTRAP
+    DurationLookup: EM_LIGHTNING_LAND
     States:
-      #NoMove: true
-      #NoCast: true
+      NoMove: true
+      NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Crystallization
     Icon: EFST_HANDICAPSTATE_CRYSTALLIZATION
-    DurationLookup: WH_SOLIDTRAP
+    DurationLookup: EM_TERRA_DRIVE
     States:
-      #NoMove: true
-      #NoCast: true
+      NoMove: true
+      NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Mdef: true
       Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Conflagration
     Icon: EFST_HANDICAPSTATE_CONFLAGRATION
-    DurationLookup: WH_FLAMETRAP
+    DurationLookup: EM_CONFLAGRATION
+    CalcFlags:
+      Def_Ele: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Misfortune
@@ -7680,6 +7690,7 @@ Body:
     CalcFlags:
       Hit: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deadlypoison
@@ -7688,15 +7699,18 @@ Body:
     CalcFlags:
       Def: true
     Flags:
+      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Depression
     Icon: EFST_HANDICAPSTATE_DEPRESSION
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Holyflame
     Icon: EFST_HANDICAPSTATE_HOLYFLAME
     Flags:
+      BossResist: true
       DisplayPc: true
   - Status: Servantweapon
     Icon: EFST_SERVANTWEAPON
@@ -7740,13 +7754,12 @@ Body:
     CalcFlags:
       All: true
     Flags:
+      SendVal1: true
       BlEffect: true
       DisplayPc: true
   - Status: Deadly_Defeasance
     Icon: EFST_DEADLY_DEFEASANCE
     DurationLookup: AG_DEADLY_PROJECTION
-    CalcFlags:
-      All: true
     Flags:
       BlEffect: true
       DisplayPc: true
@@ -7754,7 +7767,7 @@ Body:
     Icon: EFST_CLIMAX_DES_HU
     DurationLookup: AG_DESTRUCTIVE_HURRICANE
     CalcFlags:
-      Matk: true
+      All: true
   - Status: Climax
     Icon: EFST_CLIMAX
     DurationLookup: AG_CLIMAX
@@ -7767,13 +7780,9 @@ Body:
   - Status: Climax_Earth
     Icon: EFST_CLIMAX_EARTH
     DurationLookup: AG_VIOLENT_QUAKE
-    CalcFlags:
-      All: true
   - Status: Climax_Bloom
     Icon: EFST_CLIMAX_BLOOM
     DurationLookup: AG_ALL_BLOOM
-    CalcFlags:
-      All: true
   - Status: Climax_Cryimp
     Icon: EFST_CLIMAX_CRYIMP
     DurationLookup: AG_CRYSTAL_IMPACT
@@ -7833,6 +7842,8 @@ Body:
     Flags:
       BlEffect: true
       DisplayPc: true
+    EndOnStart:
+      Sandy_Festival: true
   - Status: Benedictum
     Icon: EFST_BENEDICTUM
     DurationLookup: CD_BENEDICTUM
@@ -7843,6 +7854,8 @@ Body:
     Flags:
       BlEffect: true
       DisplayPc: true
+    EndOnStart:
+      Marine_Festival: true
   - Status: Axe_Stomp
     Icon: EFST_AXE_STOMP
     DurationLookup: MT_AXE_STOMP
@@ -7864,15 +7877,31 @@ Body:
   - Status: Abr_Battle_Warior
     Icon: EFST_ABR_BATTLE_WARIOR
     DurationLookup: MT_SUMMON_ABR_BATTLE_WARIOR
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Abr_Dual_Cannon
     Icon: EFST_ABR_DUAL_CANNON
     DurationLookup: MT_SUMMON_ABR_DUAL_CANNON
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Abr_Mother_Net
     Icon: EFST_ABR_MOTHER_NET
     DurationLookup: MT_SUMMON_ABR_MOTHER_NET
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Abr_Infinity
     Icon: EFST_ABR_INFINITY
     DurationLookup: MT_SUMMON_ABR_INFINITY
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Shadow_Exceed
     Icon: EFST_SHADOW_EXCEED
     DurationLookup: SHC_SHADOW_EXCEED
@@ -7919,7 +7948,8 @@ Body:
     Icon: EFST_ATTACK_STANCE
     DurationLookup: IG_ATTACK_STANCE
     CalcFlags:
-      Watk: true
+      Patk: true
+      Smatk: true
       Def: true
     Flags:
       NoRemoveOnDead: true
@@ -8126,12 +8156,28 @@ Body:
     Icon: EFST_BO_HELL_DUSTY
   - Status: Bionic_Woodenwarrior
     DurationLookup: BO_WOODENWARRIOR
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Bionic_Wooden_Fairy
     DurationLookup: BO_WOODEN_FAIRY
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Bionic_Creeper
     DurationLookup: BO_CREEPER
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Bionic_Helltree
     DurationLookup: BO_HELLTREE
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
   - Status: Shadow_Strip
     Icon: EFST_SHADOW_STRIP
     DurationLookup: ABC_STRIP_SHADOW
@@ -8293,6 +8339,262 @@ Body:
       NoClearbuff: true
     EndOnStart:
       Sub_Weaponproperty: true
+  - Status: Almighty
+    Icon: EFST_ALMIGHTY
+    CalcFlags:
+      Str: true
+      Agi: true
+      Vit: true
+      Int: true
+      Dex: true
+      Luk: true
+      Batk: true
+      Matk: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+    EndOnStart:
+      Food_Str_Cash: true
+      Food_Agi_Cash: true
+      Food_Vit_Cash: true
+      Food_Int_Cash: true
+      Food_Dex_Cash: true
+      Food_Luk_Cash: true
+      UltimateCook: true
+  - Status: UltimateCook
+    Icon: EFST_ULTIMATECOOK
+    CalcFlags:
+      Str: true
+      Agi: true
+      Vit: true
+      Int: true
+      Dex: true
+      Luk: true
+      Batk: true
+      Matk: true
+    Flags:
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+    EndOnStart:
+      Food_Str_Cash: true
+      Food_Agi_Cash: true
+      Food_Vit_Cash: true
+      Food_Int_Cash: true
+      Food_Dex_Cash: true
+      Food_Luk_Cash: true
+      Almighty: true
+  - Status: M_DefScroll
+    Icon: EFST_M_DEFSCROLL
+    CalcFlags:
+      Def: true
+      Mdef: true
+    Flags:
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Infinity_Drink
+    Icon: EFST_INFINITY_DRINK
+    CalcFlags:
+      All: true
+    Flags:
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Mental_Potion
+    Icon: EFST_TARGET_ASPD
+    CalcFlags:
+      All: true
+    Flags:
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Limit_Power_Booster
+    Icon: EFST_LIMIT_POWER_BOOSTER
+    CalcFlags:
+      All: true
+    Flags:
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Combat_Pill
+    Icon: EFST_GM_BATTLE
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Combat_Pill2
+    Icon: EFST_GM_BATTLE2
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: MysticPowder
+    Icon: EFST_MYSTICPOWDER
+    CalcFlags:
+      Luk: true
+      Flee: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: SparkCandy
+    Icon: EFST_STEAMPACK
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: MagicCandy
+    Icon: EFST_MAGIC_CANDY
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Acaraje
+    Icon: EFST_ACARAJE
+    CalcFlags:
+      Hit: true
+      Aspd: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: PopeCookie
+    Icon: EFST_POPECOOKIE
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Vitalize_Potion
+    Icon: EFST_VITALIZE_POTION
+    CalcFlags:
+      All: true
+    Flags:
+      NoClearbuff: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Cup_Of_Boza
+    Icon: EFST_CUP_OF_BOZA
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: SKF_MATK
+    Icon: EFST_SKF_MATK
+    CalcFlags:
+      Matk: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: SKF_ATK
+    Icon: EFST_SKF_ATK
+    CalcFlags:
+      Batk: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: SKF_ASPD
+    Icon: EFST_SKF_ASPD
+    CalcFlags:
+      Aspd: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: SKF_CAST
+    Icon: EFST_SKF_CAST
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Beef_Rib_Stew
+    Icon: EFST_BEEF_RIB_STEW
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: Pork_Rib_Stew
+    Icon: EFST_PORK_RIB_STEW
+    CalcFlags:
+      All: true
+    Flags:
+      NoRemoveOnDead: true
+      NoClearbuff: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: WeaponBreaker
+    DurationLookup: NPC_WEAPONBRAKER
+  - Status: Tempering
+    Icon: EFST_TEMPERING
+    DurationLookup: MH_TEMPERING
+    CalcFlags:
+      Patk: true
+  - Status: Goldene_Tone
+    Icon: EFST_GOLDENE_TONE
+    DurationLookup: MH_GOLDENE_TONE
+    CalcFlags:
+      Res: true
+      Mres: true
+  - Status: Toxin_of_Mandara
+    Icon: EFST_TOXIN_OF_MANDARA
+    DurationLookup: MH_TOXIN_OF_MANDARA
+    Flags:
+      Debuff: true
+    CalcFlags:
+      Res: true
   - Status: Rush_Quake1
     Icon: EFST_RUSH_QUAKE1
     DurationLookup: MT_RUSH_QUAKE
@@ -8302,6 +8604,8 @@ Body:
   - Status: Rush_Quake2
     Icon: EFST_RUSH_QUAKE2
     DurationLookup: MT_RUSH_QUAKE
+    CalcFlags:
+      All: true
   - Status: Intensive_Aim
     Icon: EFST_INTENSIVE_AIM
     States:
@@ -8587,24 +8891,6 @@ Body:
       Rising_Moon: true
       Midnight_Moon: true
       Dawn_Moon: true
-  - Status: Tempering
-    Icon: EFST_TEMPERING
-    DurationLookup: MH_TEMPERING
-    CalcFlags:
-      Patk: true
-  - Status: Goldene_Tone
-    Icon: EFST_GOLDENE_TONE
-    DurationLookup: MH_GOLDENE_TONE
-    CalcFlags:
-      Res: true
-      Mres: true
-  - Status: Toxin_of_Mandara
-    Icon: EFST_TOXIN_OF_MANDARA
-    DurationLookup: MH_TOXIN_OF_MANDARA
-    Flags:
-      Debuff: true
-    CalcFlags:
-      Res: true
   - Status: Shadow_Clock
     Icon: EFST_SHADOW_CLOCK
     DurationLookup: SS_TOKEDASU
@@ -8693,268 +8979,3 @@ Body:
     DurationLookup: SOA_SOUL_OF_HEAVEN_AND_EARTH
     CalcFlags:
       Smatk: true
-  - Status: Sub_Weaponproperty
-    Flags:
-      NoBanishingBuster: true
-      NoDispell: true
-      NoClearance: true
-      NoRemoveOnDead: true
-      NoClearbuff: true
-    EndOnStart:
-      Sub_Weaponproperty: true
-  - Status: Almighty
-    Icon: EFST_ALMIGHTY
-    CalcFlags:
-      Str: true
-      Agi: true
-      Vit: true
-      Int: true
-      Dex: true
-      Luk: true
-      Batk: true
-      Matk: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-    EndOnStart:
-      Food_Str_Cash: true
-      Food_Agi_Cash: true
-      Food_Vit_Cash: true
-      Food_Int_Cash: true
-      Food_Dex_Cash: true
-      Food_Luk_Cash: true
-      UltimateCook: true
-  - Status: UltimateCook
-    Icon: EFST_ULTIMATECOOK
-    CalcFlags:
-      Str: true
-      Agi: true
-      Vit: true
-      Int: true
-      Dex: true
-      Luk: true
-      Batk: true
-      Matk: true
-    Flags:
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-    EndOnStart:
-      Food_Str_Cash: true
-      Food_Agi_Cash: true
-      Food_Vit_Cash: true
-      Food_Int_Cash: true
-      Food_Dex_Cash: true
-      Food_Luk_Cash: true
-      Almighty: true
-  - Status: M_DefScroll
-    Icon: EFST_M_DEFSCROLL
-    CalcFlags:
-      Def: true
-      Mdef: true
-    Flags:
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Infinity_Drink
-    Icon: EFST_INFINITY_DRINK
-    CalcFlags:
-      All: true
-    Flags:
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Mental_Potion
-    Icon: EFST_TARGET_ASPD
-    CalcFlags:
-      All: true
-    Flags:
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Limit_Power_Booster
-    Icon: EFST_LIMIT_POWER_BOOSTER
-    CalcFlags:
-      All: true
-    Flags:
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Combat_Pill
-    Icon: EFST_GM_BATTLE
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Combat_Pill2
-    Icon: EFST_GM_BATTLE2
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: MysticPowder
-    Icon: EFST_MYSTICPOWDER
-    CalcFlags:
-      Luk: true
-      Flee: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: SparkCandy
-    Icon: EFST_STEAMPACK
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: MagicCandy
-    Icon: EFST_MAGIC_CANDY
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Acaraje
-    Icon: EFST_ACARAJE
-    CalcFlags:
-      Hit: true
-      Aspd: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: PopeCookie
-    Icon: EFST_POPECOOKIE
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Vitalize_Potion
-    Icon: EFST_VITALIZE_POTION
-    CalcFlags:
-      All: true
-    Flags:
-      NoClearbuff: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Cup_Of_Boza
-    Icon: EFST_CUP_OF_BOZA
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: SKF_MATK
-    Icon: EFST_SKF_MATK
-    CalcFlags:
-      Matk: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: SKF_ATK
-    Icon: EFST_SKF_ATK
-    CalcFlags:
-      Batk: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: SKF_ASPD
-    Icon: EFST_SKF_ASPD
-    CalcFlags:
-      Aspd: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: SKF_CAST
-    Icon: EFST_SKF_CAST
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Beef_Rib_Stew
-    Icon: EFST_BEEF_RIB_STEW
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: Pork_Rib_Stew
-    Icon: EFST_PORK_RIB_STEW
-    CalcFlags:
-      All: true
-    Flags:
-      NoRemoveOnDead: true
-      NoClearbuff: true
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
-  - Status: WeaponBreaker
-    DurationLookup: NPC_WEAPONBRAKER
-  - Status: Tempering
-    Icon: EFST_TEMPERING
-    DurationLookup: MH_TEMPERING
-    CalcFlags:
-      Patk: true
-  - Status: Goldene_Tone
-    Icon: EFST_GOLDENE_TONE
-    DurationLookup: MH_GOLDENE_TONE
-    CalcFlags:
-      Res: true
-      Mres: true
-  - Status: Toxin_of_Mandara
-    Icon: EFST_TOXIN_OF_MANDARA
-    DurationLookup: MH_TOXIN_OF_MANDARA
-    Flags:
-      Debuff: true
-    CalcFlags:
-      Res: true

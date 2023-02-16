@@ -58,7 +58,6 @@ short current_equip_opt_index; /// Contains random option index of an equipped i
 
 uint16 SCDisabled[SC_MAX]; ///< List of disabled SC on map zones. [Cydh]
 
-
 static unsigned short status_calc_str(struct block_list *,status_change *,int);
 static unsigned short status_calc_agi(struct block_list *,status_change *,int);
 static unsigned short status_calc_vit(struct block_list *,status_change *,int);
@@ -85,7 +84,6 @@ static signed short status_calc_mdef2(struct block_list *,status_change *,int);
 static unsigned short status_calc_speed(struct block_list *,status_change *,int);
 static short status_calc_aspd_rate(struct block_list *,status_change *,int);
 static unsigned short status_calc_dmotion(struct block_list *bl, status_change *sc, int dmotion);
-
 #ifdef RENEWAL_ASPD
 static short status_calc_aspd(struct block_list *bl, status_change *sc, bool fixed);
 #endif
@@ -1966,7 +1964,6 @@ bool status_check_skilluse(struct block_list *src, struct block_list *target, ui
 				return false;
 			break;
 		case AL_TELEPORT:
-		case ALL_ODINS_POWER:
 			// Should fail when used on top of Land Protector [Skotlex]
 			if (src && map_getcell(src->m, src->x, src->y, CELL_CHKLANDPROTECTOR)
 				&& !status_has_mode(status,MD_STATUSIMMUNE)
@@ -2872,9 +2869,9 @@ int status_calc_mob_(struct mob_data* md, uint8 opt)
 						// Its unknown how the summoner's stats affects the ABR's stats.
 						// I decided to do something similar to elementals for now until I know.
 						// Also added hit increase from ABR-Mastery for balance reasons. [Rytech]
-						status->max_hp = (5000 + 2000 * abr_mastery) * mstatus->vit / 100;
-						status->rhw.atk = (2 * mstatus->batk + 500 + 200 * abr_mastery) * 70 / 100;
-						status->rhw.atk2 = 2 * mstatus->batk + 500 + 200 * abr_mastery;
+						status->max_hp = (5000 + 40000 * abr_mastery) * mstatus->vit / 100;
+						status->rhw.atk = (2 * mstatus->batk + 200 + 600 * abr_mastery) * 70 / 100;
+						status->rhw.atk2 = 2 * mstatus->batk + 200 + 600 * abr_mastery;
 						status->def = mstatus->def + 20 * abr_mastery;
 						status->mdef = mstatus->mdef + 4 * abr_mastery;
 						status->hit = mstatus->hit + 5 * abr_mastery / 2;
@@ -2907,10 +2904,10 @@ int status_calc_mob_(struct mob_data* md, uint8 opt)
 						// Its unknown how the summoner's stats affects the bionic's stats.
 						// I decided to do something similar to elementals for now until I know.
 						// Also added hit increase from Bionic-Mastery for balance reasons. [Rytech]
-						status->max_hp = (5000 + 2000 * bionic_mastery) * mstatus->vit / 100;
+						status->max_hp = (5000 + 40000 * bionic_mastery) * mstatus->vit / 100;
 						//status->max_sp = (50 + 20 * bionic_mastery) * mstatus->int_ / 100;// Wait what??? Bionic Mastery increases MaxSP? They have SP???
-						status->rhw.atk = (2 * mstatus->batk + 200 * bionic_mastery) * 70 / 100;
-						status->rhw.atk2 = 2 * mstatus->batk + 200 * bionic_mastery;
+						status->rhw.atk = (2 * mstatus->batk + 600 * bionic_mastery) * 70 / 100;
+						status->rhw.atk2 = 2 * mstatus->batk + 600 * bionic_mastery;
 						status->def = mstatus->def + 20 * bionic_mastery;
 						status->mdef = mstatus->mdef + 4 * bionic_mastery;
 						status->hit = mstatus->hit + 5 * bionic_mastery / 2;
@@ -4163,6 +4160,14 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 		base_status->mdef++;
 	}
 
+// ----- CONCENTRATION CALCULATION -----
+	if ((skill = pc_checkskill(sd, NW_GRENADE_MASTERY)) > 0)
+		base_status->con += skill;
+
+// ----- SPELL CALCULATION -----
+	if ((skill = pc_checkskill(sd, SOA_SOUL_MASTERY)) > 0)
+		base_status->spl += skill;
+
 // ------ ATTACK CALCULATION ------
 
 	// Base batk value is set in status_calc_misc
@@ -4396,14 +4401,6 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 	if ((skill = pc_checkskill_imperial_guard(sd, 1)) > 0)// IG_SHIELD_MASTERY
 		base_status->res += skill * 3;
 
-// ----- CONCENTRATION CALCULATION -----
-	if ((skill = pc_checkskill(sd, NW_GRENADE_MASTERY)) > 0)
-		base_status->con += skill;
-
-// ----- SPELL CALCULATION -----
-	if ((skill = pc_checkskill(sd, SOA_SOUL_MASTERY)) > 0)
-		base_status->spl += skill;
-
 // ----- EQUIPMENT-DEF CALCULATION -----
 
 	// Apply relative modifiers from equipment
@@ -4518,15 +4515,18 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 		skill = skill * 4;
 
 		sd->right_weapon.addrace[RC_DRAGON]+=skill;
-		sd->left_weapon.addrace[RC_DRAGON]+=skill;
+		if( !battle_config.left_cardfix_to_right )
+			sd->left_weapon.addrace[RC_DRAGON]+=skill;
 		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=dragon_matk;
 		sd->indexed_bonus.subrace[RC_DRAGON]+=skill;
 	}
 	if ((skill = pc_checkskill(sd, AB_EUCHARISTICA)) > 0) {
 		sd->right_weapon.addrace[RC_DEMON] += skill;
 		sd->right_weapon.addele[ELE_DARK] += skill;
-		sd->left_weapon.addrace[RC_DEMON] += skill;
-		sd->left_weapon.addele[ELE_DARK] += skill;
+		if( !battle_config.left_cardfix_to_right ) {
+			sd->left_weapon.addrace[RC_DEMON] += skill;
+			sd->left_weapon.addele[ELE_DARK] += skill;
+		}
 		sd->indexed_bonus.magic_addrace[RC_DEMON] += skill;
 		sd->indexed_bonus.magic_addele[ELE_DARK] += skill;
 		sd->indexed_bonus.subrace[RC_DEMON] += skill;
@@ -4550,8 +4550,10 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 
 		sd->right_weapon.addrace[RC_UNDEAD] += race_atk[skill - 1];
 		sd->right_weapon.addrace[RC_DEMON] += race_atk[skill - 1];
-		sd->left_weapon.addrace[RC_UNDEAD] += race_atk[skill - 1];
-		sd->left_weapon.addrace[RC_DEMON] += race_atk[skill - 1];
+		if( !battle_config.left_cardfix_to_right ) {
+			sd->left_weapon.addrace[RC_UNDEAD] += race_atk[skill - 1];
+			sd->left_weapon.addrace[RC_DEMON] += race_atk[skill - 1];
+		}
 		sd->indexed_bonus.subrace[RC_UNDEAD] += race_def[skill - 1];
 		sd->indexed_bonus.subrace[RC_DEMON] += race_def[skill - 1];
 	}
@@ -4563,9 +4565,10 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } // SZ_ALL
 		};
 
-		for( uint8 size = SZ_SMALL; size < SZ_MAX; size++ ){
+		for( uint8 size = SZ_SMALL; size < SZ_ALL; size++ ){
 			sd->right_weapon.addsize[size] += attack_bonus[size][skill - 1];
-			sd->left_weapon.addsize[size] += attack_bonus[size][skill - 1];
+			if( !battle_config.left_cardfix_to_right )
+				sd->left_weapon.addsize[size] += attack_bonus[size][skill - 1];
 		}
 	}
 	if ((skill = pc_checkskill(sd, CD_FIDUS_ANIMUS)) > 0) {
@@ -4595,7 +4598,8 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 
 		for( uint8 size = SZ_SMALL; size < SZ_MAX; size++ ){
 			sd->right_weapon.addsize[size] += attack_bonus[size][skill - 1];
-			sd->left_weapon.addsize[size] += attack_bonus[size][skill - 1];
+			if( !battle_config.left_cardfix_to_right )
+				sd->left_weapon.addsize[size] += attack_bonus[size][skill - 1];
 		}
 	}
 	if ((skill = pc_checkskill(sd, ABC_MAGIC_SWORD_M)) > 0 && (sd->status.weapon == W_DAGGER || sd->status.weapon == W_1HSWORD || sd->status.weapon == W_DOUBLE_DD || sd->status.weapon == W_DOUBLE_SS || sd->status.weapon == W_DOUBLE_DS || sd->status.weapon == W_DOUBLE_DA || sd->status.weapon == W_DOUBLE_SA)) {
@@ -4642,8 +4646,10 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 			i = sc->getSCE(SC_BASILICA)->val1 * 5;
 			sd->right_weapon.addele[ELE_DARK] += i;
 			sd->right_weapon.addele[ELE_UNDEAD] += i;
-			sd->left_weapon.addele[ELE_DARK] += i;
-			sd->left_weapon.addele[ELE_UNDEAD] += i;
+			if( !battle_config.left_cardfix_to_right ) {
+				sd->left_weapon.addele[ELE_DARK] += i;
+				sd->left_weapon.addele[ELE_UNDEAD] += i;
+			}
 			sd->indexed_bonus.magic_atk_ele[ELE_HOLY] += sc->getSCE(SC_BASILICA)->val1 * 3;
 		}
 		if (sc->getSCE(SC_FIREWEAPON))
@@ -4662,8 +4668,10 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
         if (sc->getSCE(SC_GEFFEN_MAGIC1)) {
             sd->right_weapon.addrace[RC_PLAYER_HUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
             sd->right_weapon.addrace[RC_DEMIHUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
-            sd->left_weapon.addrace[RC_PLAYER_HUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
-            sd->left_weapon.addrace[RC_DEMIHUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
+			if( !battle_config.left_cardfix_to_right ) {
+				sd->left_weapon.addrace[RC_PLAYER_HUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
+            	sd->left_weapon.addrace[RC_DEMIHUMAN] += sc->getSCE(SC_GEFFEN_MAGIC1)->val1;
+			}
         }
         if (sc->getSCE(SC_GEFFEN_MAGIC2)) {
             sd->indexed_bonus.magic_addrace[RC_PLAYER_HUMAN] += sc->getSCE(SC_GEFFEN_MAGIC2)->val1;
@@ -4758,13 +4766,17 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 			sd->left_weapon.addrace[RC_ANGEL] += 50;
 		}
 		if (sc->getSCE(SC_RUSH_QUAKE2)) {
-			sd->bonus.short_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
-			sd->bonus.long_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
+			sd->bonus.short_attack_atk_rate += 5 * sc->getSCE(SC_RUSH_QUAKE2)->val1;
+			sd->bonus.long_attack_atk_rate += 5 * sc->getSCE(SC_RUSH_QUAKE2)->val1;
 		}
 		if (sc->getSCE(SC_BO_HELL_DUSTY)) {
 			sd->bonus.long_attack_atk_rate += 20;
 			sd->right_weapon.addrace[RC_FORMLESS] += 20;
 			sd->right_weapon.addrace[RC_PLANT] += 20;
+			if( !battle_config.left_cardfix_to_right ) {
+				sd->left_weapon.addrace[RC_FORMLESS] += 20;
+				sd->left_weapon.addrace[RC_PLANT] += 20;
+			}
 		}
 		if (sc->getSCE(SC_UNLIMIT))
 			sd->bonus.long_attack_atk_rate += sc->getSCE(SC_UNLIMIT)->val2;
@@ -4885,6 +4897,24 @@ int status_calc_pc_sub(map_session_data* sd, uint8 opt)
 		}
 		if (sc->getSCE(SC_PORK_RIB_STEW))
 			sd->dsprate -= 2;
+		if( sc->getSCE(SC_TALISMAN_OF_FIVE_ELEMENTS) ) {
+			const std::vector<e_element> elements = { ELE_FIRE, ELE_WATER, ELE_WIND, ELE_EARTH, ELE_NEUTRAL };
+			int bonus = sc->getSCE(SC_TALISMAN_OF_FIVE_ELEMENTS)->val2;
+
+			for( const auto &element : elements ){
+				sd->indexed_bonus.magic_atk_ele[(int)element] += bonus;
+				sd->right_weapon.addele[(int)element] += bonus;
+				sd->left_weapon.addele[(int)element] += bonus;
+			}
+		}
+		if( sc->getSCE(SC_HEAVEN_AND_EARTH) ) {
+			i = sc->getSCE(SC_HEAVEN_AND_EARTH)->val2;
+			sd->right_weapon.addele[ELE_ALL] += i;
+			sd->left_weapon.addele[ELE_ALL] += i;
+			sd->indexed_bonus.magic_atk_ele[ELE_ALL] += i;
+			sd->bonus.short_attack_atk_rate += i;
+			sd->bonus.long_attack_atk_rate += i;
+		}
 	}
 	status_cpy(&sd->battle_status, base_status);
 
@@ -6957,7 +6987,7 @@ static unsigned short status_calc_sta(struct block_list *bl, status_change *sc, 
 		sta += sc->getSCE(SC_RELIGIO)->val2;
 	if (sc->getSCE(SC_SANDY_FESTIVAL))
 		sta += sc->getSCE(SC_SANDY_FESTIVAL)->val2;
-
+	
 	return (unsigned short)cap_value(sta, 0, USHRT_MAX);
 }
 
@@ -7127,6 +7157,8 @@ static unsigned int status_calc_batk(struct block_list *bl, status_change *sc, i
 		batk += 20;
 	if(sc->getSCE(SC_SKF_ATK))
 		batk += sc->getSCE(SC_SKF_ATK)->val1;
+	if (sc->getSCE(SC_INTENSIVE_AIM))
+		batk += 150;
 
 	return (unsigned int)cap_value(batk,0,INT32_MAX);
 }
@@ -7530,6 +7562,8 @@ static signed short status_calc_hit(struct block_list *bl, status_change *sc, in
 		hit += sc->getSCE(SC_LIMIT_POWER_BOOSTER)->val1;
 	if (sc->getSCE(SC_ACARAJE))
 		hit += 5;
+	if (sc->getSCE(SC_INTENSIVE_AIM))
+		hit += 250;
 
 	return (short)cap_value(hit,1,SHRT_MAX);
 }
@@ -7650,6 +7684,8 @@ static signed short status_calc_flee(struct block_list *bl, status_change *sc, i
 		flee += sc->getSCE(SC_LIMIT_POWER_BOOSTER)->val1;
 	if (sc->getSCE(SC_MYSTICPOWDER))
 		flee += 20;
+	if (sc->getSCE(SC_HANDICAPSTATE_DEEPBLIND))
+		flee -= flee * 30 / 100;
 
 	return (short)cap_value(flee,1,SHRT_MAX);
 }
@@ -7733,15 +7769,15 @@ static defType status_calc_def(struct block_list *bl, status_change *sc, int def
 	if(sc->getSCE(SC_STONEHARDSKIN))
 		def += sc->getSCE(SC_STONEHARDSKIN)->val1;
 	if(sc->getSCE(SC_STONE))
-		def >>=1;
+		def /= 2;
 	if(sc->getSCE(SC_FREEZE))
-		def >>=1;
+		def /= 2;
 	if(sc->getSCE(SC_SIGNUMCRUCIS))
 		def -= def * sc->getSCE(SC_SIGNUMCRUCIS)->val2/100;
 	if(sc->getSCE(SC_CONCENTRATION))
 		def -= def * sc->getSCE(SC_CONCENTRATION)->val4/100;
 	if(sc->getSCE(SC_SKE))
-		def >>=1;
+		def /= 2;
 	if(sc->getSCE(SC_PROVOKE) && bl->type != BL_PC) // Provoke doesn't alter player defense->
 		def -= def * sc->getSCE(SC_PROVOKE)->val3/100;
 	if(sc->getSCE(SC_STRIPSHIELD) && bl->type != BL_PC) // Player doesn't have def reduction only equip removed
@@ -8536,6 +8572,8 @@ static short status_calc_aspd_rate(struct block_list *bl, status_change *sc, int
 		aspd_rate -= sc->getSCE(SC_SKF_ASPD)->val1 * 10;
 	if( sc->getSCE(SC_PORK_RIB_STEW) )
 		aspd_rate -= 50;
+	if (sc->getSCE(SC_HANDICAPSTATE_DEEPSILENCE))
+		aspd_rate += 50;
 
 	return (short)cap_value(aspd_rate,0,SHRT_MAX);
 }
@@ -8550,7 +8588,6 @@ static short status_calc_aspd_rate(struct block_list *bl, status_change *sc, int
  */
 static unsigned short status_calc_dmotion(struct block_list *bl, status_change *sc, int dmotion)
 {
-
 	/// It has been confirmed on official servers that MvP mobs have no dmotion even without endure
 	if( bl->type == BL_MOB && status_get_class_(bl) == CLASS_BOSS )
 		return 0;
@@ -8595,13 +8632,16 @@ static signed short status_calc_patk(struct block_list *bl, status_change *sc, i
 		patk += sc->getSCE(SC_ATTACK_STANCE)->val3;
 	if (sc->getSCE(SC_TEMPERING))
 		patk += sc->getSCE(SC_TEMPERING)->val2;
+	if (sc->getSCE(SC_TALISMAN_OF_WARRIOR))
+		patk += sc->getSCE(SC_TALISMAN_OF_WARRIOR)->val2;
+	if (sc->getSCE(SC_ATTACK_STANCE))
+		patk += sc->getSCE(SC_ATTACK_STANCE)->val3;
 	if (sc->getSCE(SC_HIDDEN_CARD))
 		patk += sc->getSCE(SC_HIDDEN_CARD)->val2;
 	if (sc->getSCE(SC_TEMPORARY_COMMUNION))
 		patk += sc->getSCE(SC_TEMPORARY_COMMUNION)->val2;
 	if (sc->getSCE(SC_BLESSING_OF_M_CREATURES))
 		patk += sc->getSCE(SC_BLESSING_OF_M_CREATURES)->val2;
-
 
 	return (short)cap_value(patk, 0, SHRT_MAX);
 }
@@ -8681,7 +8721,6 @@ static signed short status_calc_mres(struct block_list *bl, status_change *sc, i
 {
 	if (!sc || !sc->count)
 		return cap_value(mres, 0, SHRT_MAX);
-
 	if (sc->getSCE(SC_GOLDENE_TONE))
 		mres += sc->getSCE(SC_GOLDENE_TONE)->val2;
 	if (sc->getSCE(SC_SHADOW_STRIP) && bl->type != BL_PC)
@@ -12539,7 +12578,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val2 = 30 * val1; // ATK bonus
 			break;
 		case SC_UNLIMIT:
-			val2 = 50 * val1;
+			val2 = 100 + 50 * val1;
 			break;
 		case SC_MONSTER_TRANSFORM:
 		case SC_ACTIVE_MONSTER_TRANSFORM:
@@ -12700,6 +12739,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 					}
 					if (pc_checkskill(sd, SU_SPIRITOFSEA) > 0)
 						val2 *= 2; // Doubles HP
+				}
+				if (status->hp < status->max_hp) {
+					clif_skill_nodamage(nullptr, bl, AL_HEAL, val2, 1);
+					status_heal(bl, val2, 0, 0);
 				}
 				tick_time = 10000 - ((val1 - 1) * 1000);
 				val4 = tick / tick_time;
@@ -12863,7 +12906,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val4 = tick - tick_time; // Remaining Time
 			break;
 		case SC_VIGOR: {
-				uint8 hp_loss[10] = { 15, 14, 12, 11, 9, 8, 6, 5, 3, 2 };
+				uint8 hp_loss[10] = { 100, 90, 80, 70, 60, 50, 40, 30, 20, 10 };
 
 				val2 = hp_loss[val1- 1];
 			}
@@ -12886,7 +12929,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			tick = INFINITE_TICK;
 			break;
 		case SC_GUARDIAN_S:
-			val2 = status->max_hp * (50 * val1) / 100;// Barrier HP
+			val2 = (status->max_hp / 2 ) * (50 * val1) / 100 + 15 * status->sta; // Barrier HP
 			break;
 		case SC_REBOUND_S:
 			val2 = 10 * val1;// Reduced Damage From Devotion
@@ -12895,7 +12938,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_ATTACK_STANCE:
 			val2 = 40 * val1;// DEF Decrease
-			val3 = 5 + 5 * val1;// ATK Increase
+			val3 = 3 * val1;// P.ATK/S.MATK Increase
 			tick = INFINITE_TICK;
 			break;
 		case SC_HOLY_S:
@@ -13014,6 +13057,19 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		case SC_DEEP_POISONING_OPTION:
 			val3 = ELE_POISON;
 			break;
+		case SC_SUB_WEAPONPROPERTY:
+			if (sd && val3 == ASC_EDP) {
+				uint16 poison_level = pc_checkskill(sd, GC_RESEARCHNEWPOISON);
+
+				if (poison_level > 0) {
+					tick += 30000; // Base of 30 seconds
+					tick += poison_level * 15 * 1000; // Additional 15 seconds per level
+				}
+			}
+			break;
+		case SC_WEAPONBREAKER:
+			val2 = val1 * 2 * 100; // Chance to break weapon
+			break;
 		case SC_TALISMAN_OF_PROTECTION:
 			val2 = 2 * val1;
 			val4 = tick / 3000;
@@ -13053,8 +13109,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_TEMPORARY_COMMUNION:
 			val2 = val1 * 3;
+			break;
 		case SC_BLESSING_OF_M_CREATURES:
 			val2 = val1 * 10;
+			break;
 		case SC_SUB_WEAPONPROPERTY:
 			if (sd && val3 == ASC_EDP) {
 				uint16 poison_level = pc_checkskill(sd, GC_RESEARCHNEWPOISON);
@@ -13629,11 +13687,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 						((TBL_MER*)d_bl)->devotion_flag = 0;
 					clif_devotion(d_bl, NULL);
 				}
-
-				status_change_end(bl, SC_AUTOGUARD);
-				status_change_end(bl, SC_DEFENDER);
-				status_change_end(bl, SC_REFLECTSHIELD);
-				status_change_end(bl, SC_ENDURE);
 			}
 			break;
 
@@ -13695,12 +13748,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 
 				if((sce->val1&0xFFFF) == CG_MOONLIT)
 					clif_status_change(bl,EFST_MOON,0,0,0,0,0);
-
-#ifdef RENEWAL
-				status_change_end(bl, SC_ENSEMBLEFATIGUE);
-#else
-				status_change_end(bl, SC_LONGING);
-#endif
 			}
 			break;
 		case SC_NOCHAT:
@@ -13712,12 +13759,18 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			}
 			break;
 		case SC_SPLASHER:
-		case SC_ROSEBLOSSOM:
 			{
 				struct block_list *src=map_id2bl(sce->val3);
 
 				if(src && tid != INVALID_TIMER)
 					skill_castend_damage_id(src, bl, sce->val2, sce->val1, gettick(), SD_LEVEL );
+			}
+			break;
+		case SC_ROSEBLOSSOM:
+			{
+				struct block_list *src=map_id2bl(sce->val3);
+				if(src)
+					skill_castend_pos2(src, bl->x, bl->y, sce->val2, sce->val1, gettick(), SD_LEVEL);
 			}
 			break;
 		case SC_CLOSECONFINE2:{
@@ -14089,7 +14142,8 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			sc_start(bl,bl, SC_BLESSING_OF_M_C_DEBUFF, 100, 1, skill_get_time2(SH_BLESSING_OF_MYSTICAL_CREATURES, 1));
 			status_percent_change(bl,bl,0, 0, -100,1);
 			break;
-	}			
+	}
+
 	// End statuses found in the EndOnEnd list.
 	if (!scdb->endonend.empty()) {
 		for (const auto &it : scdb->endonend) {
@@ -15125,7 +15179,10 @@ TIMER_FUNC(status_change_timer){
 		break;
 	case SC_FRESHSHRIMP:
 		if (--(sce->val4) >= 0) {
-			status_heal(bl, sce->val2, 0, 0);
+			if (status->hp < status->max_hp) {
+				clif_skill_nodamage(nullptr, bl, AL_HEAL, sce->val2, 1);
+				status_heal(bl, sce->val2, 0, 0);
+			}
 			sc_timer_next((10000 - ((sce->val1 - 1) * 1000)) + tick);
 			return 0;
 		}
@@ -15237,7 +15294,7 @@ TIMER_FUNC(status_change_timer){
 	case SC_SERVANTWEAPON:
 		if (sce->val4 >= 0) {
 			if( sd && sd->servantball < MAX_SERVANTBALL ){
-				pc_addservantball( *sd, MAX_SERVANTBALL );
+				pc_addservantball( *sd, 1 );
 			}
 			interval = max(500, skill_get_time2(DK_SERVANTWEAPON, sce->val1));
 			map_freeblock_lock();

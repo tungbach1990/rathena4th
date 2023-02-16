@@ -1875,10 +1875,6 @@
 
 	export_constant(SC_RUSH_QUAKE1);
 	export_constant(SC_RUSH_QUAKE2);
-	// 2021 Mutated Homunculus Skills
-	export_constant(SC_TOXIN_OF_MANDARA);
-	export_constant(SC_GOLDENE_TONE);
-	export_constant(SC_TEMPERING);
 
 	// Hyper Novice
 	export_constant(SC_SHIELDCHAINRUSH);
@@ -9893,7 +9889,6 @@
 	export_constant(UNT_TWINKLING_GALAXY);
 	export_constant(UNT_STAR_CANNON);
 	export_constant(UNT_GRENADES_DROPPING);
-	export_constant(UNT_UNKNOWN_2);
 	export_constant(UNT_FUUMASHOUAKU);
 	export_constant(UNT_MISSION_BOMBARD);
 	export_constant(UNT_TOTEM_OF_TUTELARY);

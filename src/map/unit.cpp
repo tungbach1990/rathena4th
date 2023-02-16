@@ -780,9 +780,10 @@ int unit_walktoxy( struct block_list *bl, short x, short y, unsigned char flag)
 	}
 
 	TBL_PC *sd = BL_CAST(BL_PC, bl);
-	if (sd && bl->type == BL_PC) {
+
+	if (sd) {
 		if (sd->sc.getSCE(SC_KI_SUL_RAMPAGE))
-			status_change_end(bl, SC_KI_SUL_RAMPAGE, INVALID_TIMER);
+			status_change_end(bl, SC_KI_SUL_RAMPAGE);
 	}
 
 	// Start timer to recall summon
@@ -2065,7 +2066,9 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 
 			if (!src->prev)
 				return 0; // Warped away!
-		} else if( sc->getSCE(SC_CLOAKINGEXCEED) && !(sc->getSCE(SC_CLOAKINGEXCEED)->val4&4) && skill_id != GC_CLOAKINGEXCEED && skill_id != SHC_SHADOW_STAB) {
+
+		} else if( sc->getSCE(SC_CLOAKINGEXCEED) && !(sc->getSCE(SC_CLOAKINGEXCEED)->val4&4) && skill_id != GC_CLOAKINGEXCEED && skill_id != SHC_SHADOW_STAB && skill_id != SHC_SAVAGE_IMPACT) {
+
 			status_change_end(src,SC_CLOAKINGEXCEED);
 
 			if (!src->prev)
