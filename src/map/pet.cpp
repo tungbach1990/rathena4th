@@ -1022,7 +1022,9 @@ bool pet_data_init(map_session_data *sd, struct s_pet *pet)
 		return false;
 	}
 
-	sd->pd = pd = (struct pet_data *)aCalloc(1,sizeof(struct pet_data));
+	pd = (struct pet_data *)aCalloc(1,sizeof(struct pet_data));
+	new(pd) pet_data();
+	sd->pd = pd;
 	pd->bl.type = BL_PET;
 	pd->bl.id = npc_get_new_npc_id();
 
@@ -1473,7 +1475,7 @@ int pet_change_name_ack(map_session_data *sd, char* name, int flag)
 		return 0;
 	}
 
-	memcpy(pd->pet.name, name, NAME_LENGTH);
+	safestrncpy(pd->pet.name, name, NAME_LENGTH);
 	clif_name_area(&pd->bl);
 	pd->pet.rename_flag = 1;
 	clif_pet_equip_area(pd);
@@ -1701,8 +1703,8 @@ static int pet_randomwalk(struct pet_data *pd,t_tick tick)
 			else
 				c += pd->status.speed;
 		}
-
-		pd->next_walktime = tick+rnd()%1000+MIN_RANDOMWALKTIME+c;
+		t_tick min_random_walk_time_pcbehavior = status_get_mode(&pd->bl) & MD_PCBEHAVIOR ? battle_config.min_random_walk_time_pcbehavior : battle_config.min_random_walk_time;
+		pd->next_walktime = tick+rnd()%1000+min_random_walk_time_pcbehavior+c;
 
 		return 1;
 	}

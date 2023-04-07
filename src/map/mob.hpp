@@ -9,7 +9,7 @@
 #include <common/database.hpp>
 #include <common/mmo.hpp> // struct item
 #include <common/timer.hpp>
-#include <algorithm>
+#include <algorithm>		
 
 #include "status.hpp" // struct status data, struct status_change
 #include "unit.hpp" // unit_stop_walking(), unit_stop_attack()
@@ -34,11 +34,11 @@ struct guardian_data;
 #define MAX_MINCHASE 30	//Max minimum chase value to use for mobs.
 
 //Min time between AI executions
-const t_tick MIN_MOBTHINKTIME = 100;
+#define MIN_MOBTHINKTIME static_cast<t_tick>(battle_config.min_mob_think_time_pcbehavior) //Singe
 //Min time before mobs do a check to call nearby friends for help (or for slaves to support their master)
 const t_tick MIN_MOBLINKTIME = 1000;
 //Min time between random walks
-const t_tick MIN_RANDOMWALKTIME = 4000;
+#define MIN_RANDOMWALKTIME static_cast<t_tick>(battle_config.min_random_walk_time)
 
 //Distance that slaves should keep from their master.
 #define MOB_SLAVEDISTANCE 2
@@ -191,9 +191,11 @@ enum e_aegis_monsterclass : int8 {
 
 enum e_mob_skill_target {
 	MST_TARGET = 0,
+	MST_SKILL,
 	MST_RANDOM,	//Random Target!
 	MST_SELF,
 	MST_FRIEND,
+	MST_FRIENDTARGET,
 	MST_MASTER,
 	MST_AROUND5,
 	MST_AROUND6,
@@ -206,7 +208,7 @@ enum e_mob_skill_target {
 	MST_AROUND = MST_AROUND4,
 };
 enum e_mob_skill_condition {
-	MSC_ALWAYS	=	0x0000,
+	MSC_ALWAYS = 0x0000,
 	MSC_MYHPLTMAXRATE,
 	MSC_MYHPINRATE,
 	MSC_FRIENDHPLTMAXRATE,
@@ -235,8 +237,8 @@ enum e_mob_skill_condition {
 	MSC_SPAWN,
 	MSC_MOBNEARBYGT,
 	MSC_GROUNDATTACKED,
-	MSC_DAMAGEDGT,
-	MSC_EXPANDED,
+	MSC_DAMAGEDGT,	
+	MSC_EXPANDED
 };
 
 
@@ -246,10 +248,10 @@ struct s_mob_skill {
 	short permillage;
 	int casttime,delay;
 	short cancel;
-	std::string expanded_cond; // For expanded conditions
-	short cond1;
+	e_mob_skill_condition cond1;
 	int64 cond2;
-	short target;
+	std::string expanded_cond; // For expanded conditions
+	e_mob_skill_target target;
 	int val[5];
 	short emotion;
 	unsigned short msg_id;
@@ -282,6 +284,10 @@ public:
 };
 
 class ExpandedCondition{
+protected:
+	bool shouldScanFriend = false;
+	bool shouldScanEnemy = false;
+	bool shouldScanDead = false;
 public:
 	const std::string name;
 	ExpandedCondition(std::string name) :name{ name }{}
@@ -298,7 +304,10 @@ public:
 	 * @return the predicate test
 	*/
 	virtual bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) const = 0;
-
+	bool targetsFriend();
+	bool targetsEnemy();
+	bool targetsDead();
+	virtual void scanTargets(std::shared_ptr<ExpandedCondition> ec) = 0;
 
 
 };
@@ -312,9 +321,9 @@ private:
 	inverter_t inverter;
 
 public:
-	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate) :ExpandedCondition(name), inverter{ inverter }, predicate{ predicate }{}
+	SingleCondition(std::string name, inverter_t inverter, std::shared_ptr<TPredicate> predicate);
+	void scanTargets(std::shared_ptr<ExpandedCondition> ec);
 	bool operator()(const std::map<e_mob_skill_target, block_list*>& targets)const override;
-
 };
 
 ///Condition Container.
@@ -337,6 +346,7 @@ public:
 	 * @param entry_name
 	*/
 	void parseAndPushBackExpandedConditions(const ryml::NodeRef& node);
+	void scanTargets(std::shared_ptr<ExpandedCondition> ec);
 };
 /**
  * @brief Parses a string that will be used to create the conditions. Depends on string to ids maps
@@ -345,6 +355,14 @@ public:
 */
 std::unordered_map<std::string, std::string> parseFields(const std::string& line);
 
+//class ExpandedConditionParsingError : public std::runtime_error {
+//private:
+//	std::string msg;
+//	static const std::string build_what(const std::string& msg);
+//public:
+//	ExpandedConditionParsingError(const std::string& msg_) : std::runtime_error(build_what(msg_)), msg(msg_) {}
+//	ExpandedConditionParsingError(const ExpandedConditionParsingError&) = default;
+//};
 }//namespace ai_expanded
 
 
@@ -365,7 +383,6 @@ struct s_mob_chat {
 
 class MobChatDatabase : public TypesafeYamlDatabase<uint16, s_mob_chat> {
 public:
-
 	MobChatDatabase() : TypesafeYamlDatabase("MOB_CHAT_DB", 1) {
 
 	}
@@ -433,7 +450,9 @@ private:
 	bool parseDropNode(std::string nodeName, const ryml::NodeRef& node, uint8 max, s_mob_drop *drops);
 
 public:
-	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {}
+	MobDatabase() : TypesafeCachedYamlDatabase("MOB_DB", 3, 1) {
+
+	}
 
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
@@ -509,9 +528,12 @@ struct mob_data {
 	short mob_id;
 	unsigned int tdmg; //Stores total damage given to the mob, for exp calculations. [Skotlex]
 	int level;
+	int spiritball;
+	int devotion[5];
 	int target_id,attacked_id,norm_attacked_id;
 	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
 	int bg_id; // BattleGround System
+
 
 	t_tick next_walktime,last_thinktime,last_linktime,last_pcneartime,dmgtick;
 	short move_fail_count;
@@ -538,6 +560,7 @@ struct mob_data {
 	uint16 damagetaken;
 
 	e_mob_bosstype get_bosstype();
+	int skill_being_cast_id;
 };
 
 class MobAvailDatabase : public YamlDatabase {
@@ -571,10 +594,6 @@ public:
 	const std::string getDefaultLocation() override;
 	uint64 parseBodyNode(const ryml::NodeRef& node) override;
 };
-
-
-
-
 
 // The data structures for storing delayed item drops
 struct item_drop {
@@ -633,6 +652,10 @@ void mob_clear_spawninfo();
 void do_init_mob(void);
 void do_final_mob(bool is_reload);
 
+void mob_addspiritball(mob_data* md, int max);
+
+void mob_delspiritball(mob_data* md, int count);
+
 TIMER_FUNC(mob_timer_delete);
 int mob_deleteslave(struct mob_data *md);
 
@@ -673,4 +696,3 @@ void mob_setdropitem_option(struct item *itm, struct s_mob_drop *mobdrop);
 #define CHK_MOBSIZE(size) ((size) >= SZ_SMALL && (size) < SZ_MAX) /// Check valid Monster Size
 
 #endif /* MOB_HPP */
-

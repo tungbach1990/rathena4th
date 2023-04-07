@@ -116,6 +116,7 @@ enum damage_lv battle_weapon_attack( struct block_list *bl,struct block_list *ta
 struct block_list* battle_get_master(struct block_list *src);
 struct block_list* battle_gettargeted(struct block_list *target);
 struct block_list* battle_getenemy(struct block_list *target, int type, int range);
+
 int battle_gettarget(struct block_list *bl);
 uint16 battle_getcurrentskill(struct block_list *bl);
 
@@ -729,8 +730,10 @@ struct Battle_Config
 	int mob_respawn_time;
 
 	int feature_stylist;
+	int feature_banking_state_enforce;
+	int instance_allow_reconnect;
 
-#include "../custom/battle_config_struct.inc"
+#include <custom/battle_config_struct.inc>
 };
 
 extern struct Battle_Config battle_config;

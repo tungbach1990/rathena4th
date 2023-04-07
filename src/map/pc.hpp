@@ -789,6 +789,7 @@ public:
 		uint32 pending_weight;
 		uint32 pending_zeny;
 		uint16 pending_slots;
+		uint32 dest_id;
 	} mail;
 
 	//Quest log system
@@ -936,10 +937,12 @@ public:
 	} captcha_upload;
 
 	s_macro_detect macro_detect;
+  
+	int skill_being_cast_id;
 
 	std::vector<uint32> party_booking_requests;
-};
 
+};
 extern struct eri *pc_sc_display_ers; /// Player's SC display table
 
 /**
@@ -1418,9 +1421,9 @@ bool pc_memo(map_session_data* sd, int pos);
 char pc_checkadditem(map_session_data *sd, t_itemid nameid, int amount);
 uint8 pc_inventoryblank(map_session_data *sd);
 short pc_search_inventory(map_session_data *sd, t_itemid nameid);
-char pc_payzeny(map_session_data *sd, int zeny, enum e_log_pick_type type, map_session_data *tsd);
+char pc_payzeny(map_session_data *sd, int zeny, enum e_log_pick_type type, uint32 log_charid = 0);
 enum e_additem_result pc_additem(map_session_data *sd, struct item *item, int amount, e_log_pick_type log_type);
-char pc_getzeny(map_session_data *sd, int zeny, enum e_log_pick_type type, map_session_data *tsd);
+char pc_getzeny(map_session_data *sd, int zeny, enum e_log_pick_type type, uint32 log_charid = 0);
 char pc_delitem(map_session_data *sd, int n, int amount, int type, short reason, e_log_pick_type log_type);
 
 uint64 pc_generate_unique_id(map_session_data *sd);

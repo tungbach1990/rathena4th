@@ -17,11 +17,21 @@ namespace predicates {
 class condition_predicate {
 protected:
 	e_mob_skill_target target_type_id;
+	bool shouldTargetDead = false;
 public:
 	condition_predicate(e_mob_skill_target target_type_id) : target_type_id{ target_type_id } {}
 	virtual bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) = 0;
+	inline bool targetsFriend() {
+		return target_type_id == MST_FRIEND;
+	}
+	inline bool targetsEnemy() {
+		return target_type_id == MST_TARGET;
+	}
+	inline bool targetsDead() {
+		return this->shouldTargetDead;
+	}
 	inline bool checkTarget(const std::map<e_mob_skill_target, block_list*>& targets) {
-		return targets.count(target_type_id);
+		return targets.count(target_type_id) && targets.at(target_type_id) != nullptr;
 	}
 };
 
@@ -44,7 +54,10 @@ template <class TComparator>
 struct percent_health: public condition_predicate {
 	TComparator comparator;
 	int threshold;
-	percent_health(e_mob_skill_target target_type_id,TComparator comparator,int threshold): condition_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
+	percent_health(e_mob_skill_target target_type_id,TComparator comparator,int threshold): condition_predicate(target_type_id),comparator{comparator},threshold{threshold}{
+		if (threshold <= 0)
+			this->shouldTargetDead = true;
+	}
 	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
 		if (!checkTarget(targets))
 			return false;
@@ -57,7 +70,10 @@ template <class TComparator>
 struct health: public condition_predicate {
 	TComparator comparator;
 	int threshold;
-	health(e_mob_skill_target target_type_id,TComparator comparator,int threshold): condition_predicate(target_type_id),comparator{comparator},threshold{threshold}{}
+	health(e_mob_skill_target target_type_id,TComparator comparator,int threshold): condition_predicate(target_type_id),comparator{comparator},threshold{threshold}{
+	if (threshold <= 0)
+			this->shouldTargetDead = true;
+	}
 	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
 		return checkTarget(targets) && this->comparator(status_get_hp(targets.at(target_type_id)),this->threshold);
 	}
@@ -135,6 +151,14 @@ struct job: public condition_predicate {
 	job(e_mob_skill_target target_type_id,TComparator comparator,int pjob): condition_predicate(target_type_id),comparator{comparator},mjob{pjob}{}
 	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
 		return checkTarget(targets) && status_get_class(targets.at(target_type_id)) == mjob;
+	}
+};
+
+struct monsterclass: public condition_predicate {
+	int mclass;
+	monsterclass(e_mob_skill_target target_type_id,int pclass): condition_predicate(target_type_id),mclass{pclass}{}
+	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
+		return checkTarget(targets) && status_get_class_(targets.at(target_type_id)) == mclass;
 	}
 };
 
@@ -220,6 +244,17 @@ struct knockback : public condition_predicate {
 	}
 };
 
+
+template <class TComparator>
+struct spiritball : public condition_predicate {
+	TComparator comparator;
+	int balls;
+	spiritball(e_mob_skill_target target_type_id, TComparator comparator, int balls) : condition_predicate(target_type_id), comparator{ comparator }, balls{ balls }{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		return checkTarget(targets) && comparator(status_get_spiritball(targets.at(this->target_type_id)), this->balls);
+	}
+};
+
 struct type : public condition_predicate {
 	bl_type mtype;
 	type(e_mob_skill_target target_type_id, bl_type type) : condition_predicate(target_type_id), mtype{ type }{}
@@ -237,11 +272,118 @@ struct isaligned : public condition_predicate {
 		return checkTarget(targets) && ((target->x%2 == targets.at(MST_SELF)->x%2)||(target->y%2 == targets.at(MST_SELF)->y%2));
 	}
 };
+template <class TComparator>
+struct devotees : public condition_predicate {
+	TComparator comparator;
+	int d;
+	devotees(e_mob_skill_target target_type_id,TComparator comparator,  int d) : condition_predicate(target_type_id), comparator{ comparator }{
+		this->d = min(MAX_DEVOTION, d);
+	}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		block_list* target = targets.at(this->target_type_id);
+		unsigned int count = 0;
+		map_session_data* sd = BL_CAST(BL_PC,target);
+		mob_data* md = BL_CAST(BL_MOB, target);
+		for (unsigned int i = 0; i < MAX_DEVOTION; i++) {
+			if ((sd && sd->devotion[i] != 0) || (md && md->devotion[i] !=0))
+				++count;
+		}
+		return checkTarget(targets) && comparator(count, this->d);
+	}
+};
+
+struct is_devotee : public condition_predicate {
+	is_devotee(e_mob_skill_target target_type_id) : condition_predicate(target_type_id){}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		if (!checkTarget(targets))
+			return false;
+		block_list* target = targets.at(this->target_type_id);
+		mob_data* md = BL_CAST(BL_MOB, targets.at(MST_SELF));
+		int i;
+		for (i = 0; i < MAX_DEVOTION && md->devotion[i] != target->id; i++) {
+		}
+		return i < MAX_DEVOTION;
+	}
+};
+
+
+struct can_place_skill : public condition_predicate {
+	int skill_id;
+	can_place_skill(e_mob_skill_target target_type_id, int skill_id) : condition_predicate(target_type_id), skill_id{ skill_id }{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		if (!checkTarget(targets))
+			return false;
+		int remaining = skill_get_maxcount(skill_id, skill_get_max(skill_id));
+		unit_skillunit_maxcount(*(unit_bl2ud(targets.at(target_type_id))), skill_id, remaining);
+		return remaining > 0;
+	}
+};
+
+template <class TComparator>
+struct leveldiff : public condition_predicate {
+	TComparator comparator;
+	int levels;
+	leveldiff(e_mob_skill_target target_type_id, TComparator comparator, int levels) : condition_predicate(target_type_id), comparator{ comparator }, levels{ levels }{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		return checkTarget(targets) && comparator(abs(status_get_lv(targets.at(MST_SELF)) - status_get_lv(targets.at(this->target_type_id))), this->levels);
+	}
+};
+
+struct mapflag_pred: public condition_predicate {
+	e_mapflag mmapflag;
+	mapflag_pred(e_mob_skill_target target_type_id, e_mapflag pmapflag): condition_predicate(target_type_id),mmapflag{pmapflag}{}
+	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
+		return checkTarget(targets) && (map_getmapflag((targets.at(target_type_id))->m, mmapflag) >0);
+	}
+};
+
+struct no_delay: public condition_predicate {
+	int mskillid;
+	no_delay(e_mob_skill_target target_type_id, int pskillid): condition_predicate(target_type_id),mskillid{pskillid}{}
+	inline bool operator()(const std::map<e_mob_skill_target,block_list*>& targets) {
+		if (!checkTarget(targets))
+			return false;
+		mob_data* md = BL_CAST(BL_MOB,targets.at(MST_SELF));
+		std::vector<std::shared_ptr<s_mob_skill>> &ms = md->db->skill;
+		int i = 0;
+		ARR_FIND(0, ms.size(), i, ms[i]->skill_id == mskillid);
+		if (i >= ms.size())
+			return false;
+		if (DIFF_TICK(gettick(), md->skilldelay[i]) < ms[i]->delay)
+			return false;
+		return true;
+	}
+}; 
+
+struct skill_being_cast: public condition_predicate {
+	int mskillid;
+	skill_being_cast(e_mob_skill_target target_type_id, int pskillid): condition_predicate(target_type_id),mskillid{pskillid}{}
+	inline bool operator()(const std::map<e_mob_skill_target, block_list*>& targets) {
+		if (!checkTarget(targets))
+			return false;
+		mob_data* md = BL_CAST(BL_MOB, targets.at(target_type_id));
+		map_session_data* sd = BL_CAST(BL_PC, targets.at(target_type_id));
+		if (md) {
+			if (mskillid == -1 && md->skill_being_cast_id > 0)
+				return true;
+			else
+				return mskillid == md->skill_being_cast_id;
+		}	
+		else if (sd) {
+			if (mskillid == -1 && sd->skill_being_cast_id > 0)
+				return true;
+			else
+				return mskillid == sd->skill_being_cast_id;
+		}
+		else
+			return false;
+	}
+};
+
 
 
 
 } //namespace predicates
-
 namespace logic_gates {
 
 //XOR logic gate

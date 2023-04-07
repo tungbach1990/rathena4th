@@ -1872,9 +1872,24 @@
 	export_constant(SC_TOXIN_OF_MANDARA);
 	export_constant(SC_GOLDENE_TONE);
 	export_constant(SC_TEMPERING);
-
+	export_constant(SC_GRADUAL_GRAVITY);
+	export_constant(SC_ALL_STAT_DOWN);
+	export_constant(SC_KILLING_AURA);
+	export_constant(SC_DAMAGE_HEAL);
+	export_constant(SC_IMMUNE_PROPERTY_NOTHING);
+	export_constant(SC_IMMUNE_PROPERTY_WATER);
+	export_constant(SC_IMMUNE_PROPERTY_GROUND);
+	export_constant(SC_IMMUNE_PROPERTY_FIRE);
+	export_constant(SC_IMMUNE_PROPERTY_WIND);
+	export_constant(SC_IMMUNE_PROPERTY_POISON);
+	export_constant(SC_IMMUNE_PROPERTY_SAINT);
+	export_constant(SC_IMMUNE_PROPERTY_DARKNESS);
+	export_constant(SC_IMMUNE_PROPERTY_TELEKINESIS);
+	export_constant(SC_IMMUNE_PROPERTY_UNDEAD);
 	export_constant(SC_RUSH_QUAKE1);
 	export_constant(SC_RUSH_QUAKE2);
+	export_constant(SC_RELIEVE_ON);
+	export_constant(SC_RELIEVE_OFF);	
 
 	// Hyper Novice
 	export_constant(SC_SHIELDCHAINRUSH);
@@ -1945,6 +1960,7 @@
 #ifdef RENEWAL
 	export_constant(SC_EXTREMITYFIST2);
 #endif
+	export_constant(SC_EXPANDED_DHRES);
 
 	/* status icons */
 	export_deprecated_constant2("SI_BLANK",-1);
@@ -4667,6 +4683,7 @@
 	export_constant(MOB_MVPEXP);
 	export_constant(MOB_MATK);	
 	export_constant(MOB_ID);
+	export_constant(MOB_JOB);
 
 	/* petinfo types */
 	export_constant(PETINFO_ID);
@@ -9478,11 +9495,12 @@
 	export_constant(MD_IGNOREMISC);
 	export_constant(MD_KNOCKBACKIMMUNE);
 	export_constant(MD_TELEPORTBLOCK);
-	export_constant(MD_PCSKILLBEHAVIOR);
+	export_constant(MD_PCBEHAVIOR);
 	export_constant(MD_FIXEDITEMDROP);
 	export_constant(MD_DETECTOR);
 	export_constant(MD_STATUSIMMUNE);
 	export_constant(MD_SKILLIMMUNE);
+	export_constant(MD_STAYDEAD);
 
 	export_deprecated_constant3("MD_CASTSENSOR_IDLE", MD_CASTSENSORIDLE, "MD_CASTSENSORIDLE");
 	export_deprecated_constant3("MD_NORANDOM_WALK", MD_NORANDOMWALK, "MD_NORANDOMWALK");
