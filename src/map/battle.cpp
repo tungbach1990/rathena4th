@@ -2662,7 +2662,6 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 		case RL_R_TRIP:
 		case RL_R_TRIP_PLUSATK:
 		case SR_RAMPAGEBLASTER:
-		case DK_HACKANDSLASHER_ATK: // 2 cell cast range.		
 		case BO_ACIDIFIED_ZONE_WATER_ATK:
 		case BO_ACIDIFIED_ZONE_FIRE_ATK:
 		case BO_ACIDIFIED_ZONE_GROUND_ATK:
