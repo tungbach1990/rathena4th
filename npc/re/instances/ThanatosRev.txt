@@ -1,0 +1,1519 @@
+//===== rAthena Script =======================================
+//= Thanatos Tower
+//===== Description: =========================================
+//= [Official Conversion]
+//= Thanatos Revamped
+//===== Changelogs: ==========================================
+//= 1.0 First version. [Capuche]
+//============================================================
+
+thana_step,154,367,3	script	Rumin	4_M_AC_RUMIN,{
+	.@instance$ = "Memories of Thanatos";
+	.@party_id = getcharid(1);
+	.@p_name$ = getpartyname(.@party_id);
+	.@n$ = "[ Rumin ]";
+	if (BaseLevel < 180) {
+		mes .@n$; 
+		mes "You must be base level 180 to continue.";
+		end;
+	}
+	mes .@n$, "Memories of Thanatos Entrance"; 
+	switch(select(is_party_leader() ? "Create " +.@instance$ : "","Enter " +.@instance$,.@close$)){
+	case 1:			
+		switch( instance_create(.@instance$) ) {
+		case -3:
+			dispbottom "Memorial Dungeon, '"+.@instance$+"' is already in progress.",0xFFFFFF;
+			close;
+		case -4:
+		case -2:
+		case -1:
+			mes "Group Name: " + getpartyname( getcharid(1) );
+			mes "Group Leader: " + strcharinfo(0);
+			mes "^0000ff" + .@instance$ + "^000000 - instance reservation failed.";
+			close;
+		}
+		end;
+	case 2:
+		switch( instance_enter(.@instance$) ) {
+		case IE_OTHER:
+			mes .@n$;
+			mes "An unknown error has occurred.";
+			close;
+		case IE_NOINSTANCE:
+			mes .@n$;
+			mes "The rift of time is not yet open.";
+			close;
+		case IE_NOMEMBER:
+			mes .@n$;
+			mes "Your body is not fit to enter the time rift. You will not be able to join if you are not in a group.";
+			close;
+		case IE_OK:
+			end;
+		}
+		end;
+	}
+	end;
+}
+
+// =============================================================
+// First level of the Tower of Death
+//=============================================================
+1@thts,156,371,3	script	Lucille#thts	4_F_LUCILE,{
+	if('1thts || is_party_leader() == false)
+		end;
+	cutin "tnm_lucile01",2;
+	mes "[Lucille]";
+	mes "... ..." ;
+	next;
+	mes "[Lucille]";
+	mes "... ..." ;
+	mes "... ...?" ;
+	next;
+	mes "[Lucille]";
+	mes "... ..." ;
+	mes "... ... ..." ;
+	mes "Who are you ...?" ;
+	next;
+	mes "[Lucille]";
+	mes "This is not the time to say hello..." ;
+	mes "My name is Lucille of the Assassins Guild, I was about to investigate the remains of the Magic Swordsman..." ;
+	mes "Was he all alone before?" ;
+	next;
+	mes "[Lucille]";
+	mes "But for some reason, he didn't stop...";
+	next;
+	mes "[Lucille]";
+	mes "... ... ...";
+	next;
+	mes "[Lucille]";
+	mes "Can you do me a favour?" ;
+	next;
+	mes "[Lucille]";
+	mes "Actually, this tower has relics of the past.";
+	mes "I tried to destroy them, but as you can see, I can't move on now." ;
+	next;
+	if(select("Ask for details." , "How can I help you?") == 2)
+	{
+		mes "[Lucille]";
+		mes "My body can recover itself, but again there is not enough time to wait now." ;
+		mes "Just go up first, I'll catch up later!" ;
+		next;
+	}
+	mes "[Lucille]";
+	mes "... Data found... I remember now. ";
+	mes "In some places, there are magic stones that would have shone, but they were hidden for unknown reasons." ;
+	mes "There should be four coloured magic stones, which you will need to use when you reach the top." ;
+	next;
+	mes "[Lucille]";
+	mes "So... I'll see you at the top!" ;
+	npctalk "So... I'll see you at the top!" ;
+	close2;
+	cutin "",255;
+	if('1thts)
+		end;
+	'1thts = 1;
+	enablenpc instance_npcname("thts_warp_01");
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("thts_warp_01");
+	disablenpc instance_npcname("thts_warp_02");
+	disablenpc instance_npcname("thts_warp_03");
+	disablenpc instance_npcname("thts_warp_04");
+	disablenpc instance_npcname("thts_warp_05");
+	disablenpc instance_npcname("thts_warp_06");
+	disablenpc instance_npcname("thts_warp_07");
+	disablenpc instance_npcname("thts_warp_08");
+	disablenpc instance_npcname("thts_warp_09");
+	disablenpc instance_npcname("thts_warp_10");
+	disablenpc instance_npcname("thts_warp_11");
+
+	setarray 'floors[0],3,4,5,6;
+	setarray 'maps$[0],instance_mapname("3@thts"),instance_mapname("4@thts"),instance_mapname("5@thts"),instance_mapname("6@thts");
+	setarray 'xs[0],27,18,155,50;
+	setarray 'ys[0],44,97,100,18;
+	.@loop = getarraysize('floors);
+	for (.@i = 1; .@i <= .@loop ; .@i++) {
+		.@r = rand(getarraysize('floors));
+		'order[.@i] = 'floors[.@r];
+		deletearray 'floors[.@r],1;
+		'wm$[.@i] = 'maps$[.@r];
+		deletearray 'maps$[.@r],1;
+		'wx[.@i] = 'xs[.@r];
+		deletearray 'xs[.@r],1;
+		'wy[.@i] = 'ys[.@r];
+		deletearray 'ys[.@r],1;
+	}
+	'order[.@i] = 7;
+	'wm$[.@i] = instance_mapname("7@thts");
+	'wx[.@i] = 115;
+	'wy[.@i] = 17;
+	'current = 0;
+	
+	setarray 'map$[0], instance_mapname("1@thts"), instance_mapname("2@thts"), instance_mapname("3@thts"), instance_mapname("5@thts"), instance_mapname("4@thts"), instance_mapname("6@thts"), instance_mapname("7@thts"), instance_mapname("8@thts");
+	end;
+}
+
+// =============================================================
+// Tower of Death teleportation point
+//=============================================================
+1@thts,174,372,0	warp	thts_warp_01	2,2,2@thts,31,166
+2@thts,113,167,0	warp	thts_warp_02	2,2,1@thts,71,288
+1@thts,173,288,0	script	thts_warp_03	45,1,1,{
+	warp 'wm$['current],'wx['current],'wy['current];
+	end;
+}
+3@thts,114,43,0	warp	thts_warp_04	2,2,1@thts,31,223
+1@thts,32,166,0	script	thts_warp_05	45,1,1,{
+	warp 'wm$['current],'wx['current],'wy['current];
+	end;
+}
+5@thts,170,138,0	warp	thts_warp_06	2,2,1@thts,15,73
+1@thts,16,15,0	script	thts_warp_07	45,1,1,{
+	warp 'wm$['current],'wx['current],'wy['current];
+	end;
+}
+4@thts,92,145,0	warp	thts_warp_08	2,2,1@thts,181,223
+1@thts,182,166,0	script	thts_warp_09	45,1,1,{
+	warp 'wm$['current],'wx['current],'wy['current];
+	end;
+}
+6@thts,92,36,0	warp	thts_warp_10	2,2,1@thts,181,73
+1@thts,181,15,0	script	thts_warp_11	45,1,1,{
+	warp 'wm$['current],'wx['current],'wy['current];
+	end;
+}
+//=============================================================
+// Tower of Death Level 2 - Angel's Warning
+//=============================================================
+2@thts,58,172,3	script	Watcher#Angel's Warning	20800,9,9,{
+	end;
+OnTouch:
+	if('2thts || is_party_leader() == false)
+		end;
+	'2thts = 1;
+	npctalk "I am the watcher of this place, this is not a place for you humans to be." ;
+	sleep2 2000;
+	npctalk "If you ignore my warnings and continue on...";
+	sleep2 2000;
+	npctalk "You will regret your actions, and I will punish you!" ;
+	areamonster 'map$[1],42,180,61,164,"--ja--",20800,10,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],53,152,66,133,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],54,123,65,112,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],29,128,42,117,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],30,100,43,87,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],29,72,38,61,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],32,48,45,37,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],84,40,95,33,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],95,71,107,64,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],97,87,109,75,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],75,100,82,92,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],97,137,108,121,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],75,146,83,138,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[1],90,170,101,155,"--ja--",20800,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	sleep2 3000;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+OnMyMobDead:
+	if(mobcount('map$[1], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{
+		'current ++;
+		enablenpc instance_npcname("thts_warp_02");
+		enablenpc instance_npcname("thts_warp_03");
+		
+		donpcevent instance_npcname("#activate"+'order['current])+"::OnEnable";
+		mapannounce 'map$[1], "The teleportation point to the next level is open." ,bc_map,0x00ff00;
+	}
+	end;
+}
+
+// =============================================================
+// Tower of Death Level 3 - Memories of Hate
+//=============================================================
+3@thts,69,106,0	script	#activate3	-1,{
+	end;
+OnEnable:
+	donpcevent instance_npcname("Statue#GiveHateRoom")+"::OnStart";
+}
+3@thts,69,106,0	script	Statue#GiveHateRoom	4_ENERGY_RED,{
+	if('3thts < 5 || is_party_leader() == false)
+		end;
+	specialeffect EF_CARTTER;
+	mapannounce 'map$[2], "This shard carries a fragment of the Abomination's memory. The teleportation point to the next level has been opened." ,bc_map;
+	getitem 7438,1; // Hated shards
+	hideonnpc instance_npcname(strnpcinfo(0));
+	'current++; 
+	enablenpc instance_npcname("thts_warp_04");
+	enablenpc instance_npcname("thts_warp_05");
+	
+	donpcevent instance_npcname("#activate"+'order['current])+"::OnEnable";
+	end;
+OnStart:
+	areamonster 'map$[2],43,37,54,29,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],60,38,65,32,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],58,65,65,53,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],28,97,43,91,"--ja--",20788,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],33,71,45,59,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],32,124,41,109,"--ja--",20787,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],31,161,43,143,"--ja--",20787,4,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],44,184,62,173,"--ja--",20787,5,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],58,158,65,136,"--ja--",20787,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],74,181,86,171,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],73,160,82,137,"--ja--",20788,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],96,164,107,152,"--ja--",20788,5,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],96,124,110,118,"--ja--",20788,5,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],95,100,107,94,"--ja--",20787,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],94,68,107,56,"--ja--",20787,4,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],74,74,82,58,"--ja--",20787,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],73,80,82,74,"--ja--",20787,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[2],74,101,83,92,"--ja--",20787,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if(mobcount('map$[2], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{
+		mapannounce 'map$[2], "The middle sealed device has been closed and the magical crystal magic stone is glowing." ,bc_map;
+		setarray .@s$, "r", "g", "b", "y";
+		.@k = rand(1,4);
+		for(.@i = 0; .@i < getarraysize(.@s$); .@i++)
+			donpcevent instance_npcname("Glowing Crystal#thts_"+.@s$[.@i]+.@k)+"::OnEnable";
+	}
+	end;
+
+OnBoss:
+	mapannounce 'map$[2], "The abomination of Thanatos has appeared",bc_map,0x00ff00;
+	switch(rand(1,4))
+	{
+		case 1: areamonster 'map$[2],55,123,65,111,"--ja--",20796,1,instance_npcname(strnpcinfo(0))+"::OnBossDead"; break;
+		case 2: areamonster 'map$[2],74,123,85,111,"--ja--",20796,1,instance_npcname(strnpcinfo(0))+"::OnBossDead"; break;
+		case 3: areamonster 'map$[2],55,103,65,93,"--ja--",20796,1,instance_npcname(strnpcinfo(0))+"::OnBossDead"; break;
+		case 4: areamonster 'map$[2],74,103,85,93,"--ja--",20796,1,instance_npcname(strnpcinfo(0))+"::OnBossDead"; break;
+	}
+	end;
+
+OnBossDead:
+	'3thts ++;
+	end;
+}
+
+// =============================================================
+// Glowing Crystal
+// =============================================================
+3@thts,90,153,0	script	Glowing Crystal#thts_r1	4_ENERGY_RED,{
+	getitem 7426,1; //Magic_Gem_Red
+	specialeffect EF_SPELLBREAKER;
+	'3thts ++;
+	if('3thts > 3)
+		donpcevent instance_npcname("Statue#GiveHateRoom") + "::OnBoss";
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnInstanceInit:
+OnDisable:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+3@thts,90,62,0	duplicate(Glowing Crystal#thts_r1)	Glowing Crystal#thts_r2	4_ENERGY_RED
+3@thts,49,59,0	duplicate(Glowing Crystal#thts_r1)	Glowing Crystal#thts_r3	4_ENERGY_RED
+3@thts,49,144,0	duplicate(Glowing Crystal#thts_r1)	Glowing Crystal#thts_r4	4_ENERGY_RED
+
+3@thts,49,153,0	script	Glowing Crystal#thts_y1	4_ENERGY_YELLOW,{
+	getitem 7427,1; //Magic_Gem_Yellow
+	specialeffect EF_SPELLBREAKER;
+	'3thts ++;
+	if('3thts > 3)
+		donpcevent instance_npcname("Statue#GiveHateRoom") + "::OnBoss";
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnInstanceInit:
+OnDisable:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+3@thts,90,150,0	duplicate(Glowing Crystal#thts_y1)	Glowing Crystal#thts_y2	4_ENERGY_YELLOW
+3@thts,90,59,0	duplicate(Glowing Crystal#thts_y1)	Glowing Crystal#thts_y3	4_ENERGY_YELLOW
+3@thts,49,56,0	duplicate(Glowing Crystal#thts_y1)	Glowing Crystal#thts_y4	4_ENERGY_YELLOW
+
+3@thts,49,65,0	script	Glowing Crystal#thts_b1	4_ENERGY_BLUE,{
+	getitem 7428,1; //Magic_Gem_Blue
+	specialeffect EF_SPELLBREAKER;
+	'3thts ++;
+	if('3thts > 3)
+		donpcevent instance_npcname("Statue#GiveHateRoom") + "::OnBoss";
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnInstanceInit:
+OnDisable:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+3@thts,49,150,0	duplicate(Glowing Crystal#thts_b1)	Glowing Crystal#thts_b2	4_ENERGY_BLUE
+3@thts,90,147,0	duplicate(Glowing Crystal#thts_b1)	Glowing Crystal#thts_b3	4_ENERGY_BLUE
+3@thts,90,56,0	duplicate(Glowing Crystal#thts_b1)	Glowing Crystal#thts_b4	4_ENERGY_BLUE
+
+3@thts,90,65,0	script	Glowing Crystal#thts_g1	4_ENERGY_WHITE,{
+	getitem 7429,1; //Magic_Gem_Green
+	specialeffect EF_SPELLBREAKER;
+	'3thts ++;
+	if('3thts > 3)
+		donpcevent instance_npcname("Statue#GiveHateRoom") + "::OnBoss";
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnInstanceInit:
+OnDisable:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+3@thts,49,62,0	duplicate(Glowing Crystal#thts_g1)	Glowing Crystal#thts_g2	4_ENERGY_WHITE
+3@thts,49,147,0	duplicate(Glowing Crystal#thts_g1)	Glowing Crystal#thts_g3	4_ENERGY_WHITE
+3@thts,90,144,0	duplicate(Glowing Crystal#thts_g1)	Glowing Crystal#thts_g4	4_ENERGY_WHITE
+
+// =============================================================
+// Tower of Death Level 5 - Sad Memories
+//=============================================================
+5@thts,52,133,3	script	#activate5	-1,{
+	end;
+OnEnable:
+	donpcevent instance_npcname("#Tower of Death_Room of Sorrows")+"::OnStart";
+}
+5@thts,129,155,8	script	#Tower of Death_Room of Sorrows	20798,{
+	if(is_party_leader() == false)
+		end;
+	specialeffect EF_CARTTER;
+	getitem 7437,1; // Sad fragment
+	mapannounce 'map$[3], "The bind of sorrowful memories has been closed and the teleportation point to the next level has been opened." ,bc_map;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	'current++; 
+	enablenpc instance_npcname("thts_warp_06");
+	enablenpc instance_npcname("thts_warp_07");
+	
+	donpcevent instance_npcname("#activate"+'order['current])+"::OnEnable";
+	disablenpc instance_npcname("#Tower of Death Blizzard 01");
+	disablenpc instance_npcname("#Tower of Death Blizzard 02");
+	disablenpc instance_npcname("#Tower of Death Blizzard 03");
+	disablenpc instance_npcname("#Tower of Death Blizzard 04");
+	disablenpc instance_npcname("#Tower of Death Blizzard 05");
+	disablenpc instance_npcname("#Tower of Death Blizzard 06");
+	disablenpc instance_npcname("#Tower of Death Blizzard 07");
+	disablenpc instance_npcname("#Tower of Death Blizzard 08");
+	disablenpc instance_npcname("#Tower of Death Blizzard 09");
+	disablenpc instance_npcname("#Tower of Death Blizzard 10");
+	disablenpc instance_npcname("#Tower of Death Blizzard 11");
+	disablenpc instance_npcname("#Tower of Death Blizzard 12");
+	disablenpc instance_npcname("#Tower of Death Blizzard 13");
+	disablenpc instance_npcname("#Tower of Death Blizzard 14");
+	end;
+OnStart:
+	areamonster 'map$[3],94,115,116,102,"--ja--",20791,7,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[3],96,131,114,117,"--ja--",20791,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[3],160,131,160,122,"--ja--",20791,10,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[3],145,147,163,133,"--ja--",20791,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[3],124,163,165,150,"--ja--",20791,15,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if(mobcount('map$[3], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{
+		monster 'map$[3],129,155,"--ja--",20798,1,instance_npcname(strnpcinfo(0))+"::OnBossDead";
+		mapannounce 'map$[3],getmonsterinfo(20798, MOB_NAME)+"Appeared around the stone statue." ,bc_map,0x00ff00;
+	}
+	end;
+
+OnBossDead:
+	hideoffnpc instance_npcname(strnpcinfo(0));
+	mapannounce 'map$[3], "The body of pain has become broken, the icy storm has lifted." ,bc_map,0x00ff00;
+	end;
+
+OnInstanceInit:
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+5@thts,0,0,5	script	#Tower of Death Blizzard	139,9,9,{
+	end;
+OnTouch:
+	if(unitexists(getd("'GID_STORMGUST_"+instance_npcname(strnpcinfo(0)))))
+		end;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[3],.@x,.@y,"--ja--",20562,1;
+	setd "'GID_STORMGUST_"+instance_npcname(strnpcinfo(0)), $@mobid[0];
+	setunitdata getd("'GID_STORMGUST_"+instance_npcname(strnpcinfo(0))), UMOB_CLASS, 139;
+	setunitdata getd("'GID_STORMGUST_"+instance_npcname(strnpcinfo(0))), UMOB_DMGIMMUNE, 1;
+	areamobuseskill 'map$[3],.@x,.@y,5,20562, "WZ_STORMGUST",10,0,0,-1,3;
+	if('STORM == 0)
+	{
+		'STORM = 1;
+		mapannounce 'map$[3], "The mechanism on the ground has been touched and an icy storm has descended...",bc_map,0x00ff00;
+	}
+	disablenpc instance_npcname(strnpcinfo(0));
+	initnpctimer;
+	end;
+
+OnTimer5000:
+	mobremove getd("'GID_STORMGUST_"+instance_npcname(strnpcinfo(0)));
+	enablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+5@thts,120,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 01	139,5,5
+5@thts,96,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 02	139,5,5
+5@thts,106,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 03	139,5,5
+5@thts,117,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 04	139,5,5
+5@thts,128,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 05	139,5,5
+5@thts,139,124,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 06	139,5,5
+5@thts,109,113,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 07	139,5,5
+5@thts,98,113,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 08	139,5,5
+5@thts,145,126,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 09	139,5,5
+5@thts,157,127,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 10	139,5,5
+5@thts,160,135,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 11	139,5,5
+5@thts,145,135,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 12	139,5,5
+5@thts,145,143,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 13	139,5,5
+5@thts,160,144,0	duplicate(#Tower of Death Blizzard)	#Tower of Death Blizzard 14	139,5,5
+
+//=============================================================
+// Tower of Death Level 4 - Distressing Memories
+//=============================================================
+4@thts,52,133,3	script	#activate4	-1,{
+	end;
+OnEnable:
+	donpcevent instance_npcname("#Tower of Death_The Room of Distress")+"::OnStart";
+}
+4@thts,52,133,3	script	#Tower of Death_The Room of Distress	20799,{
+	if(is_party_leader() == false)
+		end;
+	specialeffect EF_CARTTER;
+	getitem 7436,1; // distressed fragment
+	hideonnpc instance_npcname(strnpcinfo(0));
+	'current++; 
+	enablenpc instance_npcname("thts_warp_08");
+	enablenpc instance_npcname("thts_warp_09");
+	
+	donpcevent instance_npcname("#activate"+'order['current])+"::OnEnable";
+	disablenpc instance_npcname("#Tower of Death Wall of Flames 1");
+	disablenpc instance_npcname("#Tower of Death Wall of Flames 2");
+	end;
+
+OnStart:
+	areamonster 'map$[4],23,116,40,98,"--ja--",20790,10,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[4],44,132,57,119,"--ja--",20790,5,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[4],22,159,38,141,"--ja--",20790,8,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[4],15,152,29,135,"--ja--",20790,8,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[4],55,156,89,136,"--ja--",20790,8,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[4],73,121,87,106,"--ja--",20790,4,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if(mobcount('map$[4], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{
+		monster 'map$[4],52,133,"--ja--",20799,1,instance_npcname(strnpcinfo(0))+"::OnBossDead";
+		mapannounce 'map$[4],getmonsterinfo(20799, MOB_NAME)+"appears in the middle." ,bc_map,0x00ff00;
+	}
+	end;
+
+OnBossDead:
+	hideoffnpc instance_npcname(strnpcinfo(0));
+	mapannounce 'map$[4], "The memory of the affliction has shattered and the flame spell has been lifted." ,bc_map,0x00ff00;
+	end;
+
+OnInstanceInit:
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+4@thts,40,136,0	script	#Tower of Death Wall of Flames 1	139,5,5,{
+	end;
+OnTouch_:
+	if(getarraysize('FireGID_A))
+		end;
+	getmapxy .@map$, .@x, .@y, BL_NPC;
+	.@range = 2;
+	while(.@FIREWALL <= 3)
+	{
+		.@FIREWALL ++;
+		switch(.@FIREWALL)
+		{
+			case 1: break;
+			case 2: .@x = .@x+1;	.@y = .@y+1;	break;
+			case 3: .@x = .@x+1;	.@y = .@y-1;	break;
+			case 4: .@x = .@x-1;	.@y = .@y-1;	break;
+			case 5: .@x = .@x-1;	.@y = .@y+1;	break;
+			default: break;
+		}
+		for(.@i = 0; .@i < 30; .@i += .@range)
+		{
+			if ( checkcell(.@map$, .@x-.@i, .@y+.@i, cell_chkpass) )
+			{
+				monster(.@map$, .@x-.@i, .@y+.@i, "", 20562, 1);
+				.@unit_id = $@mobid[0];
+				setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+				setunitdata .@unit_id, UMOB_CLASS, 139;
+				'FireGID_A[getarraysize('FireGID_A)] = .@unit_id;
+				unitskillusepos .@unit_id, "MG_FIREWALL", 10, .@x-.@i, .@y+.@i,-5000;
+			}
+			if ( checkcell(.@map$, .@x+.@i, .@y-.@i, cell_chkpass) )
+			{
+				monster(.@map$, .@x+.@i, .@y-.@i, "", 20562, 1);
+				.@unit_id = $@mobid[0];
+				setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+				setunitdata .@unit_id, UMOB_CLASS, 139;
+				'FireGID_A[getarraysize('FireGID_A)] = .@unit_id;
+				unitskillusepos .@unit_id, "MG_FIREWALL", 10, .@x+.@i, .@y-.@i,-5000;
+			}
+		}
+	}
+	if('FIREWALL[0] == 0)
+	{
+		'FIREWALL[0] = 1;
+		mapannounce 'map$[4], "Body feels very hot...",bc_map,0x00ff00;
+	}
+	initnpctimer;
+	end;
+
+OnTimer10000:
+	stopnpctimer;
+	for(.@i = 0; .@i < getarraysize('FireGID_A); .@i++)
+		if(unitexists('FireGID_A[.@i])) mobremove 'FireGID_A[.@i];
+	'FIREWALL[0] = 0;
+	deletearray 'FireGID_A;
+	end;
+}
+
+4@thts,57,144,0	script	#Tower of Death Wall of Flames 2	139,5,5,{
+	end;
+OnTouch_:
+	if(getarraysize('FireGID_B))
+		end;
+	getmapxy .@map$, .@x, .@y, BL_NPC;
+	.@range = 2;
+	while(.@FIREWALL <= 3)
+	{
+		.@FIREWALL ++;
+		switch(.@FIREWALL)
+		{
+			case 1: break;
+			case 2: .@x = .@x+1;	.@y = .@y+1;	break;
+			case 3: .@x = .@x+1;	.@y = .@y-1;	break;
+			case 4: .@x = .@x-1;	.@y = .@y-1;	break;
+			case 5: .@x = .@x-1;	.@y = .@y+1;	break;
+			default: break;
+		}
+		for(.@i = 0; .@i < 30; .@i += .@range)
+		{
+			if ( checkcell(.@map$, .@x+.@i, .@y+.@i, cell_chkpass) )
+			{
+				monster(.@map$, .@x+.@i, .@y+.@i, "", 20562, 1);
+				.@unit_id = $@mobid[0];
+				setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+				setunitdata .@unit_id, UMOB_CLASS, 139;
+				'FireGID_B[getarraysize('FireGID_B)] = .@unit_id;
+				unitskillusepos .@unit_id, "MG_FIREWALL", 10, .@x+.@i, .@y+.@i,-5000;
+			}
+			if ( checkcell(.@map$, .@x-.@i, .@y-.@i, cell_chkpass) )
+			{
+				monster(.@map$, .@x-.@i, .@y-.@i, "", 20562, 1);
+				.@unit_id = $@mobid[0];
+				setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+				setunitdata .@unit_id, UMOB_CLASS, 139;
+				'FireGID_B[getarraysize('FireGID_B)] = .@unit_id;
+				unitskillusepos .@unit_id, "MG_FIREWALL", 10, .@x-.@i, .@y-.@i,-5000;
+			}
+		}
+	}
+	if('FIREWALL[1] == 0)
+	{
+		'FIREWALL[1] = 1;
+		mapannounce 'map$[4], "Body feels very hot...",bc_map,0x00ff00;
+	}
+	initnpctimer;
+	end;
+
+OnTimer10000:
+	stopnpctimer;
+	for(.@i = 0; .@i < getarraysize('FireGID_B); .@i++)
+		if(unitexists('FireGID_B[.@i])) mobremove 'FireGID_B[.@i];
+	'FIREWALL[1] = 0;
+	deletearray 'FireGID_B;
+	end;
+}
+
+// =============================================================
+// Tower of Death Level 6 - Desperate Memories
+//=============================================================
+6@thts,48,55,3	script	#activate6	-1,{
+	end;
+OnEnable:
+	donpcevent instance_npcname("#Tower of Death_Room of Despair")+"::OnStart";
+}
+6@thts,48,55,3	script	#Tower of Death_Room of Despair	20797,{
+	if(is_party_leader() == false)
+		end;
+	specialeffect EF_CARTTER;
+	getitem 7439,1; // Desperate shard
+	hideonnpc instance_npcname(strnpcinfo(0));
+	'current++; 
+	enablenpc instance_npcname("thts_warp_10");
+	enablenpc instance_npcname("thts_warp_11");
+	
+	donpcevent instance_npcname("#activate"+'order['current])+"::OnEnable";
+	disablenpc instance_npcname("#Tower of Death Earthquake Link1");
+	disablenpc instance_npcname("#Tower of Death Earthquake Link2");
+	disablenpc instance_npcname("#Tower of Death Earthquake Link3");
+	disablenpc instance_npcname("#Tower of Death Earthquake Link4");
+	disablenpc instance_npcname("#Tower of Death Earthquake Link5");
+	end;
+
+OnStart:
+	areamonster 'map$[5],16,37,34,19,"--ja--",20789,10,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],23,116,40,98,"--ja--",20789,15,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],41,63,56,45,"--ja--",20789,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],60,46,72,36,"--ja--",20789,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],42,69,58,61,"--ja--",20789,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],65,85,82,68,"--ja--",20789,10,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],18,85,36,75,"--ja--",20789,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],59,46,71,33,"--ja--",20789,6,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	areamonster 'map$[5],77,28,82,20,"--ja--",20789,3,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if(mobcount('map$[5], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{
+		monster 'map$[5],48,55,"--ja--",20797,1,instance_npcname(strnpcinfo(0))+"::OnBossDead";
+		mapannounce 'map$[5],getmonsterinfo(20797, MOB_NAME)+"emerged." ,bc_map,0x00ff00;
+	}
+	end;
+
+OnBossDead:
+	hideoffnpc instance_npcname(strnpcinfo(0));
+	mapannounce 'map$[5], "Desperate memories have shattered and the earthquake link has been lifted." ,bc_map,0x00ff00;
+	end;
+
+OnInstanceInit:
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+6@thts,0,0,0	script	#Tower of Death Earthquake Link	139,5,5,{
+	end;
+OnTouch:
+	if(unitexists(getd("'GID_EQ"+instance_npcname(strnpcinfo(0)))))
+		end;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[5],.@x,.@y,"--ja--",20582,1;
+	setd "'GID_EQ"+instance_npcname(strnpcinfo(0)), $@mobid[0];
+	setunitdata getd("'GID_EQ"+instance_npcname(strnpcinfo(0))), UMOB_CLASS, 139;
+	setunitdata getd("'GID_EQ"+instance_npcname(strnpcinfo(0))), UMOB_DMGIMMUNE, 1;
+	// Adjust the strength of the seismic link (the more people on the map the stronger it is)
+	unitskilluseid getd("'GID_EQ"+instance_npcname(strnpcinfo(0))), "NPC_EARTHQUAKE",getmapusers('map$[5]);
+	if('EARTHQUAKE == 0)
+	{
+		'EARTHQUAKE = 1;
+		mapannounce 'map$[5], "Earthquake link has been triggered",bc_map,0x00ff00;
+	}
+	disablenpc instance_npcname(strnpcinfo(0));
+	initnpctimer;
+	end;
+
+OnTimer5000:
+	if(unitexists(getd("'GID_EQ"+instance_npcname(strnpcinfo(0)))))
+	{
+		mobremove getd("'GID_EQ"+instance_npcname(strnpcinfo(0)));
+		enablenpc instance_npcname(strnpcinfo(0));
+	}
+	end;
+}
+
+6@thts,37,19,0	duplicate(#Tower of Death Earthquake Link)	#Tower of Death Earthquake Link1	139,5,5
+6@thts,21,22,0	duplicate(#Tower of Death Earthquake Link)	#Tower of Death Earthquake Link2	139,5,5
+6@thts,30,41,0	duplicate(#Tower of Death Earthquake Link)	#Tower of Death Earthquake Link3	139,5,5
+6@thts,48,77,0	duplicate(#Tower of Death Earthquake Link)	#Tower of Death Earthquake Link4	139,5,5
+6@thts,71,35,0	duplicate(#Tower of Death Earthquake Link)	#Tower of Death Earthquake Link5	139,5,5
+
+//=============================================================
+// Tower of Death Level 7 - Memory of Rage
+//=============================================================
+7@thts,48,55,3	script	#activate7	-1,{
+	end;
+OnEnable:
+	enablenpc instance_npcname("Blue Angel Statue#thts");
+	enablenpc instance_npcname("Blood Red Knight Statue#thts");
+	enablenpc instance_npcname("Golden Religious Statue#thts");
+	enablenpc instance_npcname("Green Sage Statue#thts");
+}
+7@thts,0,0,0	script	#Tower of Death_Rage Room	-1,{
+	end;
+OnStart1:
+	areamonster 'map$[6],121,62,129,47,"--ja--",20792,rand(5,8),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+OnStart3:
+	areamonster 'map$[6],130,60,136,48,"--ja--",20793,rand(5,8),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+OnStart2:
+	areamonster 'map$[6],121,62,129,47,"--ja--",20794,rand(5,8),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+OnStart4:
+	areamonster 'map$[6],130,60,136,48,"--ja--",20795,rand(5,8),instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+
+OnMyMobDead:
+	if(mobcount('map$[6], instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1)
+	{	
+		if('7thts >= 4)
+		{
+			mapannounce 'map$[6], "Black Demon Statue : Kakakakakakakakakakakak... Do you wish to experience the deepest darkness...?",bc_map,0x00ff00;
+			enablenpc instance_npcname("Black Devil Statue#thts");
+		}
+	}
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname("#thts_effect01");
+	disablenpc instance_npcname("#thts_effect02");
+	disablenpc instance_npcname("#thts_effect03");
+	disablenpc instance_npcname("#thts_effect04");
+	disablenpc instance_npcname("#thts_effect05");
+	end;
+}
+
+/*****************************
+- Statues
+*****************************/
+7@thts,103,18,0	script	Blue Angel Statue#thts	4_ENERGY_BLUE,{
+	if(is_party_leader() == false)
+		end;
+	if (countitem(7436)) {
+		delitem 7436,1;
+		donpcevent instance_npcname("#Tower of Death_Rage Room")+"::OnStart1";
+		mapannounce 'map$[6], "Afraid...of fear?" ,bc_map,0x00ff00;
+		hideonnpc instance_npcname(strnpcinfo(0));
+		'7thts ++;
+	} else {
+		showscript "I need a " + getitemname(7436) + "...";
+	}
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,95,58,0	script	Blood Red Knight Statue#thts	4_ENERGY_RED,{
+	if(is_party_leader() == false)
+		end;
+	if (countitem(7439)) {
+		delitem 7439,1;
+		donpcevent instance_npcname("#Tower of Death_Rage Room")+"::OnStart3";
+		mapannounce 'map$[6], "Rage...filled all around...",bc_map,0x00ff00;
+		hideonnpc instance_npcname(strnpcinfo(0));
+		'7thts ++;
+	} else {
+		showscript "I need a " + getitemname(7439) + "...";
+	}
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,162,58,0	script	Golden Religious Statue#thts	4_ENERGY_YELLOW,{
+	if(is_party_leader() == false)
+		end;
+	if (countitem(7438)) {
+		delitem 7438,1;
+		donpcevent instance_npcname("#Tower of Death_Rage Room")+"::OnStart2";
+		mapannounce 'map$[6], "Do you resent your fate?" ,bc_map,0x00ff00;
+		hideonnpc instance_npcname(strnpcinfo(0));
+		'7thts ++;
+	} else {
+		showscript "I need a " + getitemname(7438) + "...";
+	}
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+7@thts,153,17,0	script	Green Sage Statue#thts	4_ENERGY_WHITE,{
+	if(is_party_leader() == false)
+		end;
+	if (countitem(7437)) {
+		delitem 7437,1;
+		donpcevent instance_npcname("#Tower of Death_Rage Room")+"::OnStart4";
+		mapannounce 'map$[6], "Do you regret the decisions you've made?" ,bc_map,0x00ff00;
+		hideonnpc instance_npcname(strnpcinfo(0));
+		'7thts ++;
+	} else {
+		showscript "I need a " + getitemname(7437) + "...";
+	}
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+7@thts,129,86,0	script	Black Devil Statue#thts	4_ENERGY_RED,{
+	if(is_party_leader() == false)
+		end;
+	'7thts ++;
+	if('7thts >= 5)
+	{
+		getitem 7430, 1; // black magic stone
+		mapannounce 'map$[6], "Intense dark magic unleashes the final seal and flames appear in the centre." ,bc_map,0x00ff00;
+		specialeffect EF_BEGINSPELL7;
+		enablenpc instance_npcname("#thts_effect01");
+		enablenpc instance_npcname("#thts_effect02");
+		enablenpc instance_npcname("#thts_effect03");
+		enablenpc instance_npcname("#thts_effect04");
+		enablenpc instance_npcname("#thts_effect05");
+	}
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+/*****************************
+- Torch
+*****************************/
+7@thts,134,52,0	script	#thts_effect01	4_NFWISP,{
+	disable_items;
+	.@item_id = 7426;
+	if('thana_summon&1)
+		dispbottom "Someone has put" + getitemname(.@item_id)+"into the flame." ,0xFFFFFF;
+	else if(countitem(.@item_id))
+	{
+		delitem .@item_id, 1;
+		'thana_summon |= 1;
+		specialeffect EF_WHITEBODY;
+		specialeffect EF_BEGINSPELL3;
+		mapannounce 'map$[6], "The strange magic is concentrated in the centre and part of the door is unsealed." ,bc_map,0x00ff00;
+		if('thana_summon == 31)
+			donpcevent instance_npcname("#ins_gateto_thanatos") + "::OnEnable";
+	}
+	else
+		dispbottom "There seems to be one missing" + getitemname(.@item_id)+"." ,0xFF0000;
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,132,47,0	script	#thts_effect02	4_NFWISP,{
+	disable_items;
+	.@item_id = 7427;
+	if('thana_summon&2)
+		dispbottom "Someone has put" + getitemname(.@item_id)+"into the flame." ,0xFFFFFF;
+	else if(countitem(.@item_id))
+	{
+		delitem .@item_id, 1;
+		'thana_summon |= 2;
+		specialeffect EF_WHITEBODY;
+		specialeffect EF_BEGINSPELL3;
+		mapannounce 'map$[6], "The strange magic is concentrated in the centre, and part of the door is unsealed." ,bc_map,0x00ff00;
+		if('thana_summon == 31)
+			donpcevent instance_npcname("#ins_gateto_thanatos") + "::OnEnable";
+	}
+	else
+		dispbottom "There seems to be one missing" + getitemname(.@item_id)+"." ,0xFF0000;
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,127,47,0	script	#thts_effect03	4_NFWISP,{
+	disable_items;
+	.@item_id = 7428;
+	if('thana_summon&4)
+		dispbottom "Someone has put" + getitemname(.@item_id)+"into the flame." ,0xFFFFFF;
+	else if(countitem(.@item_id))
+	{
+		delitem .@item_id, 1;
+		'thana_summon |= 4;
+		specialeffect EF_WHITEBODY;
+		specialeffect EF_BEGINSPELL3;
+		mapannounce 'map$[6], "The strange magic is concentrated in the centre, and part of the door is unsealed." ,bc_map,0x00ff00;
+		if('thana_summon == 31)
+			donpcevent instance_npcname("#ins_gateto_thanatos") + "::OnEnable";
+	}
+	else
+		dispbottom "There seems to be one missing" + getitemname(.@item_id)+"." ,0xFF0000;
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,125,52,0	script	#thts_effect04	4_NFWISP,{
+	disable_items;
+	.@item_id = 7429;
+	if('thana_summon&8)
+		dispbottom "Someone has put" + getitemname(.@item_id)+"into the flame." ,0xFFFFFF;
+	else if(countitem(.@item_id))
+	{
+		delitem .@item_id, 1;
+		'thana_summon |= 8;
+		specialeffect EF_WHITEBODY;
+		specialeffect EF_BEGINSPELL3;
+		mapannounce 'map$[6], "The strange magic is concentrated in the centre, and part of the door is unsealed." ,bc_map,0x00ff00;
+		if('thana_summon == 31)
+			donpcevent instance_npcname("#ins_gateto_thanatos") + "::OnEnable";
+	}
+	else
+		dispbottom "There seems to be one missing" + getitemname(.@item_id)+"." ,0xFF0000;
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+7@thts,129,56,0	script	#thts_effect05	4_NFWISP,{
+	disable_items;
+	.@item_id = 7430;
+	if('thana_summon&16)
+		dispbottom "Someone has put" + getitemname(.@item_id)+"into the flame." ,0xFFFFFF;
+	else if(countitem(.@item_id))
+	{
+		delitem .@item_id, 1;
+		'thana_summon |= 16;
+		specialeffect EF_WHITEBODY;
+		specialeffect EF_BEGINSPELL3;
+		mapannounce 'map$[6], "strong" + substr(getitemname(.@item_id),0,1) + "The strange magic is concentrated in the centre, and part of the door is unsealed." ,bc_map,0x00ff00;
+		if('thana_summon == 31)
+			donpcevent instance_npcname("#ins_gateto_thanatos") + "::OnEnable";
+	}
+	else
+		dispbottom "There seems to be one missing" + getitemname(.@item_id)+"." ,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+/*****************************
+- Central transfer point (to the top of the tower)
+*****************************/
+7@thts,130,52,0	script	#ins_gateto_thanatos	45,1,1,{
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname("#ins_gateto_thanatos");
+	end;
+OnEnable:
+	mapannounce 'map$[6], "The final seal has been lifted and the door is open." ,bc_map,0x00ff00;
+	enablenpc instance_npcname("#ins_gateto_thanatos");
+	enablenpc instance_npcname("#sealthts");
+	specialeffect EF_MAPPILLAR2;
+OnOn2:
+	initnpctimer;
+	end;
+OnTimer1000:
+OnTimer3000:
+OnTimer5000:
+	specialeffect EF_BEGINSPELL3,AREA,instance_npcname("#thts_effect05");
+	specialeffect EF_BEGINSPELL3,AREA,instance_npcname("#thts_effect04");
+	specialeffect EF_BEGINSPELL3,AREA,instance_npcname("#thts_effect03");
+	specialeffect EF_BEGINSPELL3,AREA,instance_npcname("#thts_effect02");
+	specialeffect EF_BEGINSPELL3,AREA,instance_npcname("#thts_effect01");
+	end;
+
+OnTouch_:
+	.@touch = 1;
+OnTimer6000:
+	if('thana_summon&31 == 31)
+	{
+		if (.@touch) warp 'map$[7],136,116;
+		else donpcevent instance_npcname("#ins_gateto_thanatos")+"::OnOn2";
+	}
+	end;
+}
+
+// =============================================================
+// Tower of Death - Thanatos Tower
+//=============================================================
+//*****************************
+//- Sealed Stone Trigger
+//*****************************/
+8@thts,136,139,3	script	#sealthts	4_ENERGY_BLACK,{
+	disable_items;
+	specialeffect EF_SPELLBREAKER;
+	specialeffect EF_DQ9_CHARGE3;
+	specialeffect EF_BLUELINE;
+	if('hide || is_party_leader() == false)
+		end;
+	'hide = 1;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	mapannounce 'map$[7], "The memories of the magical swordsman Thanatos have been released." ,bc_map,0x7b68ee;
+	sleep 1500;
+	mapannounce 'map$[7],"... Fragments of forgotten memories..." ,bc_map,0xff0000;
+	sleep 1500;
+	mapannounce 'map$[7],"...shattered...broken...scattered...into a tear ......",bc_map,0xff0000;
+	sleep 1500;
+	mapannounce 'map$[7],"...ravaged to pieces ...... take a deep breath ............", bc_map,0xff0000;
+	sleep 1500;
+	mapannounce 'map$[7],"...thick with blood ...... into a dagger in the chest ......",bc_map,0xff0000;
+	sleep 1500;
+	mapannounce 'map$[7],"...... those who want to invade this land again ...... perish ......!!!" ,bc_map,0xff0000;
+	sleep 1500;
+	mapannounce 'map$[7],"...is ...... Thanatos! The man who ...... exterminated the ...... Demons!!!" ,bc_map,0xff0000;
+	sleep 1500;
+	// Pick three sealed stones at random
+	// You need to unseal and knock down the corresponding sealing stones or you can't summon the Demon Swordsman
+	// You can't summon a swordsman even if you hit the wrong seal stone
+	mapannounce 'map$[7], "If the screen is too bright for your eyes, please adjust the screen brightness or turn off the effects /effect temporarily",bc_map,0x00FFFF;
+	setarray .@str$, "Seal of Sorrow", "Seal of Misery", "Seal of Despair", "Seal of Hatred", "Seal of Anger";
+	do {
+		.@i = rand(getarraysize(.@str$));
+		if(inarray('SealCheck$, .@str$[.@i]) == -1) {
+			'SealCheck$[getarraysize('SealCheck$)] = .@str$[.@i];
+			mapannounce 'map$[7], "Memory fragments subject to " + .@str$[.@i]+ " protected." ,bc_map,0x00ff00;
+		}
+	} while(getarraysize('SealCheck$) < 3);
+	enablenpc instance_npcname("Seal of Sorrow#thts_1");
+	enablenpc instance_npcname("Seal of Misery#thts_2");
+	enablenpc instance_npcname("Seal of Despair#thts_3");
+	enablenpc instance_npcname("Seal of Hatred#thts_4");
+	enablenpc instance_npcname("Seal of Anger#thts_5");
+	mapannounce 'map$[7], "Please use the corresponding shard to unseal the protected Seal Stone." ,bc_map,0x00ff00;
+	initnpctimer;
+	end;
+
+OnTimer5000:
+	specialeffect EF_SPELLBREAKER;
+	specialeffect EF_DQ9_CHARGE3;
+	specialeffect EF_BLUELINE;
+	end;
+
+OnInstanceInit:
+	//disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// top right corner (sad fragment #7437)
+8@thts,205,161,3	script	Seal of Sorrow#thts_1	20786,{
+	disable_items;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[7], .@x, .@y, "--ja--", 20786, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	mapannounce 'map$[7], "The stone appeared to react to the fragment of sorrow, the seal that bound the memory is released." ,bc_map,0x00ff00;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnMyMobDead:
+	if(inarray('SealCheck$, strnpcinfo(1)) > -1)
+	{
+		'thana_summon2 ++;
+		mapannounce 'map$[7], "The Seal of Sorrow was destroyed, erasing Thanatos' memories of sorrow." ,bc_map,0x00ff00;
+		if('thana_summon2 >= getarraysize('SealCheck$))
+			donpcevent instance_npcname("#sommon_instance_thanatos")+"::OnEnable";
+		end;
+	}
+	'fail = 1;
+	mapannounce 'map$[7],strnpcinfo(1)+"Forced to destroy, broken memories become unstable...",bc_map,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// lower right corner (distressed fragment #7436)
+8@thts,191,86,3	script	Seal of Misery#thts_2	20786,{
+	disable_items;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[7], .@x, .@y, "Seal of Misery", 20786, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	mapannounce 'map$[7], "The stone appeared to react to the fragment of misery, the seal that bound the memory is released." ,bc_map,0x00ff00;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnMyMobDead:
+	if(inarray('SealCheck$, strnpcinfo(1)) > -1)
+	{
+		'thana_summon2 ++;
+		mapannounce 'map$[7], "The Seal of Misery was destroyed, erasing Thanatos' memories of misery." ,bc_map,0x00ff00;
+		if('thana_summon2 >= getarraysize('SealCheck$))
+			donpcevent instance_npcname("#sommon_instance_thanatos")+"::OnEnable";
+		end;
+	}
+	'fail = 1;
+	mapannounce 'map$[7],strnpcinfo(1)+"Forced to destroy, broken memories become unstable...",bc_map,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// Top left corner (Desperate Shards #7439)
+8@thts,68,168,3	script	Seal of Despair#thts_3	20786,{
+	disable_items;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[7], .@x, .@y, "Seal of Despair", 20786, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	mapannounce 'map$[7], "The stone appeared to react to the fragment of despair, the seal that bound the memory is released." ,bc_map,0x00ff00;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnMyMobDead:
+	if(inarray('SealCheck$, strnpcinfo(1)) > -1)
+	{
+		'thana_summon2 ++;
+		mapannounce 'map$[7], "The sealstone of despair was destroyed, erasing Thanatos' memories of despair." ,bc_map,0x00ff00;
+		if('thana_summon2 >= getarraysize('SealCheck$))
+			donpcevent instance_npcname("#sommon_instance_thanatos")+"::OnEnable";
+		end;
+	}
+	'fail = 1;
+	mapannounce 'map$[7],strnpcinfo(1)+"Forced to destroy, broken memories become unstable...",bc_map,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// lower left corner (hated shard #7439)
+8@thts,89,85,3	script	Seal of Hatred#thts_4	20786,{
+	disable_items;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[7], .@x, .@y, "Seal of Hatred", 20786, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	mapannounce 'map$[7], "The stone appeared to react to the fragment of hatred, the seal that bound the memory is released." ,bc_map,0x00ff00;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnMyMobDead:
+	if(inarray('SealCheck$, strnpcinfo(1)) > -1)
+	{
+		'thana_summon2 ++;
+		mapannounce 'map$[7], "The Seal of Hatred was destroyed, erasing the memory of Thanatos' memories of hatred." ,bc_map,0x00ff00;
+		if('thana_summon2 >= getarraysize('SealCheck$))
+			donpcevent instance_npcname("#sommon_instance_thanatos")+"::OnEnable";
+		end;
+	}
+	'fail = 1;
+	mapannounce 'map$[7],strnpcinfo(1)+"Forced to destroy, broken memories become unstable...",bc_map,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// directly above (angry shard #1000243)
+8@thts,141,214,3	script	Seal of Anger#thts_5	20786,{
+	disable_items;
+	getmapxy .@m$, .@x, .@y, BL_NPC;
+	monster 'map$[7], .@x, .@y, "Seal of Anger", 20786, 1, instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	mapannounce 'map$[7], "The stone appears to react to the fragment of anger, the seal that bound the memory is released." ,bc_map,0x00ff00;
+	hideonnpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnMyMobDead:
+	if(inarray('SealCheck$, strnpcinfo(1)) > -1)
+	{
+		'thana_summon2 ++;
+		mapannounce 'map$[7], "The Seal of Anger was destroyed, erasing Thanatos' memories of anger." ,bc_map,0x00ff00;
+		if('thana_summon2 >= getarraysize('SealCheck$))
+			donpcevent instance_npcname("#sommon_instance_thanatos")+"::OnEnable";
+		end;
+	}
+	'fail = 1;
+	mapannounce 'map$[7],strnpcinfo(1)+"Forced to destroy, broken memories become unstable...",bc_map,0xFF0000;
+	end;
+
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+/*****************************
+- Thanatos summoning
+*****************************/
+8@thts,136,139,0	script	#sommon_instance_thanatos	-1,{
+	end;
+
+OnEnable:
+	specialeffect EF_MAPPILLAR2,AREA,instance_npcname(strnpcinfo(0));
+	specialeffect EF_SEISMICWEAPON,AREA,instance_npcname(strnpcinfo(0));
+	.@random = rand(6,15);
+	for(.@i = 0; .@i < .@random; .@i++)
+		areamonster 'map$[7],125,150,145,130,"--en--",rand(20792,20795),1,instance_npcname(strnpcinfo(0))+"::OnUnDeadSlave";
+	monster 'map$[7],136,139, "--en--",20784,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	'boss_id = $@mobid[0];
+	if('fail) {
+		getunitdata 'boss_id,.@mobdata;
+		setunitdata 'boss_id, UMOB_ATKMIN, (.@mobdata[UMOB_ATKMIN] * 4);
+		setunitdata 'boss_id, UMOB_ATKMAX, (.@mobdata[UMOB_ATKMAX] * 4);
+		setunitdata 'boss_id, UMOB_MATKMAX, (.@mobdata[UMOB_MATKMAX] * 4 * 100 / 130);
+	}
+	initnpctimer;
+	stopnpctimer instance_npcname("#sealthts");
+	mapannounce 'map$[7], "Some of the Sealed Stones were destroyed, strangely enough some of the sealed energy still exists." ,bc_map,0x00ff00;
+	end;
+
+OnTimer5000:
+	if(unitexists('boss_id) == 0)
+		end;
+	getunitdata 'boss_id, .@mob_data;
+
+	callfunc "Thanatos_Skill", 'boss_id, rand(1,2), 'map$[7], .@mob_data[UMOB_X], .@mob_data[UMOB_Y];
+	getunitdata 'boss_id, .@mob_data;
+		if((.@mob_data[UMOB_HP] * 100 / .@mob_data[UMOB_MAXHP]) <30 && !'breaking) {
+			'breaking = 1;
+			initnpctimer instance_npcname("#thts_metamorphosis");
+			mapannounce 'map$[7], "Thanatos' memory is gradually breaking!" ,bc_map,0xFF0000;
+		}
+		
+	initnpctimer;
+	end;
+
+OnUnDeadSlave:
+	if(unitexists('boss_id))
+		areamonster 'map$[7],125,150,145,130,"--en--",rand(20796,20799),1,instance_npcname(strnpcinfo(0))+"::OnUnDeadSlave";
+	end;
+
+OnMyMobDead:
+	if (mobcount('map$[7],instance_npcname(strnpcinfo(0))+"::OnMyMobDead") < 1) {
+		mapannounce 'map$[7],"... Uhhhh... No... I have to keep this place... No way... I..." ,bc_map,0xFF0000;
+		enablenpc instance_npcname("Lucille#thts_reward");
+		// end of copy
+	}
+	end;
+}
+
+/*****************************
+- Magic Swordsman: Memory of Thanatos (variant)
+*****************************/
+8@thts,0,0,0	script	#thts_metamorphosis	-1,{
+	end;
+OnTimer60000:
+	if(unitexists('boss_id))
+	{
+		mapannounce 'map$[7], "Thanatos' memory has broken!!!" ,bc_map,0xFF0000;
+		getunitdata 'boss_id, .@mob_data;
+		mobremove 'boss_id;
+		monster 'map$[7],.@mob_data[UMOB_X],.@mob_data[UMOB_Y], "--en--",20785,1,instance_npcname("#sommon_instance_thanatos")+"::OnMyMobDead";
+		'boss_id = $@mobid[0];
+		if('fail) {
+			getunitdata 'boss_id,.@mobdata;
+			setunitdata 'boss_id, UMOB_ATKMIN, (.@mobdata[UMOB_ATKMIN] * 4);
+			setunitdata 'boss_id, UMOB_ATKMAX, (.@mobdata[UMOB_ATKMAX] * 4);
+			setunitdata 'boss_id, UMOB_MATKMAX, (.@mobdata[UMOB_MATKMAX] * 4 * 100 / 130);
+		}
+		stopnpctimer instance_npcname("#sommon_instance_thanatos");
+		initnpctimer instance_npcname("#sommon_instance_thanatos");
+	}
+	stopnpctimer;
+	end;
+}
+
+/*****************************
+- Lucille (collect the reward)
+*****************************/
+8@thts,140,130,3	script	Lucille#thts_reward	4_F_LUCILE,{
+	mes "[Lucille]";
+	mes "Even though this is not a real space";
+	mes "It was awful to watch him disappear..." ;
+	mes "I don't mean to blame you";
+	mes "Instead, I wish I could thank you on his behalf";
+	next;
+	mes "[Lucille]";
+	mes "In this time that does not exist";
+	mes "Neither does the magic swordsman exist... He can't go anywhere";
+	mes "as long as he has any memory of the past";
+	mes "That would be a small blessing";
+	mes "Luckily you have somewhere to go back to..." ;
+	next;
+	mes "[Lucille]";
+	mes "So...are you going out?" ;
+	next;
+	if(select("Send me out." , "Hold on a second...") == 2)
+	{
+		mes "[Lucille]";
+		mes "Okay...in this space of residual memories...don't stay too long to avoid bad effects!" ;
+		close;
+	}
+	warp "Save",0,0;
+	end;
+OnInstanceInit:
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+}
+
+// =============================================================
+// Magic Swordsman Thanatos' Memory [Special Skill]
+//=============================================================
+function	script	Thanatos_Skill	{
+	if(!unitexists(getarg(0))) return 0;
+	.@gid = getarg(0);
+	.@type = getarg(1);
+	.@map$ = getarg(2);
+	.@x = getarg(3);
+	.@y = getarg(4);
+	switch(.@type)
+	{
+		case 1:
+			// Disintegration (cross first, then X range)
+			.@range = 5;
+			for(.@i = 1; .@i <= 8; .@i++)
+			{
+				switch(.@i)
+				{
+					case 1:	.@pos_x = .@x; .@pos_y = .@y+.@range;	break;// up
+					case 2:	.@pos_x = .@x-.@range; .@pos_y = .@y;	break;// left
+					case 3:	.@pos_x = .@x+.@range; .@pos_y = .@y;	break;// right
+					case 4:	.@pos_x = .@x; .@pos_y = .@y-.@range;	break;// down
+					case 5:	.@pos_x = .@x-.@range;	.@pos_y = .@y+.@range; break; // top left
+					case 6:	.@pos_x = .@x+.@range;	.@pos_y = .@y+.@range; break; // top right
+					case 7:	.@pos_x = .@x-.@range;	.@pos_y = .@y-.@range; break; // lower left
+					case 8:	.@pos_x = .@x+.@range;	.@pos_y = .@y-.@range; break; // lower right
+				}
+				monster(.@map$, .@pos_x, .@pos_y, "", 20582, 1);
+				.@unit_id = $@mobid[0];
+				setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+				setunitdata .@unit_id, UMOB_CLASS, 139;
+				unitskillusepos .@unit_id, "NPC_GROUNDDRIVE", 1, .@pos_x, .@pos_y, -5000;
+				.@bot[getarraysize(.@bot)] = .@unit_id;
+				if(.@i == 4) sleep 300;
+			}
+			break;
+		case 2:
+			// Thunderbolt spell wide range
+			.@range = 5;
+			for(.@i = 0; .@i < 20; .@i += .@range)
+			{
+				for(.@j = 1; .@j <= 4; .@j++)
+				{
+					switch(.@j)
+					{
+						case 1: .@pos_x = .@x+.@i; .@pos_y = .@y+.@i; break;
+						case 2: .@pos_x = .@x+.@i; .@pos_y = .@y-.@i; break;
+						case 3: .@pos_x = .@x-.@i; .@pos_y = .@y-.@i; break;
+						case 4: .@pos_x = .@x-.@i; .@pos_y = .@y+.@i; break;
+					}
+					monster(.@map$, .@pos_x, .@pos_y, "", 20582, 1);
+					.@unit_id = $@mobid[0];
+					setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+					setunitdata .@unit_id, UMOB_CLASS, 139;
+					unitskillusepos .@unit_id, "MG_THUNDERSTORM", 10, .@pos_x, .@pos_y, -5000;
+					.@bot[getarraysize(.@bot)] = .@unit_id;
+				}
+
+			}
+			for(.@i = 1; .@i < 5; .@i++)
+			{
+				for(.@j = 1; .@j <= 5; .@j++)
+				{
+					switch(.@j)
+					{
+						case 1: .@pos_x = .@x; .@pos_y = .@y; ;break;
+						case 2: .@pos_x = .@x; .@pos_y = .@y+(.@range*.@i); break;
+						case 3: .@pos_x = .@x; .@pos_y = .@y-(.@range*.@i); break;
+						case 4: .@pos_x = .@x-(.@range*.@i); .@pos_y = .@y; break;
+						case 5: .@pos_x = .@x+(.@range*.@i); .@pos_y = .@y; break;
+					}
+					monster(.@map$, .@pos_x, .@pos_y, "", 20582, 1);
+					.@unit_id = $@mobid[0];
+					setunitdata .@unit_id, UMOB_DMGIMMUNE, 1;
+					setunitdata .@unit_id, UMOB_CLASS, 139;
+					unitskillusepos .@unit_id, "MG_THUNDERSTORM", 10, .@pos_x, .@pos_y, -5000;
+					.@bot[getarraysize(.@bot)] = .@unit_id;
+				}
+			}
+			sleep 1000;
+			break;
+	}
+	for(.@i=0; .@i<getarraysize(.@bot); .@i++)
+		if(unitexists(.@bot[.@i])) mobremove .@bot[.@i];
+	return 1;
+}
+
+// =============================================================
+// Map properties
+//=============================================================
+1@thts	mapflag	noteleport
+1@thts	mapflag	nowarp
+1@thts	mapflag	partylock
+1@thts	mapflag	nosave
+1@thts	mapflag	nomemo
+1@thts	mapflag	nobranch
+1@thts	mapflag	noicewall
+1@thts	mapflag	restricted	6
+
+2@thts	mapflag	noteleport
+2@thts	mapflag	nowarp
+2@thts	mapflag	partylock
+2@thts	mapflag	nosave
+2@thts	mapflag	nomemo
+2@thts	mapflag	nobranch
+2@thts	mapflag	noicewall
+2@thts	mapflag	restricted	6
+
+3@thts	mapflag	noteleport
+3@thts	mapflag	nowarp
+3@thts	mapflag	partylock
+3@thts	mapflag	nosave
+3@thts	mapflag	nomemo
+3@thts	mapflag	nobranch
+3@thts	mapflag	noicewall
+3@thts	mapflag	restricted	6
+
+4@thts	mapflag	noteleport
+4@thts	mapflag	nowarp
+4@thts	mapflag	partylock
+4@thts	mapflag	nosave
+4@thts	mapflag	nomemo
+4@thts	mapflag	nobranch
+4@thts	mapflag	noicewall
+4@thts	mapflag	restricted	6
+
+5@thts	mapflag	noteleport
+5@thts	mapflag	nowarp
+5@thts	mapflag	partylock
+5@thts	mapflag	nosave
+5@thts	mapflag	nomemo
+5@thts	mapflag	nobranch
+5@thts	mapflag	noicewall
+5@thts	mapflag	restricted	6
+
+6@thts	mapflag	noteleport
+6@thts	mapflag	nowarp
+6@thts	mapflag	partylock
+6@thts	mapflag	nosave
+6@thts	mapflag	nomemo
+6@thts	mapflag	nobranch
+6@thts	mapflag	noicewall
+6@thts	mapflag	restricted	6
+
+7@thts	mapflag	noteleport
+7@thts	mapflag	nowarp
+7@thts	mapflag	partylock
+7@thts	mapflag	nosave
+7@thts	mapflag	nomemo
+7@thts	mapflag	nobranch
+7@thts	mapflag	noicewall
+7@thts	mapflag	restricted	6
+
+8@thts	mapflag	noteleport
+8@thts	mapflag	nowarp
+8@thts	mapflag	partylock
+8@thts	mapflag	nosave
+8@thts	mapflag	nomemo
+8@thts	mapflag	nobranch
+8@thts	mapflag	noicewall
+8@thts	mapflag	restricted	6
