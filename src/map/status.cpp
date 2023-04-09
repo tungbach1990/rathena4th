@@ -12781,7 +12781,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		case SC_LOCKON_LASER:
 			val4 = tick / 3000;
 			tick_time = 3000; // Sends every 3 seconds custom
-			break;			
+			break;
 		case SC_H_MINE:
 			val2 = src->id;
 			break;

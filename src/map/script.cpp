@@ -26790,6 +26790,49 @@ BUILDIN_FUNC(item_enchant){
 	return SCRIPT_CMD_SUCCESS;
 #endif
 }
+// removedynamic({"NPCNAME"});
+BUILDIN_FUNC(removedynamic)
+{
+	struct npc_data *nd;
+	
+	if (script_hasdata(st, 2))
+	{
+		nd = npc_name2id(script_getstr(st, 2));
+		if (nd == NULL)
+		{
+			ShowError("getnpcgid: NPC not found: %s\n", script_getstr(st, 2));
+			script_pushint(st, -1);
+			return SCRIPT_CMD_SUCCESS;
+		}
+	}
+	else
+		nd = (struct npc_data *)map_id2bl(st->oid);
+	
+	if ( nd->dynamicnpc.owner_char_id == 0 )
+	{
+		ShowError("buildin_removedynamic: cannot unload source npc %s\n", script_getstr(st, 2));
+		script_pushint(st, -1);
+		return SCRIPT_CMD_SUCCESS;
+	}
+		
+	nd->dynamicnpc.removal_tid = INVALID_TIMER;
+	
+	npc_unload(nd, true);
+
+	script_pushint(st, 1);
+	return SCRIPT_CMD_SUCCESS;
+}
+BUILDIN_FUNC(mobremove)
+{
+        struct block_list *bl = NULL;
+
+        bl = map_id2bl( script_getnum(st,2) );
+
+        if ( bl && bl->type == BL_MOB )
+                unit_free(bl,CLR_OUTSIGHT);
+
+        return SCRIPT_CMD_SUCCESS;
+}
 
 /**
 * Generate item link string for client
@@ -27669,6 +27712,8 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(set_reputation_points, "ii?"),
 	BUILDIN_DEF(get_reputation_points, "i?"),
 	BUILDIN_DEF(add_reputation_points, "ii?"),
+	BUILDIN_DEF(mobremove,"i"),
+	BUILDIN_DEF(removedynamic, "?"),
 	BUILDIN_DEF(item_reform, "??"),
 	BUILDIN_DEF(item_enchant, "i?"),
 	BUILDIN_DEF(itemlink, "i?????????"),
