@@ -1591,6 +1591,12 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 				damage = battle_calc_pk_damage(*src, *bl, damage, skill_id, flag);
 
 			return damage; //These skills bypass everything else.
+		case NPC_LOCKON_LASER:
+			return damage; //These skills bypass everything else.
+		case NPC_LOCKON_LASER_ATK:
+			return damage = 30000;
+		case NPC_CANE_OF_EVIL_EYE:
+			return damage = 75000; //this skill has 5 multi hit 15000 each hit.			
 	}
 
 	// Nothing can reduce the damage, but Safety Wall and Millennium Shield can block it completely.

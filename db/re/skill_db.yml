@@ -18381,6 +18381,73 @@ Body:
     HitCount: 1
     Duration1: 60000
     Status: Relieve_off
+  - Id: 773
+    Name: NPC_LOCKON_LASER
+    Description: Lockon Laser
+    MaxLevel: 5
+    Type: Magic
+    TargetType: Attack
+    DamageFlags:
+      Splash: true
+      IgnoreFlee: true
+    Range: 9
+    Hit: Single
+    HitCount: 1
+    Element: Neutral
+    SplashArea: 1
+    Duration1: 60000
+    FixedCastTime: -1
+    Status: LOCKON_LASER
+  - Id: 774
+    Name: NPC_LOCKON_LASER_ATK
+    Description: Lockon Laser ATK
+    MaxLevel: 5
+    Type: Magic    
+    TargetType: Attack
+    DamageFlags:
+      Splash: true
+      IgnoreDefense: true
+      IgnoreDefCard: true
+    Range: 11
+    Hit: Single
+    HitCount: 1
+    Knockback: 2
+    Element: Neutral
+    SplashArea: 3
+    AfterCastActDelay: 2000
+    Duration1: 1000
+    Duration2: 30000
+    Unit:
+      Id: Dummyskill
+      Interval: 1000
+      Target: Enemy
+      Flag:
+        NoOverlap: true
+  - Id: 780
+    Name: NPC_CANE_OF_EVIL_EYE
+    Description: Cane of Evil Eye
+    MaxLevel: 5
+    Type: Magic
+    TargetType: Ground
+    Flags:
+      IsNpc: true
+    Range: 9
+    Hit: Multi_Hit
+    HitCount: 5
+    Element: Neutral
+    CastTime: 4000
+    AfterCastActDelay: 1000
+    Duration1: 15000
+    Cooldown: 4000
+    FixedCastTime: 1500
+    Unit:
+      Id: Cane_of_Evil_Eye
+      Range: 6
+      Interval: 1150
+      Target: Enemy
+      Flag:
+        NoOverlap: true
+        PathCheck: true    
   - Id: 783
     Name: NPC_KILLING_AURA
     Description: Killing Aura

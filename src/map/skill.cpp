@@ -7331,7 +7331,18 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 			map_foreachinrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill_castend_damage_id);
 		}
 		break;
-
+	case NPC_LOCKON_LASER:
+		if (tsc && tsc->data[SC_LOCKON_LASER]) {
+			if (flag & 1) {
+				skill_castend_pos2(src, bl->x, bl->y, NPC_LOCKON_LASER_ATK, skill_lv, tick, flag);
+			} else {
+				clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
+				map_foreachinrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), BL_CHAR, src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill_castend_damage_id);
+			}
+		}
+		sc_start(src, bl, SC_LOCKON_LASER, 20 + 5 * skill_lv, skill_lv, skill_get_time(skill_id, skill_lv));
+		clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
+		break;
 	case SU_SCAROFTAROU:
 		sc_start(src, bl, SC_BITESCAR, 10, skill_lv, skill_get_time(skill_id, skill_lv)); //! TODO: What's the activation chance for the Bite effect?
 		skill_attack(skill_get_type(skill_id), src, src, bl, skill_id, skill_lv, tick, flag);
@@ -14486,6 +14497,8 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 	case NPC_FLAMECROSS:
 	case NPC_HELLBURNING:
 	case NPC_REVERBERATION:
+	case NPC_LOCKON_LASER_ATK:
+	case NPC_CANE_OF_EVIL_EYE:	
 	case WL_COMET:
 	case RA_ELECTRICSHOCKER:
 	case RA_CLUSTERBOMB:
