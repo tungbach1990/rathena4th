@@ -12778,6 +12778,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val4 = tick/1000;
 			tick_time = 1000; // Sends every 1 seconds
 			break;
+		case SC_LOCKON_LASER:
+			val4 = tick / 3000;
+			tick_time = 3000; // Sends every 3 seconds custom
+			break;			
 		case SC_H_MINE:
 			val2 = src->id;
 			break;
@@ -15387,6 +15391,17 @@ TIMER_FUNC(status_change_timer){
 			return 0;
 		}
 		break;
+	case SC_LOCKON_LASER:
+		if (--(sce->val4) >= 0) {
+			map_freeblock_lock();
+			clif_specialeffect(bl, 1633, AREA);
+			if (sc->data[type]) {
+				sc_timer_next(1000 + tick);
+			}
+			map_freeblock_unlock();
+			return 0;
+		}
+		break;		
 	case SC_BURNT:
 		if( --(sce->val4) >= 0 ) {
 			int damage = 2000;

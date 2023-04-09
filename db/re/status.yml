@@ -8291,6 +8291,12 @@ Body:
       NoClearbuff: true
     EndOnStart:
       Sub_Weaponproperty: true
+  - Status: LOCKON_LASER
+    Icon: EFST_LOCKON_LASER
+    DurationLookup: NPC_LOCKON_LASER
+    Flags:
+      NoDispell: true
+      NoClearance: true      
   - Status: Almighty
     Icon: EFST_ALMIGHTY
     CalcFlags:
