@@ -15395,7 +15395,7 @@ TIMER_FUNC(status_change_timer){
 		if (--(sce->val4) >= 0) {
 			map_freeblock_lock();
 			clif_specialeffect(bl, 1633, AREA);
-			if (sc->data[type]) {
+			if (sc->getSCE(type)) {
 				sc_timer_next(1000 + tick);
 			}
 			map_freeblock_unlock();
