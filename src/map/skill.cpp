@@ -7332,7 +7332,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		}
 		break;
 	case NPC_LOCKON_LASER:
-		if (tsc && tsc->data[SC_LOCKON_LASER]) {
+		if (tsc && tsc->getSCE(SC_LOCKON_LASER)) {
 			if (flag & 1) {
 				skill_castend_pos2(src, bl->x, bl->y, NPC_LOCKON_LASER_ATK, skill_lv, tick, flag);
 			} else {
