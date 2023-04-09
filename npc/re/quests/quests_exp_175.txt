@@ -15,7 +15,7 @@ glast_01,191,273,3	script	Magician Nillem#glabyss01	4_M_JOB_WIZARD,{
 		mes "That's right, I'm waiting for a strong adventurer to satisfy my curiosity!";
 		next;
 		mes "[Nillem]";
-		mes "If you reach level 175, you will be my destined opponent-??";
+		mes "If you reach level 175, you will be my destined opponent-¡Ù";
 		close;
 	}
 	mes "[Nillem]";

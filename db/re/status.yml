@@ -3058,8 +3058,7 @@ Body:
     EndOnStart:
       Lukfood: true
   - Status: Fear
-    Icon: EFST_HEALTHSTATE_FEAR
-    DurationLookup: RK_DRAGONHOWLING
+    DurationLookup: RK_WINDCUTTER
     States:
       NoMove: true
       NoMoveCond: true
@@ -5739,8 +5738,6 @@ Body:
   - Status: Unlimit
     Icon: EFST_UNLIMIT
     DurationLookup: RA_UNLIMIT
-    CalcFlags:
-      All: true
     Flags:
       DisplayPc: true
   - Status: Kings_Grace
@@ -5791,6 +5788,8 @@ Body:
     DurationLookup: AB_OFFERTORIUM
     Flags:
       DisplayPc: true
+    Fail:
+      Magnificat: true
     EndOnStart:
       Magnificat: true
       Blind: true
@@ -5823,7 +5822,6 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       SendVal1: true
-      NoForcedEnd: true
   - Status: Angel_Protect
     Icon: EFST_ANGEL_PROTECT
     Flags:
@@ -7599,18 +7597,16 @@ Body:
       Flee: true
       Flee2: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deepsilence
     Icon: EFST_HANDICAPSTATE_DEEPSILENCE
     DurationLookup: CD_ARBITRIUM
-    States:
-      NoCast: true
+    #States:
+      #NoCast: true
     CalcFlags:
       Aspd: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Lassitude
@@ -7618,70 +7614,62 @@ Body:
       Speed: true
       Cri: true
     Flags:
-      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Frostbite
     Icon: EFST_HANDICAPSTATE_FROSTBITE
     DurationLookup: EM_DIAMOND_STORM
     States:
-      NoMove: true
-      NoCast: true
+      #NoMove: true
+      #NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Def: true
       Mdef: true
       Def_Ele: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Swooning
     Icon: EFST_HANDICAPSTATE_SWOONING
     States:
-      NoMove: true
-      NoCast: true
+      #NoMove: true
+      #NoCast: true
       NoConsumeItem: true
     Flags:
-      BossResist: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Lightningstrike
     Icon: EFST_HANDICAPSTATE_LIGHTNINGSTRIKE
-    DurationLookup: EM_LIGHTNING_LAND
+    DurationLookup: WH_SWIFTTRAP
     States:
-      NoMove: true
-      NoCast: true
+      #NoMove: true
+      #NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Def_Ele: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Crystallization
     Icon: EFST_HANDICAPSTATE_CRYSTALLIZATION
-    DurationLookup: EM_TERRA_DRIVE
+    DurationLookup: WH_SOLIDTRAP
     States:
-      NoMove: true
-      NoCast: true
+      #NoMove: true
+      #NoCast: true
       NoConsumeItem: true
     CalcFlags:
       Mdef: true
       Def_Ele: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
       RemoveOnDamaged: true
   - Status: Handicapstate_Conflagration
     Icon: EFST_HANDICAPSTATE_CONFLAGRATION
-    DurationLookup: EM_CONFLAGRATION
-    CalcFlags:
-      Def_Ele: true
+    DurationLookup: WH_FLAMETRAP
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Misfortune
@@ -7690,7 +7678,6 @@ Body:
     CalcFlags:
       Hit: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Deadlypoison
@@ -7699,18 +7686,15 @@ Body:
     CalcFlags:
       Def: true
     Flags:
-      BossResist: true
       BlEffect: true
       DisplayPc: true
   - Status: Handicapstate_Depression
     Icon: EFST_HANDICAPSTATE_DEPRESSION
     Flags:
-      BossResist: true
       DisplayPc: true
   - Status: Handicapstate_Holyflame
     Icon: EFST_HANDICAPSTATE_HOLYFLAME
     Flags:
-      BossResist: true
       DisplayPc: true
   - Status: Servantweapon
     Icon: EFST_SERVANTWEAPON
@@ -7754,12 +7738,13 @@ Body:
     CalcFlags:
       All: true
     Flags:
-      SendVal1: true
       BlEffect: true
       DisplayPc: true
   - Status: Deadly_Defeasance
     Icon: EFST_DEADLY_DEFEASANCE
     DurationLookup: AG_DEADLY_PROJECTION
+    CalcFlags:
+      All: true
     Flags:
       BlEffect: true
       DisplayPc: true
@@ -7767,7 +7752,7 @@ Body:
     Icon: EFST_CLIMAX_DES_HU
     DurationLookup: AG_DESTRUCTIVE_HURRICANE
     CalcFlags:
-      All: true
+      Matk: true
   - Status: Climax
     Icon: EFST_CLIMAX
     DurationLookup: AG_CLIMAX
@@ -7780,9 +7765,13 @@ Body:
   - Status: Climax_Earth
     Icon: EFST_CLIMAX_EARTH
     DurationLookup: AG_VIOLENT_QUAKE
+    CalcFlags:
+      All: true
   - Status: Climax_Bloom
     Icon: EFST_CLIMAX_BLOOM
     DurationLookup: AG_ALL_BLOOM
+    CalcFlags:
+      All: true
   - Status: Climax_Cryimp
     Icon: EFST_CLIMAX_CRYIMP
     DurationLookup: AG_CRYSTAL_IMPACT
@@ -7842,8 +7831,6 @@ Body:
     Flags:
       BlEffect: true
       DisplayPc: true
-    EndOnStart:
-      Sandy_Festival: true
   - Status: Benedictum
     Icon: EFST_BENEDICTUM
     DurationLookup: CD_BENEDICTUM
@@ -7854,8 +7841,6 @@ Body:
     Flags:
       BlEffect: true
       DisplayPc: true
-    EndOnStart:
-      Marine_Festival: true
   - Status: Axe_Stomp
     Icon: EFST_AXE_STOMP
     DurationLookup: MT_AXE_STOMP
@@ -7877,31 +7862,15 @@ Body:
   - Status: Abr_Battle_Warior
     Icon: EFST_ABR_BATTLE_WARIOR
     DurationLookup: MT_SUMMON_ABR_BATTLE_WARIOR
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Abr_Dual_Cannon
     Icon: EFST_ABR_DUAL_CANNON
     DurationLookup: MT_SUMMON_ABR_DUAL_CANNON
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Abr_Mother_Net
     Icon: EFST_ABR_MOTHER_NET
     DurationLookup: MT_SUMMON_ABR_MOTHER_NET
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Abr_Infinity
     Icon: EFST_ABR_INFINITY
     DurationLookup: MT_SUMMON_ABR_INFINITY
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Shadow_Exceed
     Icon: EFST_SHADOW_EXCEED
     DurationLookup: SHC_SHADOW_EXCEED
@@ -7948,8 +7917,7 @@ Body:
     Icon: EFST_ATTACK_STANCE
     DurationLookup: IG_ATTACK_STANCE
     CalcFlags:
-      Patk: true
-      Smatk: true
+      Watk: true
       Def: true
     Flags:
       NoRemoveOnDead: true
@@ -8156,28 +8124,12 @@ Body:
     Icon: EFST_BO_HELL_DUSTY
   - Status: Bionic_Woodenwarrior
     DurationLookup: BO_WOODENWARRIOR
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Bionic_Wooden_Fairy
     DurationLookup: BO_WOODEN_FAIRY
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Bionic_Creeper
     DurationLookup: BO_CREEPER
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Bionic_Helltree
     DurationLookup: BO_HELLTREE
-    Flags:
-      NoDispell: true
-      NoBanishingBuster: true
-      NoClearance: true
   - Status: Shadow_Strip
     Icon: EFST_SHADOW_STRIP
     DurationLookup: ABC_STRIP_SHADOW
@@ -8979,3 +8931,217 @@ Body:
     DurationLookup: SOA_SOUL_OF_HEAVEN_AND_EARTH
     CalcFlags:
       Smatk: true
+  - Status: GRADUAL_GRAVITY
+    Icon: EFST_GRADUAL_GRAVITY
+    DurationLookup: NPC_GRADUAL_GRAVITY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+      NoDispell: true
+      NoClearance: true
+  - Status: ALL_STAT_DOWN
+    Icon: EFST_ALL_STAT_DOWN
+    DurationLookup: NPC_ALL_STAT_DOWN
+    CalcFlags:
+      Str: true
+      Agi: true
+      Vit: true
+      Int: true
+      Dex: true
+      Luk: true
+    Flags:
+      NoDispell: true
+      NoClearance: true
+  - Status: Killing_Aura
+    Icon: EFST_KILLING_AURA
+    DurationLookup: NPC_KILLING_AURA
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+  - Status: DAMAGE_HEAL
+    Icon: EFST_DAMAGE_HEAL
+    DurationLookup: NPC_DAMAGE_HEAL
+    Flags:
+      NoDispell: true
+  - Status: IMMUNE_PROPERTY_NOTHING
+    Icon: EFST_IMMUNE_PROPERTY_NOTHING
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_WATER
+    Icon: EFST_IMMUNE_PROPERTY_WATER
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_GROUND
+    Icon: EFST_IMMUNE_PROPERTY_GROUND
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_FIRE
+    Icon: EFST_IMMUNE_PROPERTY_FIRE
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_WIND
+    Icon: EFST_IMMUNE_PROPERTY_WIND
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_POISON
+    Icon: EFST_IMMUNE_PROPERTY_POISON
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_SAINT
+    Icon: EFST_IMMUNE_PROPERTY_SAINT
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_DARKNESS
+    Icon: EFST_IMMUNE_PROPERTY_DARKNESS
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_TELEKINESIS
+    Icon: EFST_IMMUNE_PROPERTY_TELEKINESIS
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_UNDEAD: true
+  - Status: IMMUNE_PROPERTY_UNDEAD
+    Icon: EFST_IMMUNE_PROPERTY_UNDEAD
+    DurationLookup: NPC_IMMUNE_PROPERTY
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+    EndOnStart:
+      IMMUNE_PROPERTY_NOTHING: true
+      IMMUNE_PROPERTY_WATER: true
+      IMMUNE_PROPERTY_GROUND: true
+      IMMUNE_PROPERTY_FIRE: true
+      IMMUNE_PROPERTY_WIND: true
+      IMMUNE_PROPERTY_POISON: true
+      IMMUNE_PROPERTY_SAINT: true
+      IMMUNE_PROPERTY_DARKNESS: true
+      IMMUNE_PROPERTY_TELEKINESIS: true
+  - Status: RELIEVE_ON
+    Icon: EFST_RELIEVE_DAMAGE
+    DurationLookup: NPC_RELIEVE_ON
+    Flags:
+      BlEffect: true
+      DisplayPc: true
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+    EndOnStart:
+      Relieve_off: true
+  - Status: Relieve_off
+    DurationLookup: NPC_RELIEVE_OFF
+    Flags:
+      NoDispell: true
+      NoBanishingBuster: true
+      NoClearance: true
+    EndOnStart:
+      Relieve_on: true

@@ -65,7 +65,6 @@
 #           Materials:         Items required for this enchant upgrade (Default: null)
 #             - Material       Item name of the required item.
 #               Amount         Amount of the required item. (Default: 1)
-
 ###########################################################################
 
 Header:

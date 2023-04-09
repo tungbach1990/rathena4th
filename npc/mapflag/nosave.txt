@@ -7,6 +7,7 @@
 //= 1.7 Updated. [Lupus]
 //= 1.8 Updated. [L0ne_W0lf]
 //= 1.9 Renewal split. [Euphy]
+//= 2.0 Moved instances to pre-renewal. [Lemongrass]
 //============================================================
 
 //============================================================

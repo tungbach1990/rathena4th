@@ -4604,10 +4604,10 @@ Body:
     Title: Qualifications of the Guests
     Drops:
       - Mob: MM_GB_MOROCC_1
-        Item: Heart_of_Soul
+        Item: Soul_Of_Ahat
         Rate: 10000
       - Mob: MM_GB_MOROCC_4
-        Item: Sheenas_Soul
+        Item: Soul_Of_Shnaim
         Rate: 10000
   - Id: 7597
     Title: Fall of the False God
@@ -5079,7 +5079,7 @@ Body:
       - Mob: TOXIOUS
         Count: 20    
   - Id: 7880
-    Title: New Poison Research - Standby
+    Title: New toxic gas research - Standby
     TimeLimit: 4h
   - Id: 7881
     Title: Unusual Mineral Research 1
@@ -5089,7 +5089,7 @@ Body:
       - Mob: MINERAL_R
         Count: 20    
   - Id: 7882
-    Title: Special Mineral Research 1 - Standby
+    Title: Special mineral research 1 - Waiting
     TimeLimit: 4h
   - Id: 7883
     Title: Special Mineral Research2
@@ -5099,7 +5099,7 @@ Body:
       - Mob: MINERAL_P
         Count: 20    
   - Id: 7884
-    Title: Special Mineral Research 2 - Standby
+    Title: Special mineral research 2 - Waiting
     TimeLimit: 4h
   - Id: 7885
     Title: Research Abyssman
@@ -5107,7 +5107,7 @@ Body:
       - Mob: ABYSSMAN
         Count: 10    
   - Id: 7886
-    Title: Research Abyssman - Standby
+    Title: Abyssman Research - Waiting
     TimeLimit: 4h
   - Id: 7887
     Title: Mineworm Research
@@ -5117,7 +5117,7 @@ Body:
       - Mob: PORCELLIO_W
         Count: 10    
   - Id: 7888
-    Title: Mineworm Research - Standby
+    Title: Gwangin bug research - Waiting
     TimeLimit: 4h
   - Id: 7890
     Title: X century XX gold-waiting
@@ -5864,7 +5864,7 @@ Body:
       - Mob: GHOST_CUBE
         Count: 15
       - Mob: LUDE_GAL
-        Count: 15    
+        Count: 15
   - Id: 8642
     Title: He looks cute - Standby
     TimeLimit: 4h
@@ -5874,12 +5874,12 @@ Body:
       - Mob: BRUTAL_MURDERER
         Count: 10
       - Mob: GAN_CEANN
-        Count: 10    
+        Count: 10
   - Id: 8645
     Title: That's not an instrument - Standby
     TimeLimit: 4h
   - Id: 8647
-    Title: Playing the piano    
+    Title: Playing the piano
   - Id: 8648
     Title: Playing the piano - Standby
     TimeLimit: 4h
@@ -5891,7 +5891,7 @@ Body:
       - Mob: DISGUISER
         Count: 15
       - Mob: BLUEMOON_LOLI_RURI
-        Count: 15    
+        Count: 15
   - Id: 8651
     Title: Guys with messy hair - Standby
     TimeLimit: 4h
@@ -5908,21 +5908,21 @@ Body:
       - Mob: GROTE
         Count: 10
       - Mob: PIERROTZOIST
-        Count: 10    
+        Count: 10
   - Id: 8654
     Title: The ones with dolls - Standby
     TimeLimit: 4h
   - Id: 8655
     Title: The ones with dolls
   - Id: 8656
-    Title: Wake them up    
+    Title: Wake them up
   - Id: 8657
     Title: Wake them up - Standby
     TimeLimit: 4h
   - Id: 8658
     Title: Sorry for being sleepy (1)
   - Id: 8659
-    Title: Sorry for being sleepy (2)    
+    Title: Sorry for being sleepy (2)
   - Id: 8661
     Title: "[Standby] Subjugation-Audumra Chowon-3"
     TimeLimit: 4h
@@ -7580,7 +7580,7 @@ Body:
     Title: Vigilante Corp
     Drops:
       - Mob: DR_RODA_FROG
-        Item: Luxurious_Cloth
+        Item: High_Quality_Cloth
         Rate: 5000
   - Id: 11445
     Title: Vigilante Corp
@@ -7736,7 +7736,7 @@ Body:
       - Mob: EP17_2_BOOKWORM
         Count: 20
   - Id: 11635
-    Title: Hunting Bookworm - Waiting
+    Title: The ultimate bookworm hunt
     TimeLimit: 4h
   - Id: 11636
     Title: Hunting Roaming Spellbook
@@ -7744,7 +7744,7 @@ Body:
       - Mob: EP17_2_ROAMING_SPLBOOK
         Count: 20
   - Id: 11637
-    Title: Hunting Roaming Spellbook - Waiting
+    Title: The ultimate rule
     TimeLimit: 4h
   - Id: 11638
     Title: Ultimate Scrap Metal Collection
@@ -8784,7 +8784,7 @@ Body:
   - Id: 12497
     Title: Security Clearance
   - Id: 12498
-    Title: Security Clearance - Waiting
+    Title: Waiting for permission to enter the security zone
     TimeLimit: 4h
   - Id: 12499
     Title: Red Pepper - Kappa Suppression
@@ -9717,7 +9717,7 @@ Body:
     Title: An errand out of nowhere
     Drops:
       - Mob: DR_BASILISK1
-        Item: Basilac_Clam
+        Item: Basil_Rac
         Rate: 5000
   - Id: 14541
     Title: No news is not a good news
@@ -9768,7 +9768,7 @@ Body:
     Title: Dirty Creatures
     Drops:
       - Mob: DR_BASILISK2
-        Item: Basilac_Clam
+        Item: Basil_Rac
         Rate: 5000
   - Id: 14559
     Title: Charm Effect Duration
@@ -9777,19 +9777,19 @@ Body:
     Title: New Ingredient
     Drops:
       - Mob: DR_BASILISK2
-        Item: Basilac_Clam
+        Item: Basil_Rac
         Rate: 5000
   - Id: 14561
     Title: Dirty and Filty
     Drops:
       - Mob: DR_BASILISK2
-        Item: Basilac_Clam
+        Item: Basil_Rac
         Rate: 5000
   - Id: 14562
     Title: The basic are the best
     Drops:
       - Mob: DR_BASILISK2
-        Item: Basilac_Clam
+        Item: Basil_Rac
         Rate: 5000
   - Id: 14563
     Title: Free time
@@ -10773,7 +10773,7 @@ Body:
       - Mob: MD_SILVA_PAPILIA
         Count: 1
   - Id: 16432
-    Title: Hunting Silva Papila - Waiting
+    Title: Silva Papilia Hunt-Standby
     TimeLimit: 4h
   - Id: 16433
     Title: Hunting Senior Papila
@@ -10781,19 +10781,19 @@ Body:
       - Mob: MD_GRAN_PAPILIA
         Count: 1
   - Id: 16434
-    Title: Hunting Senior Papila - Waiting
+    Title: Grand Papelia Hunting-Standby
     TimeLimit: 4h
   - Id: 16435
     Title: Searching for Gardener
   - Id: 16436
-    Title: Searching for Gardener - Waiting
+    Title: Search-wait for gardeners
     TimeLimit: 4h
   - Id: 16437
     Title: Water Garden
   - Id: 16438
     Title: Water Garden Hard
   - Id: 16439
-    Title: Water Garden - Waiting
+    Title: Award Garden-Waiting
     TimeLimit: 4h
   - Id: 16440
     Title: I would like to know what it is
@@ -10853,9 +10853,9 @@ Body:
     Title: Data backup - Waiting
     TimeLimit: 4h
   - Id: 16528
-    Title: Data Backup    
+    Title: Data Backup
   - Id: 16529
-    Title: Abandoned Lab Amicitia    
+    Title: Abandoned Lab Amicitia
   - Id: 16530
     Title: The ground and fire
     TimeLimit: 4h
@@ -10865,7 +10865,7 @@ Body:
       - Mob: CHIMERA_AMITERA
         Count: 15
       - Mob: CHIMERA_FILLIA
-        Count: 15    
+        Count: 15
   - Id: 16532
     Title: Water, wind - Waiting
     TimeLimit: 4h
@@ -10875,12 +10875,12 @@ Body:
       - Mob: CHIMERA_LITUS
         Count: 15
       - Mob: CHIMERA_VANILAQUS
-        Count: 15    
+        Count: 15
   - Id: 16534
     Title: Werner's Trace - Standby
     TimeLimit: 4h
   - Id: 16535
-    Title: Traces of Werner    
+    Title: Traces of Werner
   - Id: 16536
     Title: Imitate and wait
     TimeLimit: 4h
@@ -10890,7 +10890,7 @@ Body:
       - Mob: CHIMERA_NAPEO
         Count: 15
       - Mob: CHIMERA_GALENSIS
-        Count: 15    
+        Count: 15
   - Id: 16538
     Title: Natural change - Waiting
     TimeLimit: 4h
@@ -10900,11 +10900,11 @@ Body:
       - Mob: CHIMERA_LAVA
         Count: 15
       - Mob: CHIMERA_FULGOR
-        Count: 15   
+        Count: 15
   - Id: 16540
-    Title: Data Backup    
+    Title: Data Backup
   - Id: 16545
-    Title: Traces of Werner     
+    Title: Traces of Werner
   - Id: 16546
     Title: Farm Worker
   - Id: 16547
@@ -11041,7 +11041,7 @@ Body:
         Item: Autodoll_Communicator
         Rate: 5000
   - Id: 17341
-    Title: No Signal - Waiting
+    Title: (Standby) No signal
     TimeLimit: 4h
   - Id: 17342
     Title: "I don't like it"
@@ -11086,7 +11086,7 @@ Body:
       - Mob: EP17_2_HEART_HUNTER_H
         Count: 20
   - Id: 17360
-    Title: Ground warehouse clearance - Waiting
+    Title: (Standby) Clean the warehouse floor
     TimeLimit: 4h
   - Id: 17361
     Title: Basement warehouse clearance
@@ -11094,7 +11094,7 @@ Body:
       - Mob: EP17_2_BETA_ITEMKEEPER
         Count: 20
   - Id: 17362
-    Title: Basement warehouse clearance - Waiting
+    Title: (Standby) Organize the underground warehouse
     TimeLimit: 4h
   - Id: 17363
     Title: Exploring bathhouse
@@ -11130,7 +11130,7 @@ Body:
       - Mob: EP17_2_BETA_CLEANER_B
         Count: 10
   - Id: 17377
-    Title: Between hot and cold baths - Waiting
+    Title: (Standby) Between hot and cold baths
     TimeLimit: 4h
   - Id: 17378
     Title: "Sweepy's request"
@@ -11142,7 +11142,7 @@ Body:
       - Mob: EP17_2_PIRANHA
         Count: 15
   - Id: 17380
-    Title: Cleaning the bathhouse - Waiting
+    Title: (Standby) I'm cleaning the bathhouse
     TimeLimit: 4h
   - Id: 17381
     Title: Joining the company
@@ -11185,62 +11185,62 @@ Body:
   - Id: 18000
     Title: Ready to enter
   - Id: 18001
-    Title: Mansion Sewer
+    Title: Delivery for Rooney
   - Id: 18002
-    Title: Broken core collection
+    Title: Delivery for Rooney
   - Id: 18003
-    Title: Broken Core 01
+    Title: Delivery for Rooney
   - Id: 18004
-    Title: Broken Core 02
+    Title: Lasda's Request
   - Id: 18005
-    Title: Broken Core 03
+    Title: Jesse's Request
   - Id: 18006
-    Title: Broken Core 04
+    Title: Sir Krieg's Approval
   - Id: 18007
-    Title: Broken Core 05
+    Title: Sir Krieg's Trust
   - Id: 18008
-    Title: Broken Core 06
+    Title: Sir Krieg's Trust
   - Id: 18009
-    Title: Broken Core 07
+    Title: Into the prison
   - Id: 18010
-    Title: Broken Core 08
+    Title: Jail Break
   - Id: 18011
-    Title: Broken Core 09
+    Title: Bodyguard work
   - Id: 18012
-    Title: Broken Core 10
+    Title: Bodyguard work
   - Id: 18013
-    Title: To the designated point
+    Title: Bodyguard work
   - Id: 18014
-    Title: Unexpected big fish
+    Title: Bodyguard work
   - Id: 18015
-    Title: Tracking Illusion
+    Title: Bodyguard work
   - Id: 18016
-    Title: Strategy planning
+    Title: Bodyguard work
   - Id: 18017
-    Title: Pest Extermination
+    Title: Jail Break
     Targets:
       - Mob: MD_SWEETY
         Count: 1
   - Id: 18018
-    Title: To the non-official lounge
+    Title: Jail Break
   - Id: 18019
-    Title: Conversation with Sweetie
+    Title: Vitre's Songs
   - Id: 18020
-    Title: Greeting
+    Title: Vitre's Songs
   - Id: 18021
-    Title: A guest
+    Title: Vitre's Songs
   - Id: 18022
-    Title: Hey!Sweetie
+    Title: Vitre's Songs
     Targets:
       - Mob: MD_SWEETY
         Count: 1
   - Id: 18023
-    Title: Hey!Sweetie - Waiting
+    Title: Vitre the Spy
     TimeLimit: 4h
   - Id: 18024
     Title: Core collection
   - Id: 18025
-    Title: Core collection - Waiting
+    Title: Collecting cores - Standby
     TimeLimit: 4h
   - Id: 18028
     Title: The Memory of Thanatos the Magistrate - Waiting

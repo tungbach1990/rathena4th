@@ -136,7 +136,6 @@ int battle_gettarget(struct block_list* bl)
 	return 0;
 }
 
-
 /**
  * Get random enemy
  * @param bl
@@ -1388,7 +1387,7 @@ bool battle_status_block_damage(struct block_list *src, struct block_list *targe
 			delay = 100;
 
 		map_session_data *sd = map_id2sd(target->id);
-		
+
 		if (sd && pc_issit(sd))
 			pc_setstand(sd, true);
 		if (sce_d && (d_bl = map_id2bl(sce_d->val1)) &&
