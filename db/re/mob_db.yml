@@ -101771,28 +101771,514 @@ Body:
 #    AegisName: MD_THA_DOLOR
 #  - Id: 20800
 #    AegisName: MD_OBSERVATION
-#  - Id: 20801
-#    AegisName: ILL_SROPHO
-#  - Id: 20802
-#    AegisName: ILL_OBEAUNE
-#  - Id: 20803
-#    AegisName: ILL_DEVIACE
-#  - Id: 20804
-#    AegisName: ILL_MARSE
-#  - Id: 20805
-#    AegisName: ILL_MERMAN
-#  - Id: 20806
-#    AegisName: ILL_SEDORA
-#  - Id: 20807
-#    AegisName: ILL_SWORD_FISH
-#  - Id: 20808
-#    AegisName: ILL_STROUF
-#  - Id: 20809
-#    AegisName: ILL_PHEN
-#  - Id: 20810
-#    AegisName: ILL_KING_DRAMOH
-#  - Id: 20811
-#    AegisName: ILL_KRAKEN
+  - Id: 20801
+    AegisName: ILL_SROPHO
+    Name: Deep Sea Sropho
+    Level: 147
+    Hp: 336823
+    BaseExp: 30314
+    JobExp: 21220
+    Attack: 2657
+    Attack2: 340
+    Defense: 224
+    MagicDefense: 81
+    Str: 145
+    Agi: 50
+    Vit: 95
+    Int: 80
+    Dex: 110
+    Luk: 50
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Fish
+    Element: Water
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 550
+    AttackMotion: 1056
+    DamageMotion: 576
+    Ai: 04
+    Drops:
+      - Item: Fin
+        Rate: 2500
+      - Item: Blue_Herb
+        Rate: 50
+      - Item: Crystal_Arrow_Container
+        Rate: 50
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: Electric_Eel
+        Rate: 25
+      - Item: Deepsea_Fish_Tail
+        Rate: 1000
+      - Item: ILL_Sropho_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20802
+    AegisName: ILL_OBEAUNE
+    Name: Deep Sea Obeaune
+    Level: 149
+    Hp: 340238
+    BaseExp: 30621
+    JobExp: 21434
+    Attack: 2647
+    Attack2: 384
+    Defense: 255
+    MagicDefense: 90
+    Str: 134
+    Agi: 50
+    Vit: 114
+    Int: 77
+    Dex: 114
+    Luk: 50
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Fish
+    Element: Water
+    ElementLevel: 2
+    WalkSpeed: 200
+    AttackDelay: 936
+    AttackMotion: 1155
+    DamageMotion: 672
+    Ai: 04
+    Drops:
+      - Item: Heart_Of_Mermaid
+        Rate: 2500
+      - Item: Fin
+        Rate: 150
+      - Item: Skyblue_Jewel
+        Rate: 5
+      - Item: Saint_Robe
+        Rate: 10
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: Rotten_Deepseafish
+        Rate: 1000
+      - Item: ILL_Obeaune_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20803
+    AegisName: ILL_DEVIACE
+    Name: Deep Sea Deviace
+    Level: 150
+    Hp: 348355
+    BaseExp: 31352
+    JobExp: 21946
+    Attack: 2714
+    Attack2: 401
+    Defense: 274
+    MagicDefense: 91
+    Str: 151
+    Agi: 58
+    Vit: 121
+    Int: 80
+    Dex: 120
+    Luk: 58
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Fish
+    Element: Water
+    ElementLevel: 4
+    WalkSpeed: 400
+    AttackDelay: 480
+    AttackMotion: 970
+    DamageMotion: 770
+    Ai: 04
+    Drops:
+      - Item: Mistic_Frozen
+        Rate: 10
+      - Item: Tooth_Of_Ancient_Fish
+        Rate: 2500
+      - Item: Lip_Of_Ancient_Fish
+        Rate: 300
+      - Item: Katar_Of_Cold_Icicle
+        Rate: 5
+      - Item: Abysmal_Clam
+        Rate: 1000
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Deviace_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20804
+    AegisName: ILL_MARSE
+    Name: Deep Sea Marse
+    Level: 149
+    Hp: 335141
+    BaseExp: 30163
+    JobExp: 21114
+    Attack: 2851
+    Attack2: 417
+    Defense: 288
+    MagicDefense: 100
+    Str: 159
+    Agi: 60
+    Vit: 135
+    Int: 90
+    Dex: 120
+    Luk: 60
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Fish
+    Element: Water
+    ElementLevel: 2
+    WalkSpeed: 270
+    AttackDelay: 1070
+    AttackMotion: 1512
+    DamageMotion: 485
+    Ai: 04
+    Drops:
+      - Item: Chinese_Ink
+        Rate: 2500
+      - Item: Tentacle
+        Rate: 1000
+      - Item: Water_Sprits_Armor
+        Rate: 10
+      - Item: Skyblue_Jewel
+        Rate: 5
+      - Item: Mistic_Frozen
+        Rate: 6
+      - Item: Deep_Sea_Starfish
+        Rate: 1000
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Marse_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20805
+    AegisName: ILL_MERMAN
+    Name: Deep Sea Merman
+    Level: 148
+    Hp: 337534
+    BaseExp: 30378
+    JobExp: 21265
+    Attack: 2801
+    Attack2: 401
+    Defense: 268
+    MagicDefense: 75
+    Str: 159
+    Agi: 60
+    Vit: 134
+    Int: 74
+    Dex: 110
+    Luk: 48
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Demihuman
+    Element: Water
+    ElementLevel: 3
+    WalkSpeed: 220
+    AttackDelay: 708
+    AttackMotion: 1225
+    DamageMotion: 675
+    Ai: 04
+    Drops:
+      - Item: Lip_Of_Ancient_Fish
+        Rate: 1000
+      - Item: Mistic_Frozen
+        Rate: 100
+      - Item: Yggdrasilberry
+        Rate: 80
+      - Item: Deep_Sea_Crab
+        Rate: 1000
+      - Item: Zephyrus
+        Rate: 5
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Merman_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20806
+    AegisName: ILL_SEDORA
+    Name: Deep Sea Sedora
+    Level: 199
+    Hp: 2875143
+    BaseExp: 191676
+    JobExp: 134173
+    Attack: 6574
+    Attack2: 796
+    Defense: 274
+    MagicDefense: 100
+    Str: 232
+    Agi: 147
+    Vit: 78
+    Int: 147
+    Dex: 140
+    Luk: 60
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Fish
+    Element: Wind
+    ElementLevel: 3
+    WalkSpeed: 220
+    AttackDelay: 168
+    AttackMotion: 965
+    DamageMotion: 578
+    Ai: 04
+    Drops:
+      - Item: Tentacle
+        Rate: 2000
+      - Item: Chinese_Ink
+        Rate: 1000
+      - Item: Old_Blue_Box
+        Rate: 5
+      - Item: Crystal_Blue
+        Rate: 20
+      - Item: Abysmal_Clam
+        Rate: 2500
+      - Item: Electronic_Guitar
+        Rate: 5
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Sedora_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20807
+    AegisName: ILL_SWORD_FISH
+    Name: Deep Sea Swordfish
+    Level: 199
+    Hp: 2997411
+    BaseExp: 199827
+    JobExp: 139879
+    Attack: 6678
+    Attack2: 824
+    Defense: 288
+    MagicDefense: 71
+    Str: 248
+    Agi: 160
+    Vit: 99
+    Int: 120
+    Dex: 160
+    Luk: 60
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Fish
+    Element: Water
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 335
+    AttackMotion: 1250
+    DamageMotion: 384
+    Ai: 04
+    Drops:
+      - Item: Sharp_Scale
+        Rate: 2000
+      - Item: Gill
+        Rate: 300
+      - Item: Deepsea_Fish_Tail
+        Rate: 2500
+      - Item: Mistic_Frozen
+        Rate: 50
+      - Item: Morrigane's_Pendant
+        Rate: 10
+      - Item: Elunium_Stone
+        Rate: 25
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Sword_Fish_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20808
+    AegisName: ILL_STROUF
+    Name: Deep Sea Strouf
+    Level: 201
+    Hp: 2967419
+    BaseExp: 197828
+    JobExp: 138480
+    Attack: 5947
+    Attack2: 811
+    Defense: 277
+    MagicDefense: 80
+    Str: 224
+    Agi: 160
+    Vit: 99
+    Int: 125
+    Dex: 161
+    Luk: 64
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Fish
+    Element: Water
+    ElementLevel: 3
+    WalkSpeed: 180
+    AttackDelay: 276
+    AttackMotion: 672
+    DamageMotion: 384
+    Ai: 04
+    Drops:
+      - Item: Fin
+        Rate: 2000
+      - Item: Skyblue_Jewel
+        Rate: 10
+      - Item: Oridecon_Stone
+        Rate: 10
+      - Item: Mistic_Frozen
+        Rate: 20
+      - Item: Deep_Sea_Starfish
+        Rate: 2500
+      - Item: Brionac
+        Rate: 50
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Strouf_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20809
+    AegisName: ILL_PHEN
+    Name: Deep Sea Phen
+    Level: 199
+    Hp: 2897158
+    BaseExp: 193144
+    JobExp: 135201
+    Attack: 5844
+    Attack2: 813
+    Defense: 219
+    MagicDefense: 90
+    Str: 208
+    Agi: 157
+    Vit: 66
+    Int: 115
+    Dex: 144
+    Luk: 71
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Fish
+    Element: Water
+    ElementLevel: 2
+    WalkSpeed: 220
+    AttackDelay: 168
+    AttackMotion: 1154
+    DamageMotion: 865
+    Ai: 04
+    Drops:
+      - Item: Sharp_Scale
+        Rate: 2000
+      - Item: Fin
+        Rate: 1000
+      - Item: Meat
+        Rate: 300
+      - Item: Mistic_Frozen
+        Rate: 50
+      - Item: Rotten_Deepseafish
+        Rate: 2500
+      - Item: Morrigane's_Helm
+        Rate: 10
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_Phen_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20810
+    AegisName: ILL_KING_DRAMOH
+    Name: Deep Sea King Dramoh
+    Level: 205
+    Hp: 3115698
+    BaseExp: 207713
+    JobExp: 145399
+    Attack: 6081
+    Attack2: 849
+    Defense: 330
+    MagicDefense: 40
+    Str: 194
+    Agi: 151
+    Vit: 150
+    Int: 100
+    Dex: 142
+    Luk: 80
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Fish
+    Element: Water
+    ElementLevel: 3
+    WalkSpeed: 180
+    AttackDelay: 480
+    AttackMotion: 960
+    DamageMotion: 970
+    Ai: 04
+    Drops:
+      - Item: Nipper
+        Rate: 1500
+      - Item: Solid_Shell
+        Rate: 1500
+      - Item: Deep_Sea_Crab
+        Rate: 2500
+      - Item: Morrigane's_Belt
+        Rate: 50
+      - Item: Death_Guidance
+        Rate: 50
+      - Item: E_Abyss1
+        Rate: 250
+      - Item: ILL_King_Dramoh_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20811
+    AegisName: ILL_KRAKEN
+    Name: Deep Sea Kraken
+    Level: 204
+    Hp: 81289587
+    BaseExp: 5865974
+    JobExp: 4178562
+    Attack: 10874
+    Attack2: 1889
+    Defense: 335
+    MagicDefense: 271
+    Str: 325
+    Agi: 190
+    Vit: 169
+    Int: 277
+    Dex: 200
+    Luk: 55
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Fish
+    Element: Water
+    ElementLevel: 4
+    WalkSpeed: 180
+    AttackDelay: 422
+    AttackMotion: 870
+    DamageMotion: 480
+    Ai: 21
+    Class: Boss
+    Modes:
+      Mvp: true
+    Drops:
+      - Item: Tentacle
+        Rate: 3000
+      - Item: Mistic_Frozen
+        Rate: 500
+      - Item: Shadowdecon
+        Rate: 50
+      - Item: IL_Kraken_Leg
+        Rate: 3000
+      - Item: Morrigane's_Manteau
+        Rate: 300
+      - Item: E_Abyss1
+        Rate: 1000
+      - Item: ILL_Kraken_Card
+        Rate: 1
+        StealProtected: true
 #  - Id: 20812
 #    AegisName: MD_EVENT_HEMEL
 #  - Id: 20813
@@ -101947,8 +102433,54 @@ Body:
 #    AegisName: ELEMETAL_MASTER_S4
 #  - Id: 20842
 #    AegisName: ELEMETAL_MASTER_S5
-#  - Id: 20843
-#    AegisName: ILL_ABYSMAL_WITCH
+  - Id: 20843
+    AegisName: ILL_ABYSMAL_WITCH
+    Name: Deep Sea Witch
+    Level: 205
+    Hp: 78368745
+    BaseExp: 5896412
+    JobExp: 4143664
+    Attack: 11016
+    Attack2: 1853
+    Defense: 452
+    MagicDefense: 81
+    Str: 327
+    Agi: 194
+    Vit: 173
+    Int: 325
+    Dex: 201
+    Luk: 55
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Demon
+    Element: Dark
+    ElementLevel: 3
+    WalkSpeed: 210
+    AttackDelay: 360
+    AttackMotion: 1250
+    DamageMotion: 480
+    Ai: 21
+    Class: Boss
+    Modes:
+      Mvp: true
+    Drops:
+      - Item: Crown_Of_Witch
+        Rate: 3000
+      - Item: Mistic_Frozen
+        Rate: 300
+      - Item: Morrigane's_Pendant
+        Rate: 50
+      - Item: Morrigane's_Belt
+        Rate: 50
+      - Item: Shadowdecon
+        Rate: 50
+      - Item: E_Abyss1
+        Rate: 1000
+      - Item: ILL_Abysmal_Witch_Card
+        Rate: 1
+        StealProtected: true
 #  - Id: 20844
 #    AegisName: PRAY_GIVER
 #  - Id: 20845
@@ -104854,26 +105386,461 @@ Body:
 #    AegisName: E_SWEETS_DROPS
 #  - Id: 21385
 #    AegisName: ANDRE_LARVA
-#  - Id: 21386
-#    AegisName: ILL_ANDRE
-#  - Id: 21387
-#    AegisName: ILL_SOLDIER_ANDR
-#  - Id: 21388
-#    AegisName: ILL_ANDRE_LARVA
-#  - Id: 21389
-#    AegisName: ILL_DENIRO
-#  - Id: 21390
-#    AegisName: ILL_PIERE
-#  - Id: 21391
-#    AegisName: ILL_ANT_EGG
-#  - Id: 21392
-#    AegisName: ILL_GIEARTH
-#  - Id: 21393
-#    AegisName: ILL_FARMILIAR
-#  - Id: 21394
-#    AegisName: ILL_VITATA
-#  - Id: 21395
-#    AegisName: ILL_MAYA
+  - Id: 21386
+    AegisName: ILL_ANDRE
+    Name: Diligent Andre
+    Level: 167
+    Hp: 839882
+    BaseExp: 80476
+    JobExp: 61811
+    Attack: 4653
+    Attack2: 569
+    Defense: 168
+    MagicDefense: 22
+    Str: 111
+    Agi: 158
+    Vit: 91
+    Int: 70
+    Dex: 194
+    Luk: 70
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    Element: Earth
+    ElementLevel: 3
+    WalkSpeed: 300
+    AttackDelay: 1288
+    AttackMotion: 288
+    DamageMotion: 384
+    Ai: 21
+    Drops:
+      - Item: Excalibur
+        Rate: 5
+      - Item: IL_Twins_Feeler
+        Rate: 150
+      - Item: IL_Twins_Leg
+        Rate: 150
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Opaque_Liquid
+        Rate: 2000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Andre_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21387
+    AegisName: ILL_SOLDIER_ANDR
+    Name: Diligent Soldier Andre
+    Level: 169
+    Hp: 943547
+    BaseExp: 83348
+    JobExp: 62487
+    Attack: 5569
+    Attack2: 545
+    Defense: 201
+    MagicDefense: 30
+    Str: 198
+    Agi: 176
+    Vit: 98
+    Int: 88
+    Dex: 201
+    Luk: 101
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Medium
+    Race: Insect
+    Element: Earth
+    ElementLevel: 4
+    WalkSpeed: 350
+    AttackDelay: 1288
+    AttackMotion: 648
+    DamageMotion: 384
+    Ai: 21
+    Drops:
+      - Item: Doom_Slayer
+        Rate: 5
+      - Item: IL_Twins_Jaw
+        Rate: 100
+      - Item: IL_Twins_Leg
+        Rate: 200
+      - Item: IL_Twins_Feeler
+        Rate: 200
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Andre_soldier_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21388
+    AegisName: ILL_ANDRE_LARVA
+    Name: Diligent Andre Larva
+    Level: 164
+    Hp: 819978
+    BaseExp: 64798
+    JobExp: 46871
+    Attack: 3984
+    Attack2: 308
+    Defense: 121
+    MagicDefense: 10
+    Str: 82
+    Agi: 66
+    Vit: 59
+    Int: 54
+    Dex: 75
+    Luk: 108
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    Element: Earth
+    ElementLevel: 2
+    WalkSpeed: 200
+    AttackDelay: 1000
+    AttackMotion: 792
+    DamageMotion: 336
+    Ai: 21
+    Drops:
+      - Item: Sprint_Glove
+        Rate: 5
+      - Item: Guard
+        Rate: 7
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Andre_larva_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21389
+    AegisName: ILL_DENIRO
+    Name: Diligent Deniro
+    Level: 167
+    Hp: 819978
+    BaseExp: 81114
+    JobExp: 61044
+    Attack: 4855
+    Attack2: 544
+    Defense: 170
+    MagicDefense: 19
+    Str: 136
+    Agi: 149
+    Vit: 92
+    Int: 89
+    Dex: 185
+    Luk: 88
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    Element: Earth
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 1288
+    AttackMotion: 288
+    DamageMotion: 576
+    Ai: 21
+    Drops:
+      - Item: Sprint_Mail
+        Rate: 5
+      - Item: IL_Twins_Feeler
+        Rate: 150
+      - Item: IL_Twins_Jaw
+        Rate: 50
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Opaque_Liquid
+        Rate: 2000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Deniro_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21390
+    AegisName: ILL_PIERE
+    Name: Diligent Piere
+    Level: 167
+    Hp: 825541
+    BaseExp: 82688
+    JobExp: 60487
+    Attack: 5042
+    Attack2: 557
+    Defense: 178
+    MagicDefense: 18
+    Str: 190
+    Agi: 144
+    Vit: 86
+    Int: 63
+    Dex: 175
+    Luk: 90
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    Element: Earth
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 1288
+    AttackMotion: 288
+    DamageMotion: 576
+    Ai: 21
+    Drops:
+      - Item: Gelerdria
+        Rate: 5
+      - Item: IL_Twins_Jaw
+        Rate: 50
+      - Item: IL_Twins_Leg
+        Rate: 150
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Piere_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21391
+    AegisName: ILL_ANT_EGG
+    Name: Mushy Ant Egg
+    Level: 164
+    Hp: 659810
+    BaseExp: 34992
+    JobExp: 23555
+    Defense: 100
+    MagicDefense: 9
+    Vit: 65
+    Luk: 200
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Formless
+    Element: Neutral
+    ElementLevel: 2
+    WalkSpeed: 1000
+    AttackDelay: 1001
+    AttackMotion: 1
+    DamageMotion: 1
+    Ai: 06
+    Drops:
+      - Item: Sprint_Shoes
+        Rate: 5
+      - Item: Siver_Guard
+        Rate: 5
+      - Item: Shell
+        Rate: 2000
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Phracon
+        Rate: 500
+      - Item: Jellopy
+        Rate: 2500
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Ant_egg_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21392
+    AegisName: ILL_GIEARTH
+    Name: Gutsy Giearth
+    Level: 168
+    Hp: 864988
+    BaseExp: 81566
+    JobExp: 61655
+    Attack: 4955
+    Attack2: 560
+    Defense: 223
+    MagicDefense: 21
+    Str: 160
+    Agi: 97
+    Vit: 155
+    Int: 104
+    Dex: 94
+    Luk: 151
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Demon
+    Element: Dark
+    ElementLevel: 3
+    WalkSpeed: 250
+    AttackDelay: 1848
+    AttackMotion: 1296
+    DamageMotion: 432
+    Ai: 21
+    Drops:
+      - Item: Thorn_Staff
+        Rate: 5
+      - Item: IL_Twins_Hat
+        Rate: 50
+      - Item: IL_Twins_Shovel
+        Rate: 50
+      - Item: Coal
+        Rate: 200
+      - Item: Elder_Pixie's_Beard
+        Rate: 4000
+      - Item: Dry_Sand
+        Rate: 2000
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Giearth_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21393
+    AegisName: ILL_FARMILIAR
+    Name: Gutsy Familiar
+    Level: 166
+    Hp: 761002
+    BaseExp: 79844
+    JobExp: 60180
+    Attack: 4472
+    Attack2: 542
+    Defense: 144
+    MagicDefense: 10
+    Str: 90
+    Agi: 162
+    Vit: 70
+    Int: 115
+    Dex: 188
+    Luk: 55
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Brute
+    Element: Dark
+    ElementLevel: 2
+    WalkSpeed: 150
+    AttackDelay: 1276
+    AttackMotion: 576
+    DamageMotion: 384
+    Ai: 21
+    Drops:
+      - Item: Ancient_Dagger
+        Rate: 5
+      - Item: IL_Twins_Fang
+        Rate: 75
+      - Item: IL_Twins_Fur
+        Rate: 150
+      - Item: Tooth_Of_Bat
+        Rate: 5500
+      - Item: Red_Herb
+        Rate: 700
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Farmiliar_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21394
+    AegisName: ILL_VITATA
+    Name: Diligent Vitata
+    Level: 169
+    Hp: 879511
+    BaseExp: 83348
+    JobExp: 62487
+    Attack: 4566
+    Attack2: 2984
+    Defense: 168
+    MagicDefense: 166
+    Str: 177
+    Agi: 199
+    Vit: 144
+    Int: 142
+    Dex: 223
+    Luk: 56
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    Element: Poison
+    ElementLevel: 4
+    WalkSpeed: 300
+    AttackDelay: 1768
+    AttackMotion: 768
+    DamageMotion: 384
+    Ai: 21
+    Drops:
+      - Item: Sprint_Ring
+        Rate: 5
+      - Item: IL_Twins_Acid
+        Rate: 75
+      - Item: IL_Twins_Jaw
+        Rate: 75
+      - Item: Worm_Peelings
+        Rate: 4500
+      - Item: Sticky_Mucus
+        Rate: 1000
+      - Item: Scell
+        Rate: 300
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: ILL_Vitata_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 21395
+    AegisName: ILL_MAYA
+    Name: Silent Maya
+    Level: 175
+    Hp: 24512365
+    BaseExp: 4401752
+    JobExp: 3601314
+    Attack: 7844
+    Attack2: 3827
+    Defense: 998
+    MagicDefense: 184
+    Str: 251
+    Agi: 206
+    Vit: 238
+    Int: 322
+    Dex: 244
+    Luk: 248
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Insect
+    Element: Neutral
+    ElementLevel: 4
+    WalkSpeed: 100
+    AttackDelay: 864
+    AttackMotion: 1000
+    DamageMotion: 480
+    Ai: 21
+    Drops:
+      - Item: Dea_Staff
+        Rate: 300
+      - Item: IL_Twins_Acid
+        Rate: 10000
+      - Item: IL_Twins_Crown
+        Rate: 3000
+      - Item: IL_Twins_Leg
+        Rate: 10000
+      - Item: Shadowdecon
+        Rate: 100
+      - Item: Shell_Of_Cognition
+        Rate: 2000
+      - Item: Mother's_Nightmare
+        Rate: 10
+      - Item: ILL_Maya_Card
+        Rate: 1
+        StealProtected: true
 #  - Id: 21396
 #    AegisName: SEASON_MOB_016
 #  - Id: 21397

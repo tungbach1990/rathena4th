@@ -1292,15 +1292,61 @@ Body:
   - Id: 3406
     Title: Dragon Monster Hunt - Standby
     TimeLimit: 4h
+  - Id: 3407
+    Title: The Fishing Rod of the Missing Person
+  - Id: 3408
+    Title: Procurement of Abyssal Essence
+  - Id: 3409
+    Title: Vortex leading to the Deep Sea
+  - Id: 3410
+    Title: Sirud to the Surface
+  - Id: 3411
+    Title: Defeating Deep Sea Creatures
+    Targets:
+      - Mob: ILL_SROPHO
+        Count: 10
+      - Mob: ILL_MARSE
+        Count: 10
+      - Mob: ILL_DEVIACE
+        Count: 10
+  - Id: 3412
+    Title: Collect Abyssal Essence
+  - Id: 3413
+    Title: Collect Abyssal Essence - Daily    
   - Id: 3414
     Title: Collect Abyssal Essence - Standby
     TimeLimit: 4h
+  - Id: 3415
+    Title: Defeat Deep Sea Creatures in the Upper Layers - Daily
+    Targets:
+      - Mob: ILL_SROPHO
+        Count: 10
+      - Mob: ILL_MARSE
+        Count: 10
+      - Mob: ILL_DEVIACE
+        Count: 10    
   - Id: 3416
     Title: Defeat Deep Sea Creatures in the Upper Layers - Standby
     TimeLimit: 4h
+  - Id: 3417
+    Title: Defeat Deep Sea Creatures in the Lower Layers - Daily
+    Targets:
+      - Mob: ILL_SWORD_FISH
+        Count: 10
+      - Mob: ILL_PHEN
+        Count: 10
+      - Mob: ILL_KING_DRAMOH
+        Count: 10    
   - Id: 3418
     Title: Defeat Deep Sea Creatures in the Lower Layers - Standby
     TimeLimit: 4h
+  - Id: 3419
+    Title: Defeat Deep Sea fishmen in the Lower Layers - Daily
+    Targets:
+      - Mob: ILL_SEDORA
+        Count: 15
+      - Mob: ILL_STROUF
+        Count: 15    
   - Id: 3420
     Title: Defeat Deep Sea fishmen in the Lower Layers - Standby
     TimeLimit: 4h
@@ -6065,6 +6111,57 @@ Body:
           MAGMARING: true
           DROSERA: true
           MUSCIPULAR: true
+  - Id: 8719
+    Title: A new area somewhere in the anthill
+  - Id: 8720
+    Title: Mirko's Request (1)
+  - Id: 8721
+    Title: Where is Briashen
+  - Id: 8722
+    Title: Briashen's message
+  - Id: 8723
+    Title: Mirko's Request (2)
+  - Id: 8724
+    Title: Where is Khahris
+  - Id: 8725
+    Title: The same look...? (1)
+  - Id: 8726
+    Title: The same look...? (2)
+  - Id: 8727
+    Title: The same look...? (3)
+  - Id: 8728
+    Title: Who is Khahris?
+  - Id: 8729
+    Title: Where is Briashen (2)
+  - Id: 8730
+    Title: The Labyrinth of Perception
+  - Id: 8731
+    Title: Geological Survey
+  - Id: 8732
+    Title: Geological Survey - Standby
+    TimeLimit: 4h
+  - Id: 8733
+    Title: Source of Power
+  - Id: 8734
+    Title: Source of Power - Standby
+    TimeLimit: 4h
+  - Id: 8735
+    Title: Same thing
+    Targets:
+      - Mob: ILL_SOLDIER_ANDR
+        Count: 10
+      - Mob: ILL_PIERE
+        Count: 10
+      - Mob: ILL_VITATA
+        Count: 10
+  - Id: 8736
+    Title: The Same Thing - Standby
+    TimeLimit: 4h
+  - Id: 8737
+    Title: Shared Memories
+  - Id: 8738
+    Title: Shared Memories - Standby
+    TimeLimit: 4h          
   - Id: 9000
     Title: Job Change to Knight
   - Id: 9001
