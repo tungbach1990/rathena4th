@@ -4,6 +4,8 @@
 //= [Walkthrough Conversion]
 //===== Changelog: ===========================================
 //= 1.0 Added sp_rudus4 quests. [Capuche]
+//= 1.1 Added nif_dun01 and nif_dun02 quests. [Capuche]
+//= 1.2 Added amicitia1 and amicitia2 quests. [Capuche]
 //============================================================
 
 // sp_rudus4

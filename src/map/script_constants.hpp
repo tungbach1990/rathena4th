@@ -1888,9 +1888,7 @@
 	export_constant(SC_IMMUNE_PROPERTY_TELEKINESIS);
 	export_constant(SC_IMMUNE_PROPERTY_UNDEAD);
 	export_constant(SC_RUSH_QUAKE1);
-	export_constant(SC_RUSH_QUAKE2);
-	export_constant(SC_RELIEVE_ON);
-	export_constant(SC_RELIEVE_OFF);	
+	export_constant(SC_RUSH_QUAKE2);	
 
 	// Hyper Novice
 	export_constant(SC_SHIELDCHAINRUSH);
@@ -1956,7 +1954,8 @@
 	export_constant(SC_TEMPORARY_COMMUNION);
 	export_constant(SC_BLESSING_OF_M_CREATURES);
 	export_constant(SC_BLESSING_OF_M_C_DEBUFF);
-
+	export_constant(SC_RELIEVE_ON);
+	export_constant(SC_RELIEVE_OFF);
 
 #ifdef RENEWAL
 	export_constant(SC_EXTREMITYFIST2);
