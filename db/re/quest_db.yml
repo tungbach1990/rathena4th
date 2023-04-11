@@ -1292,6 +1292,9 @@ Body:
   - Id: 3406
     Title: Dragon Monster Hunt - Standby
     TimeLimit: 4h
+##############################################
+# Illusion of Underwater
+##############################################
   - Id: 3407
     Title: The Fishing Rod of the Missing Person
   - Id: 3408
@@ -1311,6 +1314,22 @@ Body:
         Count: 10
   - Id: 3412
     Title: Collect Abyssal Essence
+    Drops:
+      - Mob: ILL_OBEAUNE
+        Item: E_Abyss1
+        Rate: 2000
+      - Mob: ILL_SROPHO
+        Item: E_Abyss1
+        Rate: 2000
+      - Mob: ILL_DEVIACE
+        Item: E_Abyss1
+        Rate: 2000
+      - Mob: ILL_MARSE
+        Item: E_Abyss1
+        Rate: 2000
+      - Mob: ILL_MERMAN
+        Item: E_Abyss1
+        Rate: 2000
   - Id: 3413
     Title: Collect Abyssal Essence - Daily    
   - Id: 3414
@@ -1350,30 +1369,175 @@ Body:
   - Id: 3420
     Title: Defeat Deep Sea fishmen in the Lower Layers - Standby
     TimeLimit: 4h
+##############################################
+  - Id: 3446
+    Title: Illusion Investigation Team Jiroker
+  - Id: 3447
+    Title: Illusion Of Moonlight 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: pay_d03_i
+        MapName: Illusion Of Moonlight
+        MapMobTargets:
+          ILL_MOONLIGHT: true
+          ILL_NINE_TAIL: true
+          ILL_MUNAK: true
+          ILL_BON_GUN: true
+          ILL_SOHEE: true
+          ILL_ARCHER_SKELETON: true
+          ILL_HIGHWIZARD: true
+          ILL_FURY_HERO: true
   - Id: 3448
     Title: Illusion of Moonlight 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3449
+    Title: Illusion Investigation Team Elysia
+  - Id: 3450
+    Title: Illusion of Frozen 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: ice_d03_i
+        MapName: Illusion of Frozen
+        MapMobTargets:
+          ILL_GAZETI: true
+          ILL_SNOWIER: true
+          ILL_ICE_TITAN: true
+          ILL_ICEICLE: true
+          ILL_KTULLANUX: true
   - Id: 3451
     Title: Illusion of Frozen 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3452
+    Title: Illusion Investigation Team Radimir
+  - Id: 3453
+    Title: Illusion of Vampire 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: gef_d01_i 
+        MapName: Illusion of Vampire
+        MapMobTargets:
+          ILL_DRAINLIAR: true
+          ILL_ZOMBIE_C: true
+          ILL_ZOMBIE: true
+          ILL_GHOUL: true
+          ILL_NIGHTMARE: true
+          ILL_BLACK_MUSHROOM: true
+          ILL_BOMI: true
+          ILL_DRACULA: true
   - Id: 3454
     Title: Illusion of Vampire 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3455
+    Title: Illusion Investigation Team Machoko
+  - Id: 3456
+    Title: Illusion of Teddy Bear 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: ein_d02_i 
+        MapName: Illusion of Teddy Bear
+        MapMobTargets:
+          ILL_TEDDY_BEAR_R: true
+          ILL_TEDDY_BEAR_Y: true
+          ILL_TEDDY_BEAR_G: true
+          ILL_TEDDY_BEAR_W: true
+          ILL_TEDDY_BEAR_S: true
+          ILL_PITMAN: true
+          ILL_MINERAL: true
+          ILL_OBSIDIAN: true
   - Id: 3457
     Title: Illusion of Teddy Bear 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3458
+    Title: Illusion Investigation Team Orian
+  - Id: 3459
+    Title: Illusion of Abyss 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: tur_d04_i
+        MapName: Illusion of Abyss
+        MapMobTargets:
+          ILL_ASSULTER: true
+          ILL_PERMETER: true
+          ILL_FREEZER: true
+          ILL_SOLIDER: true
+          ILL_HEATER: true
+          ILL_TURTLE_GENERAL: true
   - Id: 3460
     Title: Illusion of Abyss 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3461
+    Title: Illusion Investigation Team Cassis
+  - Id: 3462
+    Title: Illusion of Luanda 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: com_d02_i
+        MapName: Illusion of Luanda
+        MapMobTargets:
+          ILL_TRI_JOINT: true
+          ILL_STALACTIC_GOLEM: true
+          ILL_MEGALITH: true
+          ILL_TAO_GUNKA: true
+          ILL_STONE_SHOOTER: true
+          ILL_WOOTAN_SHOOTER: true
+          ILL_WOOTAN_FIGHTER: true
+          ILL_WOOTAN_DEFENDER: true
   - Id: 3463
     Title: Illusion of Luanda 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3464
+    Title: Illusion Investigation Team Terian
+  - Id: 3465
+    Title: Illusion of Labyrinth 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: prt_mz03_i
+        MapName: Illusion of Labyrinth
+        MapMobTargets:
+          ILL_BAPHOMET: true
+          ILL_ANDREA: true
+          ILL_ANES: true
+          ILL_SILVANO: true
+          ILL_CECILIA: true
+          ILL_BAPHOMET_J: true
+          ILL_SIDE_WINDER: true
+          ILL_HUNTER_FLY: true
+          ILL_MANTIS: true
+          ILL_GHOSTRING: true
+          ILL_KILLER_MANTIS: true
+          ILL_POPORING: true
+          ILL_STEM_WORM: true
   - Id: 3466
     Title: Illusion of Labyrinth 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3467
+    Title: Illusion Investigation Team Lee Star
+  - Id: 3468
+    Title: Illusion of Underwater 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: iz_d05_i
+        MapName: Illusion of Underwater
+        MapMobTargets:
+          ILL_SEDORA: true
+          ILL_SWORD_FISH: true
+          ILL_STROUF: true
+          ILL_PHEN: true
+          ILL_KING_DRAMOH: true
+          ILL_KRAKEN: true
   - Id: 3469
     Title: Illusion of Underwater 100 Kills - Standby
     TimeLimit: 4h
+  - Id: 3470
+    Title: Join the Welcome Investigation Team
   - Id: 3471
     Title: Subjugation-Einbroch Field-2
     Targets:
@@ -1452,6 +1616,26 @@ Body:
   - Id: 3504
     Title: Look at the Sky - Standby
     TimeLimit: 4h
+  - Id: 3507
+    Title: Illusion Investigation Team Seshin
+  - Id: 3508
+    Title: Illusion of Twins 100 Kills
+    Targets:
+      - Id: 1
+        Count: 100
+        Location: ant_d02_i
+        MapName: Illusion of Twins
+        MapMobTargets:
+          ILL_ANDRE: true
+          ILL_SOLIDER_ANDR: true
+          ILL_ANDRE_LARVA: true
+          ILL_DENIRO: true
+          ILL_PIERE: true
+          ILL_ANT_EGG: true
+          ILL_GIEARTH: true
+          ILL_FARMILIAR: true
+          ILL_VITATA: true
+          ILL_MAYA: true
   - Id: 3509
     Title: Illusion of Twins 100 Kills - Standby
     TimeLimit: 4h
@@ -2310,6 +2494,8 @@ Body:
     Title: Enchant tutorial (2)
   - Id: 5159
     Title: Enchant tutorial (3)
+  - Id: 5160
+    Title: Mistakes in library management
   - Id: 5161
     Title: Low Level collection request (Standby)
     TimeLimit: 4h
@@ -5189,9 +5375,23 @@ Body:
   - Id: 7888
     Title: Gwangin bug research - Waiting
     TimeLimit: 4h
+  - Id: 7889
+    Title: X century XX gold
+    Targets:
+      - Mob: ANGELGOLT
+        Count: 30
+      - Mob: ANGELGOLT2
+        Count: 40
   - Id: 7890
     Title: X century XX gold-waiting
     TimeLimit: 4h
+  - Id: 7891
+    Title: What is a Valkyrie
+    Targets:
+      - Mob: HOLY_FRUS
+        Count: 30
+      - Mob: HOLY_SKOGUL
+        Count: 30
   - Id: 7892
     Title: What is Valkyrie - Standby
     TimeLimit: 4h
@@ -7784,12 +7984,75 @@ Body:
   - Id: 11555
     Title: In search of the taste of hometown - Waiting
     TimeLimit: 4h
+##############################################
+# Illusion of Teddy Bear
+##############################################
+  - Id: 11556
+    Title: Steven is Missing
+  - Id: 11557
+    Title: Steven is Missing
+  - Id: 11558
+    Title: Steven is Missing
+  - Id: 11559
+    Title: Steven is Missing
+  - Id: 11560
+    Title: Steven is Missing
+  - Id: 11561
+    Title: Steven is Missing
+  - Id: 11562
+    Title: Steven is Missing
+  - Id: 11563
+    Title: Nasarian's Conspiracy 1
+    Targets:
+      - Mob: ILL_TEDDY_BEAR_R
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_Y
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_G
+        Count: 10
+  - Id: 11564
+    Title: Nasarian's Conspiracy 2
+    Targets:
+      - Mob: ILL_TEDDY_BEAR_B
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_W
+        Count: 10
+  - Id: 11565
+    Title: Run Away!!!
+    Targets:
+      - Mob: ILL_PITMAN
+        Count: 10
+      - Mob: ILL_MINERAL
+        Count: 10
+      - Mob: ILL_OBSIDIAN
+        Count: 10
   - Id: 11566
     Title: Escape!!!! - Wait
     TimeLimit: 4h
+  - Id: 11567
+    Title: Shouldn't Exist 1
+    Targets:
+      - Mob: ILL_TEDDY_BEAR_R
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_Y
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_G
+        Count: 10
+  - Id: 11568
+    Title: Shouldn't Exist 2
+    Targets:
+      - Mob: ILL_TEDDY_BEAR_B
+        Count: 10
+      - Mob: ILL_TEDDY_BEAR_W
+        Count: 10
   - Id: 11569
     Title: Present not to exist-wait
     TimeLimit: 4h
+  - Id: 11570
+    Title: Let the Light Devour the Darkness
+    Targets:
+      - Mob: ILL_TEDDY_BEAR_S
+        Count: 1
   - Id: 11571
     Title: Let the light consume the darkness - Wait
     TimeLimit: 4h
@@ -8739,6 +9002,11 @@ Body:
     Title: Operate the old robot
   - Id: 12369
     Title: Secret Business Relation
+  - Id: 12370
+    Title: A member of the Union
+    Drops:
+      - Item: Union_Token
+        Rate: 2000
   - Id: 12371
     Title: End of investment today
     TimeLimit: 4h
@@ -8887,15 +9155,114 @@ Body:
   - Id: 12456
     Title: Aftereffects that eliminated the aftereffects that saved the world
     TimeLimit: +6h
+  - Id: 12457
+    Title: Moment of Downfall
+  - Id: 12458
+    Title: Orb's Latter Story
+  - Id: 12459
+    Title: King's Sacrifice
+    Targets:
+      - Mob: MD_GH_KING_SCHMIDT_N
+        Count: 1
   - Id: 12460
     Title: Aftereffects of the Fall
     TimeLimit: 4h
   - Id: 12461
-    Title: The aftereffects of powerful death
-    TimeLimit: 3d 4h
+    Title: Glast Heim Purification (Hard) - Standby
+    TimeLimit: 4h 3d
+  - Id: 12462
+    Title: King's Sacrifice (Hard)
+    Targets:
+      - Mob: MD_GH_KING_SCHMIDT_H
+        Count: 1
+#--------------------------------------------------------------
+# Illusion Labyrinth
+#--------------------------------------------------------------
+  - Id: 12470
+    Title: Andrea's Revenge I
+    Targets:
+      - Mob: ILL_BAPHOMET_J
+        Count: 5
+  - Id: 12471
+    Title: Andrea's Revenge II
+    Targets:
+      - Mob: ILL_GHOSTRING
+        Count: 2
+  - Id: 12472
+    Title: Anes' Revenge I
+    Targets:
+      - Mob: ILL_HUNTER_FLY
+        Count: 5
+  - Id: 12473
+    Title: Anes' Revenge II
+    Targets:
+      - Mob: ILL_KILLER_MANTIS
+        Count: 5
+  - Id: 12474
+    Title: Silvano's Revenge I
+    Targets:
+      - Mob: ILL_MANTIS
+        Count: 5
+  - Id: 12475
+    Title: Silvano's Revenge II
+    Targets:
+      - Mob: ILL_POPORING
+        Count: 5
+  - Id: 12476
+    Title: Cecilia's Revenge I
+    Targets:
+      - Mob: ILL_SIDE_WINDER
+        Count: 5
+  - Id: 12477
+    Title: Cecilia's Revenge II
+    Targets:
+      - Mob: ILL_STEM_WORM
+        Count: 3
+  - Id: 12478
+    Title: Purification of Thoughts
+    Targets:
+      - Mob: ILL_ANDREA
+        Count: 1
+  - Id: 12479
+    Title: Purification of Thoughts
+    Targets:
+      - Mob: ILL_ANES
+        Count: 1
+  - Id: 12480
+    Title: Purification of Thoughts
+    Targets:
+      - Mob: ILL_SILVANO
+        Count: 1
+  - Id: 12481
+    Title: Purification of Thoughts
+    Targets:
+      - Mob: ILL_CECILIA
+        Count: 1
+  - Id: 12482
+    Title: The disappearance of a colleague
+  - Id: 12483
+    Title: Continue check
+  - Id: 12484
+    Title: Explore traces of apprentices
+  - Id: 12485
+    Title: Explore traces of apprentices
+  - Id: 12486
+    Title: Explore traces of apprentices
+  - Id: 12487
+    Title: Explore traces of apprentices
+  - Id: 12488
+    Title: Report Results
+  - Id: 12489
+    Title: Guest Guild One
   - Id: 12490
     Title: Receive today's mission
     TimeLimit: 4h
+  - Id: 12491
+    Title: Receive this week's mission
+    TimeLimit: SATURDAY 4h
+  - Id: 12492
+    Title: Esmeralda
+##########################################################
   - Id: 12493
     Title: The aftereffect of the challenge
     TimeLimit: 3d 4h
@@ -11061,6 +11428,14 @@ Body:
         Count: 15
   - Id: 16540
     Title: Data Backup
+  - Id: 16541
+    Title: Traces of Werner
+  - Id: 16542
+    Title: Traces of Werner
+  - Id: 16543
+    Title: Traces of Werner
+  - Id: 16543
+    Title: Traces of Werner
   - Id: 16545
     Title: Traces of Werner
   - Id: 16546
@@ -11403,12 +11778,227 @@ Body:
   - Id: 18028
     Title: The Memory of Thanatos the Magistrate - Waiting
     TimeLimit: 4h
+  - Id: 18029
+    Title: Let's catch Fabre !
+    Targets:
+      - Mob: FABRE
+        Count: 10
+  - Id: 18030
+    Title: Let's catch Fabre ! - Waiting
+    TimeLimit: 4h
+  - Id: 18031
+    Title: Payon Field Exploration
+    Targets:
+      - Mob: SPORE
+        Count: 10
+      - Mob: SNAKE
+        Count: 10
+      - Mob: WORM_TAIL
+        Count: 10
+  - Id: 18032
+    Title: Payon Field Exploration - Waiting
+    TimeLimit: 4h
+  - Id: 18033
+    Title: Exploring the Groundwater
+    Targets:
+      - Mob: THIEF_BUG_
+        Count: 30
+      - Mob: THIEF_BUG__
+        Count: 30
+      - Mob: POISON_SPORE
+        Count: 30
+  - Id: 18034
+    Title: Exploring the Groundwater - Waiting
+    TimeLimit: 4h
+  - Id: 18035
+    Title: Exploring Mjolnir Abandoned Mine
+    Targets:
+      - Mob: MARTIN
+        Count: 30
+      - Mob: SKEL_WORKER
+        Count: 30
+      - Mob: GIEARTH
+        Count: 30
+  - Id: 18036
+    Title: Exploring Mjolnir Abandoned Mine - Waiting
+    TimeLimit: 4h
+  - Id: 18037
+    Title: Izlude Undersea Cave Exploration
+    Targets:
+      - Mob: SWORD_FISH
+        Count: 30
+      - Mob: MERMAN
+        Count: 30
+      - Mob: STROUF
+        Count: 30
+  - Id: 18038
+    Title: Izlude Undersea Cave Exploration - Waiting
+    TimeLimit: 4h
+  - Id: 18039
+    Title: Payon Dungeon Exploration
+    Targets:
+      - Mob: MUNAK
+        Count: 30
+      - Mob: BON_GUN
+        Count: 30
+      - Mob: SOHEE
+        Count: 40
+  - Id: 18040
+    Title: Payon Dungeon Exploration - Waiting
+    TimeLimit: 4h
+  - Id: 18041
+    Title: Aldebaran Clock Tower Exploring
+    Targets:
+      - Mob: CLOCK
+        Count: 20
+      - Mob: PUNK
+        Count: 20
+      - Mob: RIDEWORD
+        Count: 20
+  - Id: 18042
+    Title: Aldebaran Clock Tower Exploration - Waiting
+    TimeLimit: 4h
+  - Id: 18043
+    Title: Alberta Turtle Island Expedition
+    Targets:
+      - Mob: PERMETER
+        Count: 20
+      - Mob: FREEZER
+        Count: 30
+      - Mob: HEATER
+        Count: 30
+  - Id: 18044
+    Title: Alberta Turtle Island Expedition - Waiting
+    TimeLimit: 4h
+  - Id: 18045
+    Title: Seasoned Hunter Beginner
+    Targets:
+      - Id: 1
+        Count: 30
+        Race: Formless
+        MinLevel: 99
+        MaxLevel: 115
+        Location: juperos_01
+      - Id: 2
+        Count: 30
+        Size: Medium
+        MinLevel: 99
+        MaxLevel: 115
+        Location: juperos_01
+      - Id: 3
+        Count: 30
+        Element: Water
+        MinLevel: 99
+        MaxLevel: 115
+        Location: juperos_01
+  - Id: 18046
+    Title: Seasoned Hunter Beginner - Waiting
+    TimeLimit: 4h
+  - Id: 18047
+    Title: Seasoned Hunter Intermediate
+    Targets:
+      - Id: 1
+        Count: 30
+        Race: DemiHuman
+        MinLevel: 115
+        MaxLevel: 130
+        Location: ma_fild02
+      - Id: 2
+        Count: 30
+        Size: Large
+        MinLevel: 115
+        MaxLevel: 130
+        Location: ma_fild02
+      - Id: 3
+        Count: 30
+        Element: Earth
+        MinLevel: 115
+        MaxLevel: 130
+        Location: ma_fild02
+  - Id: 18048
+    Title: Seasoned Hunter Intermediate - Waiting
+    TimeLimit: 4h
+  - Id: 18049
+    Title: Seasoned Hunter Advanced 1
+    Targets:
+      - Id: 1
+        Count: 30
+        Race: Insect
+        MinLevel: 130
+        MaxLevel: 145
+        Location: 1@gl_k
+      - Id: 2
+        Count: 30
+        Size: Small
+        MinLevel: 130
+        MaxLevel: 145
+        Location: 1@gl_k
+      - Id: 3
+        Count: 30
+        Element: Dark
+        MinLevel: 130
+        MaxLevel: 145
+        Location: 1@gl_k
+  - Id: 18050
+    Title: Seasoned Hunter Advanced 1 - Waiting
+    TimeLimit: 4h
+  - Id: 18051
+    Title: Seasoned Hunter Advanced 2
+    Targets:
+      - Id: 1
+        Count: 30
+        Element: Earth
+        MinLevel: 145
+        MaxLevel: 160
+        Location: prt_prison
+      - Id: 2
+        Count: 30
+        Size: Small
+        MinLevel: 145
+        MaxLevel: 160
+        Location: prt_prison
+      - Id: 3
+        Count: 30
+        Size: Medium
+        MinLevel: 145
+        MaxLevel: 160
+        Location: prt_prison
+  - Id: 18052
+    Title: Seasoned Hunter Advanced 2 - Waiting
+    TimeLimit: 4h
+  - Id: 18053
+    Title: Clock Tower Nightmare Attack
+    Targets:
+      - Mob: BIG_BELL
+        Count: 60
+      - Mob: OWL_VISCOUNT
+        Count: 1
+      - Mob: OWL_MARQUEES
+        Count: 1
   - Id: 18054
     Title: Nightmare on the clock tower - Standby
     TimeLimit: 4h
+  - Id: 18055
+    Title: Attack the Glastheim Abyss
+    Targets:
+      - Mob: ICE_GHOST_H
+        Count: 20
+      - Mob: FLAME_GHOST_H
+        Count: 20
+      - Mob: RAYDRIC_H
+        Count: 20
   - Id: 18056
     Title: Glastheim's attack on Abyss - Standby
     TimeLimit: 4h
+  - Id: 18057
+    Title: Einbech Mine target
+    Targets:
+      - Mob: PORCELLIO_W
+        Count: 10
+      - Mob: ABYSSMAN
+        Count: 20
+      - Mob: JEWELIANT
+        Count: 10
   - Id: 18058
     Title: Einbech Mine target - Standby
     TimeLimit: 4h
@@ -11454,6 +12044,68 @@ Body:
     Title: Winter is Banished
   - Id: 18080
     Title: Goseong dungeon 1st floor attack
+    TimeLimit: 4h
+  - Id: 18088
+    Title: Attack on the Banquet Hall of the Dead
+    Targets:
+      - Id: 1
+        Count: 40
+        Location: nif_dun01
+        MapName:  Niflheim Dungeon Banquet Hall of the Dead
+        MapMobTargets:
+          LUDE_GAL: true
+          GHOST_CUBE: true
+          BRUTAL_MURDERER: true
+          GAN_CEANN: true
+  - Id: 18089
+    Title: Attack on the Banquet Hall of the Dead - waiting
+    TimeLimit: 4h
+  - Id: 18090
+    Title: Attack on the Amicitia 1st floor
+    Targets:
+      - Id: 1
+        Count: 40
+        Location: amicitia1
+        MapName:  Amicitia Lab 1st Floor
+        MapMobTargets:
+          CHIMERA_AMITERA: true
+          CHIMERA_LITUS: true
+          CHIMERA_FILLIA: true
+          CHIMERA_VANILAQUS: true
+  - Id: 18091
+    Title: Attack the Amicitia 1st floor - waiting
+    TimeLimit: 4h
+  - Id: 18092
+    Title: Attack on the Amicitia 2nd floor
+    Targets:
+      - Id: 1
+        Count: 40
+        Location: amicitia2
+        MapName: Amicitia Lab 2nd Floor
+        MapMobTargets:
+          CHIMERA_LAVA: true
+          CHIMERA_FULGOR: true
+          CHIMERA_NAPEO: true
+          CHIMERA_GALENSIS: true
+          CHIMERA_THEONE: true
+  - Id: 18093
+    Title: Attack the Amicitia 2nd floor - waiting
+    TimeLimit: 4h
+  - Id: 18094
+    Title: Attack the Fallen Opera House
+    Targets:
+      - Id: 1
+        Count: 40
+        Location: nif_dun02
+        MapName:  Niflheim Dungeon Fallen Opera House
+        MapMobTargets:
+          DISGUISER: true
+          BLUEMOON_LOLI_RURI: true
+          PIERROTZOIST: true
+          GROTE: true
+          DEATH_WITCH: true
+  - Id: 18095
+    Title: Attack the Fallen Opera House - waiting
     TimeLimit: 4h
   - Id: 18100
     Title: Legends from Moscovia
@@ -11816,6 +12468,80 @@ Body:
   - Id: 21173
     Title: Trust of the Village
     TimeLimit: 4h
+  - Id: 21255
+    Title: Regular Monster Subjugation Cooperation Notice
+  - Id: 21256
+    Title: Orc, Overlooked operation!
+    Targets:
+      - Mob: ORK_WARRIOR
+        Count: 15
+      - Mob: ORC_LADY
+        Count: 15
+      - Mob: ORC_BABY
+        Count: 10
+  - Id: 21257
+    Title: Orc, Overlooked operation! - Standby
+    TimeLimit: 4h
+  - Id: 21258
+    Title: Dirty Orcs
+    Targets:
+      - Mob: ORC_ZOMBIE
+        Count: 20
+      - Mob: ORC_SKELETON
+        Count: 20
+  - Id: 21259
+    Title: Dirty Orcs - Standby
+    TimeLimit: 4h
+  - Id: 21260
+    Title: Greedy
+    Targets:
+      - Mob: ZENORC
+        Count: 20
+  - Id: 21261
+    Title: Greedy - Standby
+    TimeLimit: 4h
+  - Id: 21262
+    Title: The Ferocious Goblin
+    Targets:
+      - Mob: GOBLIN_2
+        Count: 10
+      - Mob: GOBLIN_3
+        Count: 10
+  - Id: 21263
+    Title: The Ferocious Goblin - Standby
+    TimeLimit: 4h
+  - Id: 21264
+    Title: Sleek Goblin Cleanup
+    Targets:
+      - Mob: GOBLIN_1
+        Count: 10
+      - Mob: GOBLIN_4
+        Count: 10
+  - Id: 21265
+    Title: Sleek Goblin Cleanup - Standby
+    TimeLimit: 4h
+  - Id: 21266
+    Title: I've got supplies! 1
+  - Id: 21267
+    Title: I've got supplies! 2
+  - Id: 21268
+    Title: I'm Here (Standby)
+    TimeLimit: 4h
+  - Id: 21269
+    Title: Bad Guys
+    Targets:
+      - Mob: GOBLIN_ARCHER
+        Count: 10
+      - Mob: GOBLIN_5
+        Count: 10
+  - Id: 21270
+    Title: Bad Guys - Standby
+    TimeLimit: 4h
+  - Id: 21909
+    Title: What you can do with jellopy
+    Targets:
+      - Mob: PORING
+        Count: 2
   - Id: 50000
     Title: Pirate Dagger materials
   - Id: 50001
