@@ -8,7 +8,7 @@
 	ONLan1Killed:
 	getunitdata killedgid,.@data2;
 		if (BaseLevel <= .@data2[UMOB_LEVEL]*11/10 && BaseLevel < 9999){
-			BaseLevel = BaseLevel + rand(1,(.@data2[UMOB_LEVEL]*11/10 - BaseLevel)/10);
+			BaseLevel = BaseLevel + rand(1,(.@data2[UMOB_LEVEL]*11/10 - BaseLevel)/100);
 			percentheal 100,100;
 		}
 	
@@ -30,7 +30,7 @@ getunitdata killedgid,.@data;
 .@y = .@data[UMOB_Y];
 .@lv = .@data[UMOB_LEVEL]*(.@data[UMOB_LEVEL]  + 250)/10 + 250;
 .times = getarg(0) * .@lv;
-monster .@m$,.@x,.@y,.@lv + getarg(2),.idmob,1,strnpcinfo(3) +"::" + getarg(1);
+monster .@m$,.@x,.@y,"[" + .@lv + "]" + getarg(2),.idmob,1,strnpcinfo(3) +"::" + getarg(1);
 .GID = $@mobid[0];
 .base = 10000 - .@lv;
 .@name$ = "killthem";
