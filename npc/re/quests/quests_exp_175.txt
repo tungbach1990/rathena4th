@@ -6,6 +6,7 @@
 //===== Changelog: ===========================================
 //= 1.0 Initial release of Glast Heim Abyss quests. [OptimusM]
 //= 1.1 Corrections here and there. [Capuche]
+//= 1.2 Initial release of Magma Dungeon 3 quests. [Capuche]
 //============================================================
 
 glast_01,191,273,3	script	Magician Nillem#glabyss01	4_M_JOB_WIZARD,{
@@ -292,7 +293,6 @@ gl_cas01_,205,36,5	script	Magician Nillem#glabyss02	4_M_JOB_WIZARD,{
 	warp "glast_01",191,270;
 	end;
 }
-
 
 
 // mag_dun03
@@ -601,7 +601,6 @@ OnInit:
 	questinfo( QTYPE_QUEST, QMARK_YELLOW, "isbegin_quest(8559) == 2 && isbegin_quest(8561) == 0 && checkquest(8560,PLAYTIME) == -1" );
 	end;
 }
-
 
 // ein_dun03
 einbech,143,244,3	script	Apprentice Researcher Sally#extdq01	4_F_LGTGIRL,{

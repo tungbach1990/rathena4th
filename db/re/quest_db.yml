@@ -5827,7 +5827,7 @@ Body:
       - Mob: DELETER1_H
         Count: 15
       - Mob: DELETER2_H
-        Count: 15    
+        Count: 15
   - Id: 8551
     Title: The Dealer That Caused Evolution (Standby)
     TimeLimit: 4h
@@ -5842,7 +5842,7 @@ Body:
     Title: Eradicate the nightmare that became a reality
     Targets:
       - Mob: NIGHTMARE_TERROR_H
-        Count: 10    
+        Count: 10
   - Id: 8554
     Title: Eradicate the nightmare that became reality (Standby)
     TimeLimit: 4h
@@ -5855,7 +5855,7 @@ Body:
     Title: Check density
     Targets:
       - Mob: LAVA_GOLEM_H
-        Count: 10    
+        Count: 10
   - Id: 8557
     Title: Check Density (Standby)
     TimeLimit: 4h
@@ -5870,7 +5870,7 @@ Body:
       - Mob: BLAZZER_H
         Count: 10
       - Mob: EXPLOSION_H
-        Count: 10    
+        Count: 10
   - Id: 8560
     Title: Small Things (Standby)
     TimeLimit: 4h
@@ -5880,7 +5880,7 @@ Body:
       - Mob: BLAZZER_H
         Count: 10
       - Mob: EXPLOSION_H
-        Count: 10    
+        Count: 10
   - Id: 8581
     Title: Sour melon is delicious - Standby
     TimeLimit: 4h
