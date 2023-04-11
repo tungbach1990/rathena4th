@@ -97248,12 +97248,110 @@ Body:
 #    AegisName: G_MINERAL_R
 #  - Id: 20559
 #    AegisName: G_MINERAL_P
-#  - Id: 20560
-#    AegisName: G_MINERAL_G
-#  - Id: 20561
-#    AegisName: G_MINERAL_W
-#  - Id: 20562
-#    AegisName: HIDDEN_MOB8
+  - Id: 20560
+    AegisName: G_MINERAL_G
+    Name: Green Mineral
+    Level: 190
+    Hp: 2435702
+    Attack: 3729
+    Attack2: 671
+    Defense: 287
+    MagicDefense: 68
+    Str: 157
+    Agi: 134
+    Vit: 96
+    Int: 53
+    Dex: 138
+    Luk: 75
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Formless
+    Element: Neutral
+    ElementLevel: 4
+    WalkSpeed: 250
+    AttackDelay: 648
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 17
+  - Id: 20561
+    AegisName: G_MINERAL_W
+    Name: White Mineral
+    Level: 190
+    Hp: 2436177
+    Attack: 3125
+    Attack2: 257
+    Defense: 293
+    MagicDefense: 68
+    Str: 140
+    Agi: 122
+    Vit: 86
+    Int: 94
+    Dex: 285
+    Luk: 88
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 12
+    Size: Large
+    Race: Formless
+    Element: Neutral
+    ElementLevel: 4
+    WalkSpeed: 250
+    AttackDelay: 648
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 09
+    Modes:
+      Aggressive: true
+    Drops:
+      - Item: Fragment_Of_Crystal
+        Rate: 3000
+      - Item: Ein_EYEROCK
+        Rate: 200
+      - Item: Oridecon
+        Rate: 80
+      - Item: Emveretarcon
+        Rate: 800
+      - Item: Ein_WHIDIUM
+        Rate: 200
+      - Item: Neo_Mineral_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20562
+    AegisName: HIDDEN_MOB8   
+    Name: HIDDEN MOB
+    Level: 200
+    Hp: 10000
+    Sp: 200
+    Attack2: 1000
+    Defense: 200
+    MagicDefense: 10
+    Str: 200
+    Agi: 200
+    Vit: 200
+    Int: 200
+    Dex: 200
+    Luk: 200
+    AttackRange: 7
+    SkillRange: 12
+    ChaseRange: 12
+    Size: Small
+    Race: Insect
+    RaceGroups:
+      Ogh_Hidden: true
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 1000
+    AttackMotion: 1000
+    Ai: 24
+    Class: Battlefield
+    Modes:
+      Detector: true
+      IgnoreMagic: true
+      IgnoreMelee: true
+      IgnoreMisc: true
+      IgnoreRanged: true
 #  - Id: 20563
 #    AegisName: GOLDEN_SAVAGE_TW
 #  - Id: 20564
@@ -101765,40 +101863,531 @@ Body:
 #    AegisName: CROW_DUKE
 #  - Id: 20783
 #    AegisName: CROW_BARON
-#  - Id: 20784
-#    AegisName: MD_THANATOS
-#  - Id: 20785
-#    AegisName: MD_BROKEN_THANATOS
-#  - Id: 20786
-#    AegisName: MD_THA_BUFF
-#  - Id: 20787
-#    AegisName: MD_EMPATHIZER
-#  - Id: 20788
-#    AegisName: MD_HAPPY_GIVER
-#  - Id: 20789
-#    AegisName: MD_RETRIBUTION
-#  - Id: 20790
-#    AegisName: MD_SHELTER
-#  - Id: 20791
-#    AegisName: MD_SOLACE
-#  - Id: 20792
-#    AegisName: MD_THA_ANGER
-#  - Id: 20793
-#    AegisName: MD_THA_HORROR
-#  - Id: 20794
-#    AegisName: MD_THA_RESENT
-#  - Id: 20795
-#    AegisName: MD_THA_REGRET
-#  - Id: 20796
-#    AegisName: MD_THA_ODIUM
-#  - Id: 20797
-#    AegisName: MD_THA_DESPERO
-#  - Id: 20798
-#    AegisName: MD_THA_MAERO
-#  - Id: 20799
-#    AegisName: MD_THA_DOLOR
-#  - Id: 20800
-#    AegisName: MD_OBSERVATION
+  - Id: 20784
+    AegisName: MD_THANATOS
+    Name: Thanatos Phantom
+    Level: 210
+    Hp: 442473071
+    BaseExp: 1299400
+    JobExp: 1930554
+    MvpExp: 649700
+    Attack: 6370
+    Attack2: 9310
+    Defense: 390
+    MagicDefense: 86
+    Str: 280
+    Agi: 108
+    Vit: 60
+    Int: 186
+    Dex: 196
+    Luk: 61
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Large
+    Race: Demon
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 115
+    AttackMotion: 816
+    DamageMotion: 504
+    Ai: 21
+    Class: Boss
+    Modes:
+      Mvp: true
+    MvpDrops:
+      - Item: Old_Violet_Box
+        Rate: 5500
+      - Item: Old_Blue_Box
+        Rate: 5000
+      - Item: Crystal_Jewel__
+        Rate: 2000
+    Drops:
+      - Item: Treasure_Box
+        Rate: 1000
+      - Item: Fate_Fragment
+        Rate: 5000
+      - Item: Sin_Fragment
+        Rate: 5000
+      - Item: Thanatos_Card
+        Rate: 1
+        StealProtected: true
+  - Id: 20785
+    AegisName: MD_BROKEN_THANATOS
+    Name: Thanatos Phantom
+    Level: 210
+    Hp: 441773071
+    BaseExp: 1299400
+    JobExp: 1930554
+    MvpExp: 649700
+    Attack: 5270
+    Attack2: 7685
+    Defense: 270
+    MagicDefense: 79
+    Str: 230
+    Agi: 168
+    Vit: 20
+    Int: 113
+    Dex: 167
+    Luk: 47
+    AttackRange: 3
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Demon
+    Element: Neutral
+    ElementLevel: 1
+    WalkSpeed: 120
+    AttackDelay: 115
+    AttackMotion: 816
+    DamageMotion: 504
+    Ai: 21
+    Class: Boss
+    Modes:
+      Mvp: true
+    MvpDrops:
+      - Item: Old_Violet_Box
+        Rate: 5500
+      - Item: Old_Blue_Box
+        Rate: 5000
+      - Item: Crystal_Jewel__
+        Rate: 2000
+    Drops:
+      - Item: Treasure_Box
+        Rate: 1000
+      - Item: Fate_Fragment
+        Rate: 5000
+      - Item: Sin_Fragment
+        Rate: 5000
+      - Item: aegis_300280
+        Rate: 1
+        StealProtected: true
+  - Id: 20786
+    AegisName: MD_THA_BUFF
+    Name: Buff
+    Level: 150
+    Hp: 1000000
+    Attack: 266
+    Attack2: 267
+    Defense: 1
+    MagicDefense: 1
+    Str: 116
+    Agi: 137
+    Vit: 63
+    Int: 97
+    Dex: 126
+    Luk: 29
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Formless
+    Element: Neutral
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Class: Boss
+  - Id: 20787
+    AegisName: MD_EMPATHIZER
+    Name: Empathizer
+    Level: 200
+    Hp: 3788426
+    BaseExp: 401010
+    JobExp: 305177
+    Attack: 5072
+    Attack2: 7392
+    Defense: 296
+    MagicDefense: 79
+    Str: 232
+    Agi: 134
+    Vit: 32
+    Int: 143
+    Dex: 148
+    Luk: 41
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Angel
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 20
+  - Id: 20788
+    AegisName: MD_HAPPY_GIVER
+    Name: Happy Giver
+    Level: 202
+    Hp: 3827826
+    BaseExp: 352857
+    JobExp: 246345
+    Attack: 4696
+    Attack2: 6837
+    Defense: 328
+    MagicDefense: 80
+    Str: 212
+    Agi: 141
+    Vit: 42
+    Int: 157
+    Dex: 187
+    Luk: 77
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Small
+    Race: Angel
+    Element: Wind
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 20
+  - Id: 20789
+    AegisName: MD_RETRIBUTION
+    Name: Baroness of Retribution
+    Level: 205
+    Hp: 3888057
+    BaseExp: 352898
+    JobExp: 246378
+    Attack: 3731
+    Attack2: 5412
+    Defense: 397
+    MagicDefense: 77
+    Str: 164
+    Agi: 162
+    Vit: 64
+    Int: 108
+    Dex: 144
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Angel
+    Element: Dark
+    ElementLevel: 3
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 20
+  - Id: 20790
+    AegisName: MD_SHELTER
+    Name: Mistress of Shelter
+    Level: 204
+    Hp: 3869550
+    BaseExp: 401024
+    JobExp: 305143
+    Attack: 3992
+    Attack2: 5797
+    Defense: 405
+    MagicDefense: 82
+    Str: 177
+    Agi: 164
+    Vit: 67
+    Int: 167
+    Dex: 170
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Angel
+    Element: Holy
+    ElementLevel: 3
+    WalkSpeed: 160
+    AttackDelay: 432
+    AttackMotion: 420
+    DamageMotion: 360
+    Ai: 20
+  - Id: 20791
+    AegisName: MD_SOLACEE
+    Name: Lady Solace
+    Level: 201
+    Hp: 3811137
+    BaseExp: 375854
+    JobExp: 281953
+    Attack: 4168
+    Attack2: 6057
+    Defense: 372
+    MagicDefense: 78
+    Str: 188
+    Agi: 108
+    Vit: 57
+    Int: 134
+    Dex: 138
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Angel
+    Element: Holy
+    ElementLevel: 3
+    WalkSpeed: 180
+    AttackDelay: 576
+    AttackMotion: 420
+    DamageMotion: 360
+    Ai: 20
+  - Id: 20792
+    AegisName: MD_THA_ANGER
+    Name: Anger of Thanatos
+    Level: 203
+    Hp: 3845405
+    Attack: 5592
+    Attack2: 8160
+    Defense: 302
+    MagicDefense: 76
+    Str: 253
+    Agi: 111
+    Vit: 33
+    Int: 97
+    Dex: 178
+    Luk: 63
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Large
+    Race: Demon
+    Element: Fire
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20793
+    AegisName: MD_THA_HORROR
+    Name: Horror of Thanatos
+    Level: 201
+    Hp: 3807368
+    Attack: 5159
+    Attack2: 7520
+    Defense: 297
+    MagicDefense: 75
+    Str: 253
+    Agi: 176
+    Vit: 32
+    Int: 97
+    Dex: 170
+    Luk: 68
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Small
+    Race: Demon
+    Element: Poison
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20794
+    AegisName: MD_THA_RESENT
+    Name: Resent of Thanatos
+    Level: 205
+    Hp: 3883906
+    Attack: 4010
+    Attack2: 5825
+    Defense: 297
+    MagicDefense: 77
+    Str: 177
+    Agi: 176
+    Vit: 32
+    Int: 97
+    Dex: 170
+    Luk: 61
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Undead
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20795
+    AegisName: MD_THA_REGRET
+    Name: Regret of Thanatos
+    Level: 202
+    Hp: 3831613
+    Attack: 3763
+    Attack2: 5460
+    Defense: 403
+    MagicDefense: 81
+    Str: 168
+    Agi: 103
+    Vit: 67
+    Int: 167
+    Dex: 146
+    Luk: 57
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Large
+    Race: Demon
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20796
+    AegisName: MD_THA_ODIUM
+    Name: Odium of Thanatos
+    Level: 204
+    Hp: 3864195
+    Attack: 5768
+    Attack2: 8420
+    Defense: 300
+    MagicDefense: 77
+    Str: 260
+    Agi: 168
+    Vit: 32
+    Int: 108
+    Dex: 177
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Large
+    Race: Undead
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 100
+    AttackDelay: 432
+    AttackMotion: 288
+    DamageMotion: 420
+    Ai: 21
+    Class: Boss
+  - Id: 20797
+    AegisName: MD_THA_DESPERO
+    Name: Despero of Thanatos
+    Level: 203
+    Hp: 3850734
+    Attack: 4420
+    Attack2: 6429
+    Defense: 407
+    MagicDefense: 76
+    Str: 198
+    Agi: 164
+    Vit: 68
+    Int: 104
+    Dex: 167
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Large
+    Race: Undead
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 150
+    AttackDelay: 160
+    AttackMotion: 528
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20798
+    AegisName: MD_THA_MAERO
+    Name: Maero of Thanatos
+    Level: 202
+    Hp: 3834643
+    Attack: 4123
+    Attack2: 5992
+    Defense: 463
+    MagicDefense: 83
+    Str: 185
+    Agi: 187
+    Vit: 87
+    Int: 188
+    Dex: 198
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Undead
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 150
+    AttackDelay: 160
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 21
+    Class: Boss
+  - Id: 20799
+    AegisName: MD_THA_DOLOR
+    Name: Dolor of Thanatos
+    Level: 202
+    Hp: 3830553
+    Attack: 3912
+    Attack2: 5679
+    Defense: 382
+    MagicDefense: 77
+    Str: 175
+    Agi: 80
+    Vit: 60
+    Int: 113
+    Dex: 60
+    Luk: 66
+    AttackRange: 1
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Small
+    Race: Undead
+    Element: Ghost
+    ElementLevel: 4
+    WalkSpeed: 150
+    AttackDelay: 160
+    AttackMotion: 672
+    DamageMotion: 480
+    Ai: 21
+    Class: Boss
+  - Id: 20800
+    AegisName: MD_OBSERVATION
+    Name: Observation
+    Level: 203
+    Hp: 3848907
+    BaseExp: 373575
+    JobExp: 280142
+    Attack: 3760
+    Attack2: 5455
+    Defense: 371
+    MagicDefense: 79
+    Str: 167
+    Agi: 108
+    Vit: 56
+    Int: 134
+    Dex: 182
+    Luk: 66
+    AttackRange: 2
+    SkillRange: 10
+    ChaseRange: 14
+    Size: Medium
+    Race: Angel
+    Element: Neutral
+    ElementLevel: 4
+    WalkSpeed: 120
+    AttackDelay: 360
+    AttackMotion: 480
+    DamageMotion: 360
+    Ai: 20
   - Id: 20801
     AegisName: ILL_SROPHO
     Name: Deep Sea Sropho

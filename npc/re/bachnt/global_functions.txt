@@ -169,3 +169,54 @@ function	script	getitemclone2	{
         }
         return;
 }
+
+function	script	instance_enable	{
+	.@npc$ = getarg(0);
+	.@type = getarg(1);
+	switch(.@type){
+		case 0:
+			disablenpc instance_npcname(.@npc$);
+			break;
+			
+		case 1:
+			enablenpc instance_npcname(.@npc$);
+			break;
+	}
+	return;
+}
+
+function	script	set_instance_var	{
+	.@var_name$ = getarg(0);
+	setd("'" + .@var_name$,getarg(1));
+	return;
+}
+
+function	script	get_instance_var	{
+	.@var_name$ = getarg(0);
+	return getd("'" + .@var_name$);
+}
+
+function	script	setd_instance_var	{
+	.@var_name$ = getarg(0);
+	.@var = getarg(1);
+	.@id = getarg(2);
+	set getinstancevar("'" + .@var_name$, .@id), .@var;
+	return;
+}
+
+function	script	getd_instance_var	{
+	.@var_name$ = getarg(0);
+	.@id = getarg(1);
+	return getinstancevar("'" + .@var_name$, .@id);
+}
+
+-	script	dummynpc2	-1,{ 
+	end; 
+}
+
+-	script	instancedummynpc	1_ETC_01,{ 
+	OnInstanceInit: 
+	instance_enable(strnpcinfo(0),false); 
+	end; 
+}
+

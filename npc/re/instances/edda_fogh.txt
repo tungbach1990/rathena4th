@@ -529,7 +529,7 @@ glast_01,241,296,5	script	OSC1198#edda_fogh	2_DROP_MACHINE,{
 	end;
 	
 OnInit:
-	cloaknpc(strnpcinfo(0),true);
+	cloakonnpc();
 	setarray .equip_id,15388,15389;
 	setarray .insignia,32228,32229,32230,32231,32232,32233;
 	setarray .drooping_id,31631,31632,31633;
@@ -663,7 +663,7 @@ glast_01,243,296,5	script	OSC1127#edda_fogh	2_SLOT_MACHINE,{
 OnInit:
 	setarray .equip_id,15388,15389;
 	setarray .insignia,32228,32229,32230,32231,32232,32233;
-	cloaknpc(strnpcinfo(0),true);
+	cloakonnpc();
 	setunittitle getnpcid(0),"[Enchant Machine]";
 end;
 }
@@ -731,7 +731,7 @@ glast_01,245,296,5	script	OSC1052#edda_fogh	2_VENDING_MACHINE1,{
 OnInit:
 	setarray .equip_id,15388,15389;
 	setarray .insignia,32228,32229,32230,32231,32232,32233;
-	cloaknpc(strnpcinfo(0),true);
+	cloakonnpc();
 	setunittitle getnpcid(0),"[Exchange Machine]";
 end;
 }

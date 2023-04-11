@@ -103,6 +103,9 @@ Body:
    
  - ready_for_concentration:
    - not self lkconcentration
+
+ - ss_for_lkconcen:
+   - not self lkconcentration
    
  - ready_for_aurablade:
    - not self aurablade
