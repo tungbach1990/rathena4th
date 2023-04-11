@@ -305,15 +305,15 @@ glast_01,241,290,5	script	Oscar#gh_fall	4_ED_OSCAR,{
 		mes "^0000CDWe've purified enough for today.^000000 You need to rest up your body to do another dimensional travel. Come back again at dawn, adventurer.";
 		close3;	
 	}
-	switch(select("Enter",((is_party_leader() == true && .@normal == true)?"Create Glastheim Purification":""),((is_party_leader() == true && BaseLevel >= 180 && .@hard == true)?"Create Glastheim Purification Hard":""))){
+	switch(select("Enter",((is_party_leader() == true && .@normal == true)?"Create Fall of Glast Heim (Normal)":""),((is_party_leader() == true && BaseLevel >= 180 && .@hard == true)?"Create Fall of Glast Heim (Advanced)":""))){
 		case 1:
-			if(select("Purification of Glastheim",((BaseLevel >= 180)?"^CC0000Purification of Glastheim Hard^000000":"")) == 1){
-				.@md_name$ = "Glastheim Purification";
+			if(select("Fall of Glast Heim (Normal)",((BaseLevel >= 180)?"^CC0000Fall of Glast Heim (Advanced)^000000":"")) == 1){
+				.@md_name$ = "Fall of Glast Heim (Normal)";
 				.@cooldown = 12460;
 				.@hunt = 12459;
 				.@check = .@normal;
 			} else {
-				.@md_name$ = "Glastheim Purification Hard";
+				.@md_name$ = "Fall of Glast Heim (Advanced)";
 				.@cooldown = 12461;
 				.@hunt = 12462;
 				.@check = .@hard;
@@ -353,7 +353,7 @@ glast_01,241,290,5	script	Oscar#gh_fall	4_ED_OSCAR,{
 				mes "I can only activate it for you adventurer. Please create a party of your own and talk to me again.";
 				close3;
 			}
-			.@md_name$ = "Glastheim Purification";
+			.@md_name$ = "Fall of Glast Heim (Normal)";
 			switch(instance_create(.@md_name$)){
 				case -1:
 					mes "[ Oscar ]";
@@ -389,7 +389,7 @@ glast_01,241,290,5	script	Oscar#gh_fall	4_ED_OSCAR,{
 				mes "I can only activate it for you adventurer. Please create a party of your own and talk to me again.";
 				close3;
 			}
-			.@md_name$ = "Glastheim Purification Hard";
+			.@md_name$ = "Fall of Glast Heim (Advanced)";
 			switch(instance_create(.@md_name$)){
 				case -1:
 					mes "[ Oscar ]";
@@ -794,7 +794,7 @@ OnInstanceInit:
 			disablenpc instance_npcname("Victim#gh_fall_" + .@i);
 		end;
 	}
-	if(.@type$ == "Glastheim Purification"){	
+	if(.@type$ == "Fall of Glast Heim (Normal)"){	
 		set_instance_var("maid",20392);
 		set_instance_var("khalitzburg",20388);
 		set_instance_var("knight",20390);

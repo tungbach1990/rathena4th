@@ -2044,9 +2044,10 @@ int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill_id, ui
 	// In official this is triggered even if no cast time.
 	clif_skillcasting(src, src->id, target_id, 0,0, skill_id, skill_lv, skill_get_ele(skill_id, skill_lv), casttime);
 
-	if ((sd || (status_get_mode(src) & MD_PCBEHAVIOR && target != src)) && target->type == BL_MOB) {
+	if (sd && target->type == BL_MOB) {
 		mob_data* tmd = BL_CAST(BL_MOB,target);
-		bool send_casttargetted_event = true;		
+		bool send_casttargetted_event = true;
+		TBL_MOB *md = (TBL_MOB*)target;
 		if(md){
 		  std::vector<std::shared_ptr<s_mob_skill>>& ms = md->db->skill;
 		  for (int i = 0; i < ms.size(); ++i) {
