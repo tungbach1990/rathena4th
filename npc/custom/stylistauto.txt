@@ -1,0 +1,20 @@
+prontera,168,188,1	script	Stylist AutoCloth#custom_stylist_auto	122,5,5,{
+	OnTouch:
+		//percentheal 100,100; 
+		while (1) {
+		set .Style, .Style+1;
+		setlook LOOK_CLOTHES_COLOR, .Style;
+		message strcharinfo(0),"This is style #"+.Style+".";
+		sleep2(3000);
+		}
+		end;
+	
+	OnInit:
+		set .Style,1;
+		setarray .@Styles[1],
+			getbattleflag("max_cloth_color"),
+			getbattleflag("max_hair_style"),
+			getbattleflag("max_hair_color");
+		end;
+		
+}
