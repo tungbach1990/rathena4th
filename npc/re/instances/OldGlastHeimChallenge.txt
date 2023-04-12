@@ -30,7 +30,7 @@ glast_01,144,288,3	script	OGH Challange#glastfd	10307,{
 		} else {
 			.@party_id = getcharid(1);
 			.@p_name$ = getpartyname(.@party_id);
-			.@md_name$ = "Old Glast Heim CM";
+			.@md_name$ = "Old Glast Heim (Challenge Mode)";
 			if (!.@party_id) {
 				mes "Please form a team.";
 				close;
